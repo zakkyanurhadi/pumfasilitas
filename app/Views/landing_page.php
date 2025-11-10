@@ -2,503 +2,401 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FacilityReport - Laporan Kerusakan Fasilitas Kampus</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Kampusku - Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        :root {
-            --primary-color: #3b82f6;
-            --primary-dark: #2563eb;
-            --secondary-color: #64748b;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --light-bg: #f8fafc;
-            --white: #ffffff;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-600: #475569;
-            --gray-800: #1e293b;
-            --border-radius: 8px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             overflow-x: hidden;
+            background: #ffffff;
         }
 
-        .hero-section {
-            min-height: 100vh;
+        /* Navbar Styles with Glassmorphism */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 999;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.sticky {
+            padding: 15px 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .navbar .max-width {
+            max-width: 1400px;
+            padding: 0 80px;
+            margin: auto;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            justify-content: space-between;
+        }
+
+        .navbar .logo a {
+            color: #001f3f;
+            font-size: 36px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo span {
+            color: #0066cc;
+        }
+
+        .navbar .menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .navbar .menu li a {
+            color: #001f3f;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 10px 18px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .navbar .menu li a:hover {
+            background: rgba(0, 102, 204, 0.15);
+            backdrop-filter: blur(10px);
+            color: #0066cc;
+        }
+
+        .login-btn {
+            padding: 10px 25px !important;
+            background: rgba(0, 102, 204, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 102, 204, 0.3);
+            border-radius: 50px;
+            color: #001f3f !important;
+        }
+
+        .login-btn:hover {
+            background: rgba(0, 102, 204, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-btn {
+            color: #001f3f;
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Home Section */
+        .home {
+            min-height: 100vh;
+            background: url('images/bglapor.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             position: relative;
-        }
-
-        .hero-container {
-            max-width: 1200px;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             align-items: center;
-            gap: 60px;
+            padding-top: 110px;
         }
 
-        .hero-content {
+        .home .max-width {
+            max-width: 1400px;
+            padding: 0 80px;
+            margin: auto;
+            width: 100%;
+            position: relative;
             z-index: 2;
         }
 
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--white);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero-content .subtitle {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-
-        .hero-content p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3rem;
-            line-height: 1.7;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary {
-            background: var(--white);
-            color: var(--primary-color);
-            border: 2px solid transparent;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-color);
-            color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--white);
-            border: 2px solid var(--white);
-        }
-
-        .btn-secondary:hover {
-            background: var(--white);
-            color: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
-        }
-
-        .hero-image {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeInRight 0.8s ease-out 0.3s both;
-        }
-
-        .hero-image::before {
-            content: "";
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(45deg,
-                    rgba(255, 255, 255, 0.1),
-                    rgba(255, 255, 255, 0.05));
-            border-radius: 50%;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        .hero-illustration {
-            width: 350px;
-            height: 350px;
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        .home-content {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 2;
+            align-items: flex-start;
         }
 
-        .illustration-content {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .illustration-icon {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg,
-                    var(--primary-color),
-                    var(--primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        .illustration-icon svg {
-            width: 60px;
-            height: 60px;
-            fill: white;
-        }
-
-        .illustration-content h3 {
-            color: var(--gray-800);
-            font-size: 1.5rem;
+        .home-content .text-1 {
+            font-size: 38px;
+            color: #001f3f;
             margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .home-content .text-2 {
+            font-size: 75px;
+            font-weight: 600;
+            color: #001f3f;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+            line-height: 1.1;
+        }
+
+        .home-content .text-3 {
+            font-size: 40px;
+            color: #001f3f;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .home-content .text-3 span {
+            color: #0066cc;
             font-weight: 700;
         }
 
-        .illustration-content p {
-            color: var(--secondary-color);
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .typing {
+            border-right: 4px solid #0066cc;
+            padding-right: 8px;
+            animation: blink 0.7s infinite;
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-            animation: fadeInUp 0.8s ease-out 0.8s both;
+        @keyframes blink {
+
+            0%,
+            100% {
+                border-color: transparent;
+            }
+
+            50% {
+                border-color: #0066cc;
+            }
         }
 
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
+        .home-content a {
+            display: inline-block;
+            padding: 20px 50px;
+            background: rgba(0, 102, 204, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 3px solid rgba(0, 102, 204, 0.4);
+            color: #001f3f;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 102, 204, 0.2);
         }
 
-        .feature-card:hover {
+        .home-content a:hover {
+            background: rgba(0, 102, 204, 0.25);
             transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 102, 204, 0.4);
+            border-color: #0066cc;
         }
 
-        .feature-card .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .feature-card h4 {
-            color: var(--white);
-            font-size: 1rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .feature-card p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .floating-shapes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .shape:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .shape:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            top: 80%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .home-content .text-2 {
+                font-size: 60px;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .home-content .text-3 {
+                font-size: 32px;
             }
         }
 
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
+        @media (max-width: 947px) {
+            .navbar .max-width {
+                padding: 0 50px;
             }
 
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                gap: 40px;
+            .navbar .menu {
+                position: fixed;
+                height: 100vh;
+                width: 100%;
+                left: -100%;
+                top: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
                 text-align: center;
+                padding-top: 100px;
+                transition: all 0.3s ease;
+                flex-direction: column;
+                border-right: 3px solid rgba(0, 102, 204, 0.3);
             }
 
-            .hero-content h1 {
-                font-size: 2.5rem;
+            .navbar .menu.active {
+                left: 0;
             }
 
-            .hero-content .subtitle {
-                font-size: 1.1rem;
+            .navbar .menu li {
+                margin: 25px 0;
             }
 
-            .cta-buttons {
-                justify-content: center;
+            .navbar .menu li a {
+                font-size: 28px;
+                display: block;
             }
 
-            .btn {
-                padding: 14px 28px;
-                font-size: 1rem;
+            .menu-btn {
+                display: block;
+                z-index: 999;
             }
 
-            .hero-illustration {
-                width: 280px;
-                height: 280px;
+            .menu-btn i.active:before {
+                content: "\f00d";
             }
 
-            .illustration-icon {
-                width: 80px;
-                height: 80px;
+            .home {
+                padding-top: 90px;
             }
 
-            .illustration-icon svg {
-                width: 40px;
-                height: 40px;
+            .home .max-width {
+                padding: 0 50px;
             }
 
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
+            .home-content .text-1 {
+                font-size: 32px;
+            }
+
+            .home-content .text-2 {
+                font-size: 50px;
+            }
+
+            .home-content .text-3 {
+                font-size: 30px;
+            }
+
+            .home-content a {
+                font-size: 22px;
+                padding: 18px 45px;
+            }
+        }
+
+        @media (max-width: 690px) {
+            .navbar .max-width {
+                padding: 0 30px;
+            }
+
+            .navbar .logo a {
+                font-size: 36px;
+            }
+
+            .home {
+                padding-top: 80px;
+            }
+
+            .home .max-width {
+                padding: 0 30px;
+            }
+
+            .home-content .text-1 {
+                font-size: 26px;
+            }
+
+            .home-content .text-2 {
+                font-size: 38px;
+            }
+
+            .home-content .text-3 {
+                font-size: 24px;
+            }
+
+            .home-content a {
+                font-size: 20px;
+                padding: 16px 40px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .home-content .text-1 {
+                font-size: 22px;
+            }
+
+            .home-content .text-2 {
+                font-size: 30px;
+            }
+
+            .home-content .text-3 {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <section class="hero-section">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1>FasilitasKampusKu</h1>
-                <p class="subtitle">Laporan Kerusakan Fasilitas Kampus</p>
-                <p>
-                    Kelola dan pantau semua laporan kerusakan fasilitas kampus dengan
-                    mudah, cepat, dan efisien. Sistem terintegrasi yang membantu
-                    mengoptimalkan proses perbaikan dan maintenance fasilitas
-                    pendidikan.
-                </p>
-
-                <div class="cta-buttons">
-                    <button class="btn btn-primary" onclick="redirectToLogin()">
-                        <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path
-                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
-                        </svg>
-                        Masuk ke Sistem
-                    </button>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="icon">⚡</div>
-                        <h4>Cepat & Responsif</h4>
-                        <p>Laporan dapat diproses dalam hitungan menit</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">📊</div>
-                        <h4>Dashboard Analitik</h4>
-                        <p>Visualisasi data yang mudah dipahami</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">🔔</div>
-                        <h4>Notifikasi Real-time</h4>
-                        <p>Update status langsung ke pelapor</p>
-                    </div>
-                </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="max-width">
+            <div class="logo">
+                <a href="/">Laporan<span>Kampusku</span></a>
             </div>
+            <ul class="menu">
+                <li><a href="/login" class="login-btn">Masuk</a></li>
+                <li><a href="/register" class="login-btn">Daftar</a></li>
+            </ul>
+            <div class="menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
 
-            <div class="hero-image">
-                <div class="hero-illustration">
-                    <div class="illustration-content">
-                        <div class="illustration-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2l-8 8h6v8h4v-8h6l-8-8z" />
-                                <circle cx="12" cy="12" r="2" />
-                                <path d="M4 14l4 4 4-4" />
-                                <path d="M16 10l4 4-4 4" />
-                            </svg>
-                        </div>
-                        <h3>Manajemen Terpusat</h3>
-                        <p>
-                            Kelola semua laporan kerusakan dari satu dashboard yang
-                            terintegrasi dengan sistem tracking otomatis.
-                        </p>
-                    </div>
-                </div>
+    <!-- Home Section -->
+    <section class="home" id="home">
+        <div class="max-width">
+            <div class="home-content">
+                <div class="text-1">Selamat Datang di</div>
+                <div class="text-2">Laporan Kampusku</div>
+                <div class="text-3">Platform untuk <span class="typing"></span></div>
+                <a href="/register">Mulai Sekarang</a>
             </div>
         </div>
     </section>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
     <script>
-        function redirectToLogin() {
-            // Opsi 1: Redirect ke halaman login
-            window.location.href = "login";
-
-            // Opsi 2: Jika ingin membuat halaman login dalam satu file yang sama
-            // showLoginForm();
-        }
-
-        // Animasi hover pada feature cards
-        const featureCards = document.querySelectorAll(".feature-card");
-        featureCards.forEach((card) => {
-            card.addEventListener("mouseenter", function() {
-                this.style.background = "rgba(255, 255, 255, 0.15)";
+        $(document).ready(function() {
+            // Sticky navbar
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 50) {
+                    $('.navbar').addClass('sticky');
+                } else {
+                    $('.navbar').removeClass('sticky');
+                }
             });
 
-            card.addEventListener("mouseleave", function() {
-                this.style.background = "rgba(255, 255, 255, 0.1)";
+            // Mobile menu toggle
+            $('.menu-btn').click(function() {
+                $('.navbar .menu').toggleClass('active');
+                $('.menu-btn i').toggleClass('active');
+            });
+
+            // Typing animation
+            var typed = new Typed(".typing", {
+                strings: [
+                    "Melaporkan Keluhan",
+                    "Memberikan Aspirasi",
+                    "Membangun Kampus",
+                    "Bersama Berkembang"
+                ],
+                typeSpeed: 60,
+                backSpeed: 40,
+                loop: true,
+                backDelay: 2000,
+                showCursor: true
             });
         });
-
-        // Parallax effect untuk floating shapes
-        window.addEventListener("scroll", () => {
-            const shapes = document.querySelectorAll(".shape");
-            const scrolled = window.pageYOffset;
-
-            shapes.forEach((shape, index) => {
-                const speed = (index + 1) * 0.3;
-                shape.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-
-        // CSS untuk animasi spin
-        const style = document.createElement("style");
-        style.textContent = `
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 
