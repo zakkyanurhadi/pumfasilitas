@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <section class="welcome-section" id="home">
-    <h1>Sistem Laporan Kerusakan Fasilitas Kampus</h1>
+    <h1>Sistem Laporan Kerusakan Fasilitas Kampus jelek</h1>
     <p>
         Selamat datang, <strong><?= esc($user['nama']) ?></strong>! Laporkan kerusakan fasilitas kampus dengan mudah dan cepat.
     </p>
