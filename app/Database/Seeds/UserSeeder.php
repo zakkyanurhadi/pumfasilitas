@@ -12,12 +12,12 @@ class UserSeeder extends Seeder
         $data = [
 
             [
-                'npm'      => 'admin',
-                'nama'     => 'admingaul',
-                'email'    => 'admin@gmail.com',
-                'password' => password_hash('admin', PASSWORD_DEFAULT),
+                'npm'      => 'damarr',
+                'nama'     => 'damar',
+                'email'    => 'damar@gmail.com',
+                'password' => password_hash('Damar123', PASSWORD_DEFAULT),
                 'img'      => 'default.jpg',
-                'role'     => 'admin'
+                'role'     => 'user'
             ],
         ];
 
