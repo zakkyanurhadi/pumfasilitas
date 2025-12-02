@@ -1,0 +1,159 @@
+@startuml Facility Report Activity Diagram
+
+|Mahasiswa|
+start
+:Buka Sistem;
+:Input NPM & Password;
+
+|Sistem|
+:Validasi Login;
+
+if (Data Valid?) then (yes)
+  :Set Session;
+  :Redirect ke Dashboard;
+else (no)
+  |Mahasiswa|
+  :Tampilkan Error;
+  stop
+endif
+
+|Mahasiswa|
+:Pilih Menu "Buat Laporan";
+:Isi Form Laporan:
+- Nama
+- NPM (auto-fill)
+- Lokasi Kerusakan
+- Lokasi Spesifik
+- Kategori Kerusakan
+- Tingkat Prioritas
+- Deskripsi;
+
+:Upload Foto Kerusakan;
+
+if (Foto Valid?) then (yes)
+  :Simpan Foto;
+else (no)
+  :Tampilkan Peringatan;
+  :Upload Ulang Foto;
+endif
+
+:Submit Laporan;
+
+|Sistem|
+:Validasi Data Form;
+
+if (Data Lengkap?) then (no)
+  |Mahasiswa|
+  :Tampilkan Error Validasi;
+  stop
+else (yes)
+  |Sistem|
+  :Simpan Laporan ke Database;
+  :Set Status = "Pending";
+  :Catat created_at;
+  :Kirim Notifikasi ke Admin;
+  
+  |Mahasiswa|
+  :Tampilkan Konfirmasi Berhasil;
+  :Redirect ke "Laporan Saya";
+  stop
+endif
+
+|Admin|
+start
+:Login sebagai Admin;
+:Buka Dashboard Admin;
+:Lihat Daftar Laporan Pending;
+
+while (Ada Laporan Pending?) is (yes)
+  :Pilih Laporan;
+  :Lihat Detail Laporan:
+  - Nama Pelapor
+  - NPM
+  - Lokasi & Deskripsi
+  - Foto Kerusakan
+  - Tanggal Laporan;
+  
+  if (Laporan Valid?) then (yes)
+    :Ubah Status → "Diproses";
+    :Tambah Keterangan Verifikasi;
+    :Isi Verifikator (NPM Admin);
+    :Catat tanggal_verifikasi;
+    
+    |Sistem|
+    :Update Database;
+    :Kirim Notifikasi ke Mahasiswa;
+    
+    |Admin|
+    note right
+      Admin melakukan
+      perbaikan fisik
+      di lapangan
+    end note
+    
+    :Koordinasi Tim Maintenance;
+    :Lakukan Perbaikan;
+    
+    if (Perbaikan Selesai?) then (yes)
+      :Ubah Status → "Selesai";
+      :Tambah Keterangan Penyelesaian;
+      :Catat tanggal penyelesaian;
+      
+      |Sistem|
+      :Update Database;
+      :Kirim Notifikasi ke Mahasiswa;
+    endif
+    
+  else (no - spam/tidak valid)
+    :Ubah Status → "Ditolak";
+    :Isi Alasan Penolakan:
+    - Laporan duplikat
+    - Deskripsi tidak jelas
+    - Bukan kerusakan fasilitas
+    - Spam/iseng;
+    :Isi Verifikator (NPM Admin);
+    
+    |Sistem|
+    :Update Database;
+    :Kirim Notifikasi ke Mahasiswa;
+  endif
+  
+  |Admin|
+endwhile (tidak ada)
+
+:Tutup Dashboard;
+stop
+
+|Mahasiswa|
+start
+:Login ke Sistem;
+:Buka Menu "Laporan Saya";
+
+|Sistem|
+:Tampilkan Daftar Laporan
+berdasarkan NPM Mahasiswa;
+
+|Mahasiswa|
+:Pilih Laporan untuk Dilihat;
+
+|Sistem|
+:Tampilkan Detail Laporan;
+
+if (Status Laporan?) then (Pending)
+  :Tampilkan "Menunggu Verifikasi Admin";
+elseif (Diproses) then
+  :Tampilkan "Sedang Ditangani"
+  + Keterangan dari Admin;
+elseif (Selesai) then
+  :Tampilkan "Sudah Diperbaiki"
+  + Keterangan Penyelesaian;
+elseif (Ditolak) then
+  :Tampilkan "Laporan Ditolak"
+  + Alasan Penolakan;
+endif
+
+|Mahasiswa|
+:Logout;
+stop
+
+@enduml

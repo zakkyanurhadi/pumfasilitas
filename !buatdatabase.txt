@@ -1,0 +1,13 @@
+buat database
+
+db_facility_report
+
+
+run terminal
+php spark migrate
+
+php spark db:seed UserSeeder
+usr pw default ->App\Database\Seeds
+23753041
+
+php spark serve

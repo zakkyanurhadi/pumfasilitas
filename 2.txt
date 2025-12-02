@@ -1,0 +1,28 @@
+📌 Perintah terminal:
+1: sudo apt update && sudo apt upgrade -y
+2: sudo apt install php8.3-cli php8.3-common php8.3-mbstring php8.3-xml php8.3-bcmath php8.3-curl php8.3-mysql php8.3-zip php8.3-readline php8.3-gd php8.3-pgsql unzip curl git composer -y
+
+
+
+✔️ Docker
+✔️ WSL (Subsistem Windows untuk Linux)
+✔️ Ubuntu
+✔️ dependensi Laravel (PHP, Composer, MySQL, dll.)
+
+
+
+composer create-project laravel/laravel laravel1
+composer create-project codeigniter4/appstarter laravel1
+composer require laravel/sail --dev
+
+php artisan sail:install
+
+
+Buat landing page 1 halaman dengan foto
+
+di navbar ada
+Home Sign In
+
+
+Aplikasi Laporan Kerusakan Fasilitas Kampus
+Masukan username dan password yang benar

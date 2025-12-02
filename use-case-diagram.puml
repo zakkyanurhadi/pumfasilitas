@@ -1,0 +1,101 @@
+@startuml Facility Report Use Case Diagram
+
+skinparam actor {
+    BackgroundColor #FFE8D0
+    BorderColor #D2691E
+}
+
+skinparam usecase {
+    BackgroundColor #D4F1F4
+    BorderColor #2C5F7C
+}
+
+skinparam shadowing false
+
+left to right direction
+
+actor "Mahasiswa\n(Pelapor)" as mahasiswa #LightBlue
+actor "Admin\n(Verifikator)" as admin #LightCoral
+
+rectangle "Sistem Laporan Fasilitas" {
+  
+  ' Use cases untuk Mahasiswa
+  usecase "Login" as UC1
+  usecase "Logout" as UC2
+  usecase "Buat Laporan Baru" as UC3
+  usecase "Upload Foto Kerusakan" as UC4
+  usecase "Lihat Laporan Saya" as UC5
+  usecase "Lihat Detail Laporan" as UC6
+  usecase "Edit Profil" as UC7
+  
+  ' Use cases untuk Admin
+  usecase "Kelola Semua Laporan" as UC8
+  usecase "Ubah Status Laporan" as UC9
+  usecase "Verifikasi Laporan" as UC10
+  usecase "Tolak Laporan (Spam)" as UC11
+  usecase "Tambah Keterangan" as UC12
+  usecase "Lihat Statistik" as UC13
+  usecase "Export Laporan" as UC14
+  
+  ' Relationships - Mahasiswa
+  mahasiswa --> UC1
+  mahasiswa --> UC2
+  mahasiswa --> UC3
+  mahasiswa --> UC4
+  mahasiswa --> UC5
+  mahasiswa --> UC6
+  mahasiswa --> UC7
+  
+  ' Relationships - Admin
+  admin --> UC1
+  admin --> UC2
+  admin --> UC8
+  admin --> UC9
+  admin --> UC10
+  admin --> UC11
+  admin --> UC12
+  admin --> UC13
+  admin --> UC14
+  admin --> UC6
+  
+  ' Include relationships
+  UC3 ..> UC4 : <<include>>
+  UC10 ..> UC9 : <<include>>
+  UC11 ..> UC12 : <<include>>
+  
+  ' Extend relationships
+  UC9 ..> UC10 : <<extend>>\n(jika diproses)
+  UC9 ..> UC11 : <<extend>>\n(jika spam)
+}
+
+note top of mahasiswa
+  <b>Hak Akses Mahasiswa:</b>
+  • Membuat laporan kerusakan
+  • Melihat status laporan sendiri
+  • Upload bukti foto
+  • Menerima notifikasi status
+end note
+
+note top of admin
+  <b>Hak Akses Admin:</b>
+  • Melihat semua laporan
+  • Verifikasi & ubah status
+  • Menolak laporan spam
+  • Menambah keterangan
+  • Melihat dashboard & statistik
+end note
+
+note bottom of UC11
+  <b>Kriteria Penolakan:</b>
+  
+  ✗ Laporan duplikat
+  ✗ Deskripsi tidak jelas
+  ✗ Foto tidak relevan
+  ✗ Bukan kerusakan fasilitas
+  ✗ Spam/iseng
+  
+  Admin wajib mengisi
+  alasan penolakan
+end note
+
+@enduml
