@@ -24,8 +24,8 @@ $routes->post('/register/process', 'AuthController::processRegister'); // 2. Mem
 // Rute yang Dilindungi (Membutuhkan Login)
 // Filter 'auth' akan berjalan sebelum mengakses controller ini.
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
-$routes->get('/lapor', 'LaporController::index', ['filter' => 'auth']);
-$routes->post('/lapor/store', 'LaporController::store', ['filter' => 'auth']);
+$routes->get('/laporan', 'LaporController::index', ['filter' => 'auth']);
+$routes->post('/laporan/store', 'LaporController::store', ['filter' => 'auth']);
 $routes->get('/laporan/status', 'LaporController::status', ['filter' => 'auth']);
 $routes->get('/laporan/riwayat', 'LaporController::riwayat', ['filter' => 'auth']);
 $routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);

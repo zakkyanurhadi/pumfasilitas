@@ -15,7 +15,7 @@ class LaporController extends BaseController
         $data = [
             'title' => 'Buat Laporan Baru',
         ];
-        return view('lapor/index', $data);
+        return view('laporan/index', $data);
     }
     /**
      * Menyimpan data laporan baru dari form.
@@ -136,7 +136,7 @@ class LaporController extends BaseController
             'perPage'     => $perPage,
         ];
 
-        return view('lapor/status', $data);
+        return view('laporan/status', $data);
     }
 
     public function detail($id)
@@ -154,7 +154,7 @@ class LaporController extends BaseController
             'laporan' => $laporan,
         ];
 
-        return view('lapor/detail', $data);
+        return view('laporan/detail', $data);
     }
 
 
@@ -200,6 +200,6 @@ class LaporController extends BaseController
             'perPage'     => $perPage,
         ];
 
-        return view('lapor/riwayat', $data);
+        return view('laporan/riwayat', $data);
     }
 }
