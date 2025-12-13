@@ -18,7 +18,7 @@ class ProfileAdminController extends BaseController
             'user'  => $user,
         ];
 
-        return view('admin/profile/index', $data);
+        return view('admin/profile/index.php', $data);
     }
 
     public function update()

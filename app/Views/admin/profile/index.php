@@ -1,86 +1,158 @@
-<?= $this->extend('layouts/main') ?>
+<?= $this->extend('admin/layouts/main') ?>
 
 <?= $this->section('content') ?>
 
 <style>
-    /* Style tambahan khusus untuk halaman profil */
-    .profile-card {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        max-width: 700px;
-        margin: 2rem auto;
-    }
+/* ===== PROFILE CARD ===== */
+.profile-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    max-width: 700px;
+    margin: 2rem auto;
+}
 
-    .profile-avatar {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
+/* ===== AVATAR ===== */
+.profile-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
 
-    .profile-avatar img {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 1rem;
-        border: 4px solid var(--gray-200);
-    }
+.profile-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.8rem;
+    border: 4px solid var(--gray-200);
+}
 
-    .form-control[readonly] {
-        background-color: var(--gray-100);
-        cursor: not-allowed;
-    }
+/* ===== ACCORDION ===== */
+.accordion-item {
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.accordion-header {
+    padding: 14px 18px;
+    background: var(--gray-100);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.accordion-header i {
+    transition: 0.3s ease;
+}
+
+.accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    padding: 0 18px;
+}
+
+.accordion-item.active .accordion-body {
+    max-height: 1000px;
+    padding: 18px;
+}
+
+.accordion-item.active .accordion-header i {
+    transform: rotate(180deg);
+}
+
+/* ===== READONLY ===== */
+.form-control[readonly] {
+    background-color: var(--gray-100);
+    cursor: not-allowed;
+}
 </style>
 
 <div class="profile-card">
-    <h2 class="text-center mb-3">Edit Profil</h2>
+    <h2 class="text-center mb-3">Pengaturan Akun</h2>
 
     <form action="<?= site_url('admin/profile/update') ?>" method="post" enctype="multipart/form-data">
         <?= csrf_field() ?>
-        
 
-        <div class="profile-avatar">
-            <img src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>" alt="User Avatar">
-            <label for="avatar">Ubah Foto Profil</label>
-            <input type="file" id="avatar" name="avatar" class="form-control mt-2" accept="image/png, image/jpeg, image/gif">
-            <small class="text-secondary mt-2">Kosongkan jika tidak ingin merubah foto. (JPG, PNG, GIF | Max: 2MB)</small>
+        <!-- === PROFIL SAYA === -->
+        <div class="accordion-item active">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>Profil Saya</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <div class="accordion-body">
+                <div class="profile-avatar">
+                    <img src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>" alt="Avatar">
+                    <label for="avatar">Ubah Foto Profil</label>
+                    <input type="file" id="avatar" name="avatar" class="form-control mt-2"
+                           accept="image/png, image/jpeg, image/gif">
+                    <small class="text-secondary mt-2">
+                        Kosongkan jika tidak ingin mengubah foto (JPG, PNG, GIF | Max 2MB)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>NPM</label>
+                    <input type="text" class="form-control" value="<?= esc($user['npm']) ?>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Nama</label>
+                    <input type="text" name="nama" class="form-control"
+                           value="<?= old('nama', esc($user['nama'])) ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control"
+                           value="<?= old('email', esc($user['email'])) ?>" required>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="npm">NPM</label>
-            <input type="text" id="npm" name="npm" class="form-control" value="<?= esc($user['npm']) ?>" readonly>
+        <!-- === UBAH PASSWORD === -->
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>Ubah Kata Sandi</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <div class="accordion-body">
+                <p class="text-secondary text-center mb-2">
+                    Kosongkan jika tidak ingin mengubah password
+                </p>
+
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" name="password" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Konfirmasi Password Baru</label>
+                    <input type="password" name="pass_confirm" class="form-control">
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="nama">Nama</label>
-            <input type="text" id="nama" name="nama" class="form-control" value="<?= old('nama', esc($user['nama'])) ?>" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" value="<?= old('email', esc($user['email'])) ?>" required>
-        </div>
-
-        <hr class="mb-3 mt-3">
-        <p class="text-secondary text-center">Kosongkan password jika tidak ingin mengubahnya.</p>
-
-        <div class="form-group">
-            <label for="password">Password Baru</label>
-            <input type="password" id="password" name="password" class="form-control">
-        </div>
-
-        <div class="form-group">
-            <label for="pass_confirm">Konfirmasi Password Baru</label>
-            <input type="password" id="pass_confirm" name="pass_confirm" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-            <button type="submit" class="btn" style="width: 100%;">Simpan Perubahan</button>
-        </div>
+        <button type="submit" class="btn w-100 mt-3">
+            Simpan Perubahan
+        </button>
     </form>
 </div>
+
+<script>
+function toggleAccordion(header) {
+    const item = header.parentElement;
+    item.classList.toggle('active');
+}
+</script>
 
 <?= $this->endSection() ?>

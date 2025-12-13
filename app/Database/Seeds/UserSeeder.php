@@ -8,23 +8,53 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Data pengguna yang akan dimasukkan
         $data = [
-
+            // USER / MAHASISWA
             [
+                'npm'      => '2023000001',
+                'nama'     => 'Mahasiswa Satu',
+                'email'    => 'mahasiswa1@gmail.com',
+                'password' => password_hash('user123', PASSWORD_DEFAULT),
+                'img'      => 'default.png',
+                'role'     => 'user',
+                'status'   => 'active',
+            ],
 
-                'npm'      => 'pengguna',
-                'nama'     => 'pengguna',
-                'email'    => 'pengguna@gmail.com',
+            // ADMIN
+            [
+                'npm'      => 'admin001',
+                'nama'     => 'Admin Fasilitas',
+                'email'    => 'admin@gmail.com',
+                'password' => password_hash('admin123', PASSWORD_DEFAULT),
+                'img'      => 'default.png',
+                'role'     => 'admin',
+                'status'   => 'active',
+            ],
 
+            // SUPERADMIN
+            [
+                'npm'      => 'superadmin01',
+                'nama'     => 'Super Administrator',
+                'email'    => 'superadmin@gmail.com',
+                'password' => password_hash('superadmin123', PASSWORD_DEFAULT),
+                'img'      => 'default.png',
+                'role'     => 'superadmin',
+                'status'   => 'active',
+            ],
 
-                'password' => password_hash('user', PASSWORD_DEFAULT),
-                'img'      => 'default.jpg',
-                'role'     => 'users'
+            // REKTOR (READ ONLY)
+            [
+                'npm'      => 'rektor01',
+                'nama'     => 'Rektor Kampus',
+                'email'    => 'rektor@gmail.com',
+                'password' => password_hash('rektor123', PASSWORD_DEFAULT),
+                'img'      => 'default.png',
+                'role'     => 'rektor',
+                'status'   => 'active',
             ],
         ];
 
-        // Menggunakan Query Builder untuk memasukkan data
+        // Insert data
         $this->db->table('users')->insertBatch($data);
     }
 }

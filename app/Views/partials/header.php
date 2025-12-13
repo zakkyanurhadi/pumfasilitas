@@ -11,8 +11,8 @@
             <nav class="nav-center">
                 <ul class="nav-menu">
                     <li><a href="<?= site_url('dashboard') ?>">Beranda</a></li>
-                    <li><a href="<?= site_url('laporan/status') ?>">Status</a></li>
-                    <li><a href="<?= site_url('laporan/riwayat') ?>">Riwayat Laporan</a></li>
+                    <li><a href="<?= site_url('lapor/status') ?>">Status</a></li>
+                    <li><a href="<?= site_url('lapor/riwayat') ?>">Riwayat Laporan</a></li>
                 </ul>
             </nav>
 

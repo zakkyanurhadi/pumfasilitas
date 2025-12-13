@@ -1,142 +1,190 @@
-<?= $this->extend('admin/layouts/main') ?>
-
-<?= $this->section('content') ?>
-
 <style>
-    .detail-card {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        margin: 2rem auto;
-    }
+ /* ================================
+   DETAIL CARD (RAPI & KONSISTEN)
+================================ */
 
-    .detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 1rem 2rem;
-    }
+.detail-card {
+    background: var(--white);
+    padding: 1.6rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    font-size: 0.9rem;
+}
 
-    .detail-grid dt {
-        /* dt = description term (label) */
-        font-weight: 600;
-        color: var(--secondary-color);
-    }
+/* Header */
+.detail-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
 
-    .detail-grid dd {
-        /* dd = description details (value) */
-        margin-left: 0;
-    }
+.detail-header .status-badge {
+    font-size: 0.75rem;
+}
 
-    .photo-gallery {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
+/* Section titles */
+.detail-card h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    color: var(--gray-700);
+}
 
-    .photo-gallery img {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: var(--border-radius);
-        border: 2px solid var(--gray-200);
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
+/* Grid informasi */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 0.3rem 1rem;
+    margin-bottom: 0.8rem;
+}
 
-    .photo-gallery img:hover {
-        transform: scale(1.05);
-    }
+.detail-grid dt {
+    font-weight: 600;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+}
 
-    /* Status badge styles bisa dipindahkan ke style.css jika belum */
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-weight: 500;
-        font-size: 1rem;
-        color: var(--white);
-    }
+.detail-grid dd {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+}
 
-    .status-pending {
-        background-color: red;
-    }
+/* Deskripsi */
+.detail-card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--gray-700);
+}
 
-    .status-diproses {
-        background-color: orange;
-    }
+/* Foto */
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.4rem;
+}
 
-    .status-selesai {
-        background-color: var(--success-color);
-    }
+.photo-gallery img {
+    width: 115px;
+    height: 115px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+    cursor: pointer;
+}
 
-    @media (max-width: 768px) {
-        .detail-grid {
-            grid-template-columns: 1fr;
-        }
-    }
+/* Buttons */
+.detail-card .btn {
+    font-size: 0.85rem !important;
+    padding: 0.45rem 0.75rem;
+    border-radius: 6px;
+}
+
+.detail-card .btn-warning {
+    color: #fff;
+}
+
 </style>
 
 <div class="detail-card">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Detail Laporan #<?= esc($laporan['id']) ?></h2>
+    <div class="d-flex justify-content-between align-items-center mb-3 detail-header">
+        <h3>Detail Laporan #<?= esc($detail['id']) ?></h3>
         <?php
         $statusClass = '';
-        if ($laporan['status'] == 'Pending') $statusClass = 'status-pending';
-        if ($laporan['status'] == 'Diproses') $statusClass = 'status-diproses';
-        if ($laporan['status'] == 'Selesai') $statusClass = 'status-selesai';
+        if ($detail['status'] == 'Pending') $statusClass = 'status-pending';
+        if ($detail['status'] == 'Diproses') $statusClass = 'status-diproses';
+        if ($detail['status'] == 'Selesai') $statusClass = 'status-selesai';
         ?>
-        <span class="status-badge <?= $statusClass ?>"><?= esc($laporan['status']) ?></span>
+        <span class="status-badge <?= $statusClass ?>"><?= esc($detail['status']) ?></span>
     </div>
 
-    <hr class="mb-3">
+    <hr>
 
+    <h4>Informasi Umum</h4>
     <dl class="detail-grid">
         <dt>Nama Pelapor</dt>
-        <dd><?= esc($laporan['nama']) ?></dd>
+        <dd><?= esc($detail['nama_pelapor'] ?? 'N/A') ?></dd>
 
         <dt>NPM</dt>
-        <dd><?= esc($laporan['npm']) ?></dd>
+        <dd><?= esc($detail['npm'] ?? 'N/A') ?></dd>
+
+        <dt>No. Telp</dt>
+        <dd><?= esc($detail['no_telp'] ?? 'N/A') ?></dd>
 
         <dt>Tanggal Lapor</dt>
-        <dd><?= date('d F Y, H:i', strtotime($laporan['created_at'])) ?> WIB</dd>
-
-        <dt>Lokasi</dt>
-        <dd><?= esc($laporan['lokasi_kerusakan']) ?> - <?= esc($laporan['lokasi_spesifik']) ?></dd>
-
-        <dt>Kategori</dt>
-        <dd><?= esc($laporan['kategori_kerusakan']) ?></dd>
-
-        <dt>Prioritas</dt>
-        <dd><?= esc($laporan['tingkat_prioritas']) ?></dd>
+        <dd><?= date('d F Y, H:i', strtotime($detail['created_at'])) ?> WIB</dd>
     </dl>
 
-    <hr class="my-3">
+    <hr>
+
+    <h4>Detail Kerusakan</h4>
+    <dl class="detail-grid">
+        <dt>Lokasi</dt>
+        <dd><?= esc($detail['lokasi_kerusakan']) ?></dd>
+
+        <dt>Spesifik</dt>
+        <dd><?= esc($detail['lokasi_spesifik'] ?? 'N/A') ?></dd>
+
+        <dt>Kategori</dt>
+        <dd><?= esc($detail['kategori']) ?></dd>
+
+        <dt>Prioritas</dt>
+        <dd><?= esc($detail['tingkat_prioritas'] ?? 'Normal') ?></dd>
+    </dl>
+
+    <hr>
 
     <h4>Deskripsi Kerusakan</h4>
-    <p><?= nl2br(esc($laporan['deskripsi_kerusakan'])) ?></p>
+    <p><?= nl2br(esc($detail['deskripsi'])) ?></p>
 
-    <h4 class="mt-3">Foto Kerusakan</h4>
-    <div class="photo-gallery">
-        <?php
-        $foto_files = json_decode($laporan['foto_kerusakan'], true);
-        if (!empty($foto_files)):
-            foreach ($foto_files as $foto):
-        ?>
-                <a href="<?= base_url('uploads/laporan/' . esc($foto)) ?>" target="_blank">
-                    <img src="<?= base_url('uploads/laporan/' . esc($foto)) ?>" alt="Foto Kerusakan">
-                </a>
-            <?php
-            endforeach;
-        else:
-            ?>
-            <p class="text-secondary">Tidak ada foto yang dilampirkan.</p>
-        <?php endif; ?>
-    </div>
+    <?php 
+    // Handle both JSON array and single string for foto_kerusakan
+    $foto_data = $detail['foto'];
+    if (is_string($foto_data)) {
+        // Attempt to decode as JSON array
+        $foto = json_decode($foto_data, true);
+        // If decoding failed or result is not an array, treat it as a single file string
+        if (!is_array($foto)) {
+            $foto = [$foto_data];
+        }
+    } else {
+        $foto = (array)$foto_data;
+    }
+    ?>
 
-    <div class="mt-4 text-center">
-        <a href="<?= site_url('/riwayatadmin') ?>" class="btn btn-secondary">Kembali ke Daftar Laporan</a>
+    <?php if (count(array_filter($foto)) > 0): ?>
+        <h4>Foto Kerusakan</h4>
+        <div class="photo-gallery">
+            <?php foreach (array_filter($foto) as $img): ?>
+                <?php $path = 'uploads/laporan/'.$img; ?>
+                <img src="<?= strpos($img, 'http') === 0 ? esc($img) : base_url($path) ?>" 
+                    alt="Foto Kerusakan" 
+                    title="Klik untuk melihat lebih besar">
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($detail['keterangan_verifikasi'])): ?>
+        <hr>
+        <h4>Informasi Verifikasi</h4>
+        <dl class="detail-grid">
+            <dt>Status Verifikasi</dt>
+            <dd><?= esc($detail['status']) ?></dd>
+            <dt>Tanggal Verifikasi</dt>
+            <dd><?= date('d F Y, H:i', strtotime($detail['tanggal_verifikasi'] ?? $detail['updated_at'])) ?> WIB</dd>
+            <dt>Verifikator</dt>
+            <dd><?= esc($detail['verifikator'] ?? 'Admin') ?></dd>
+            <dt>Keterangan</dt>
+            <dd><?= nl2br(esc($detail['keterangan_verifikasi'])) ?></dd>
+        </dl>
+    <?php endif; ?>
+
+    <hr>
+    
+    <div class="d-flex gap-2 mt-3">
+        <a href="<?= current_url() . '?keyword=' . esc($keyword ?? '') . '&status_filter=' . esc($statusFilter ?? '') . '&page=' . esc($currentPage ?? 1) ?>" class="btn btn-secondary flex-grow-1">Tutup</a>
+        <a href="#" onclick="openReportModalAdmin(<?= esc($detail['id']) ?>)" class="btn btn-warning flex-grow-1">Verifikasi</a>
     </div>
 </div>
-
-<?= $this->endSection() ?>

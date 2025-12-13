@@ -27,7 +27,7 @@
 
 /* Base styling untuk body */
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--light-bg);
   color: var(--gray-800);
   line-height: 1.6;
@@ -50,7 +50,7 @@ body {
 
 /* Container untuk membatasi lebar konten */
 .container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -200,12 +200,14 @@ body {
 }
 
 /* Main content area */
-.main-content {
-    margin-left: 210px; /* mengikuti sidebar normal */
-    padding-top: 85px; /* mengikuti top navbar */
+/* Default: sidebar terbuka */
+.main-content { 
+    margin-left: 120px; 
     padding: 1.5rem;
+    padding-top: 55px !important; 
     transition: 0.3s ease;
 }
+
 
 /* Welcome section dengan card styling */
 .welcome-section {
@@ -409,10 +411,21 @@ body {
   padding: 0.75rem;
   border: 2px solid var(--gray-200);
   border-radius: var(--border-radius);
-  font-size: 1rem;
+  font-size: 0.8rem;
   transition: border-color 0.3s ease;
   font-family: inherit;
 }
+
+.select-filter {
+    margin-top: 10px;
+    width: 135px !important;
+    padding: 4px 8px !important;
+    font-size: 0.75rem !important;
+    border: 2px solid var(--gray-300) !important;
+    border-radius: var(--border-radius);
+    height: 32px !important;
+}
+
 
 .form-control:focus {
   outline: none;
@@ -495,9 +508,9 @@ select.form-control {
 /* TOP NAVBAR */
 .top-navbar {
     position: fixed;
-    top: 0;
-    left: 0; /* mengikuti lebar sidebar */
-    right: 0;
+    top: 20px;
+    left: 320px; /* mengikuti lebar sidebar normal */
+    right: 60px;
 
     height: 65px;
     background: #fff;
@@ -507,14 +520,19 @@ select.form-control {
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 170px;
+    padding: 0 25px; /* padding aman */
     z-index: 900;
     transition: 0.3s ease;
 }
 
+/* Jika sidebar collapse */
+.sidebar.sidebar-closed ~ .top-navbar {
+    left: 70px;  /* lebar baru sidebar collapse */
+}
+
 /* Saat sidebar collapse */
 .sidebar.sidebar-closed ~ .top-navbar {
-    left: 70px;
+    left: 140px;
 }
 
 /* Title area */
@@ -564,7 +582,7 @@ select.form-control {
 
 /* ============ SIDEBAR NORMAL ============ */
 .sidebar {
-    width: 260px;
+    width: 275px;
     background: #fff;
     height: 100vh;
     border-right: 1px solid #eee;
@@ -580,7 +598,7 @@ select.form-control {
 
 /* Default (sidebar terbuka) */
 body.sidebar-open .main-content {
-    margin-left: 70px;
+    margin-left: 120px;
     padding-top: 80px;
     padding: 1.5rem;
     transition: 0.3s ease;
@@ -588,14 +606,12 @@ body.sidebar-open .main-content {
 
 /* Sidebar ditutup */
 body.sidebar-closed .main-content {
-    margin-left: 0;
-    padding-top: 80px;
-    padding: 1.5rem;
+    margin-left: 10px;
 }
 
 /* SIDEBAR COLLAPSED */
 .sidebar.sidebar-closed {
-    width: 70px;
+    width: 90px;
     padding: 18px 8px;
 }
 
@@ -627,7 +643,7 @@ body.sidebar-closed .main-content {
     border-radius: 50%;
     position: fixed;
     top: 86px;
-    left: 250px; /* di luar sidebar */
+    left: 260px; /* di luar sidebar */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -648,12 +664,44 @@ body.sidebar-closed .main-content {
 }
 
 /* ============ LOGO ============ */
+/* Brand Wrapper (Logo + Title) */
+.sidebar-brand {
+    display: flex;
+    align-items: center;          /* sejajar vertikal */
+    justify-content: center;      /* center horizontal */
+    gap: 15px;                    /* jarak logo & teks */
+    padding: 16px 0 24px;         /* jarak atas & bawah rapi */
+}
+
+/* Logo */
 .sidebar-logo {
-    width: 55px;
-    height: 55px;
-    background: #000;
-    border-radius: 18px;
-    margin: 0 0 25px 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff15;
+}
+
+.sidebar-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Title Premium Look */
+.sidebar-title-up {
+    font-size: 1.25rem;             /* lebih besar */
+    font-weight: 800;               /* SUPER tebal (premium) */
+    color: #475569;
+    letter-spacing: 0.6px;
+    font-family: 'Inter', 'Poppins', sans-serif;
+    white-space: nowrap;
+
+    /* efek profesional seperti dashboard modern */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 /* ============ MENU SECTION ============ */
@@ -668,7 +716,7 @@ body.sidebar-closed .main-content {
 
 /* Menu title */
 .sidebar-title {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: #9a9a9a;
     margin: 8px 8px 12px;
@@ -680,18 +728,102 @@ body.sidebar-closed .main-content {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     text-decoration: none;
-    color: #333;
+    color: #444;
+    font-weight: 600;
     border-radius: 12px;
     font-size: 15px;
     transition: 0.2s ease;
+    font-size: 15px;
+    text-decoration: none !important;
 }
 
 /* Hover */
 .sidebar-item:hover {
     background: #f3f4f6;
 }
+
+.sidebar-dropdown.active > .sidebar-item {
+    background: #f3f4f6;
+    font-weight: 600;
+}
+
+/* ===== SUBMENU KONFIGURASI ===== */
+
+.sidebar-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    margin-top: 6px;
+    padding-left: 39px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none !important;
+}
+  
+/* item submenu */
+.sidebar-submenu a {
+    padding: 10px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none !important;
+    color: #444;
+    transition: 0.2s ease;
+}
+
+.sidebar-submenu a:hover {
+    background: #f3f4f6;
+}
+
+/* icon submenu */
+.sidebar-submenu a i {
+    width: 18px;
+    text-align: center;
+}
+
+/* submenu active highlight */
+.active-submenu {
+    background: #e8eefc !important;
+    font-weight: 900;
+    color: #2a4dbf !important;
+}
+
+/* panah */
+.sidebar-dropdown.active .dropdown-icon {
+    transform: rotate(180deg);
+    transition: 0.25s ease;
+}
+
+/* SIDEBAR COLLAPSE */
+.sidebar.sidebar-closed .sidebar-submenu {
+    padding-left: 0;
+    margin-left: 40px;
+}
+
+.sidebar.sidebar-closed .sidebar-submenu a span {
+    display: none !important;
+}
+
+.sidebar.sidebar-closed .sidebar-submenu a {
+    justify-content: center;
+    padding: 10px;
+}
+
+.sidebar.sidebar-closed .sidebar-submenu i {
+    margin: 0 auto;
+}
+
+/* hanya dropdown icon yang ke kanan */
+.sidebar-item .dropdown-icon {
+    margin-left: auto;   /* <--- dorong icon ke paling kanan */
+    font-size: 12px;
+}
+
 
 /* ICON BOX */
 .icon-box {
@@ -712,13 +844,15 @@ body.sidebar-closed .main-content {
 
 /* ACTIVE ITEM */
 .sidebar-item.active {
-    background: #e8e9ec;
-    font-weight: 600;
+    background: #e8eefc !important;
+    font-weight: 900;
+    color: #2a4dbf !important;
 }
 
 .sidebar-item.active .icon-box {
     background: #dcdde1;
 }
+
 
 /* ACTIVE SAAT COLLAPSE */
 .sidebar.sidebar-closed .sidebar-item.active {
@@ -730,6 +864,35 @@ body.sidebar-closed .main-content {
     background: #ccc;
 }
 
+    .tooltip-wrap {
+        position: relative;
+        display: inline-block; /* penting! */
+    }
+
+    .tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+
+        position: absolute;
+        bottom: 120%;        /* tampil di atas tombol */
+        left: 50%;
+        transform: translateX(-50%);
+
+        background: #000;
+        color: #fff;
+        padding: 4px 8px;
+        font-size: 9.5px;
+        border-radius: 6px;
+        white-space: nowrap;
+
+        transition: opacity 0.2s ease;
+        z-index: 9999;
+    }
+
+    .tooltip-wrap:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
 
 /* Responsive design untuk mobile */
 @media (max-width: 768px) {

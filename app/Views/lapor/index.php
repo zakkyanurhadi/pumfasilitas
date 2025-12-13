@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/main') ?>
-
 <?= $this->section('content') ?>
 
 <style>
@@ -15,76 +14,75 @@
 
 <div class="report-card">
     <h2 class="mb-3 text-center">Form Laporan Kerusakan Fasilitas</h2>
-    <p class="text-secondary text-center mb-3">
-        Silakan isi form di bawah ini dengan detail kerusakan yang Anda temukan.
-    </p>
 
-    <form action="<?= site_url('lapor') ?>" method="post" enctype="multipart/form-data">
+    <form action="<?= site_url('lapor/store') ?>" method="post" enctype="multipart/form-data">
         <?= csrf_field() ?>
 
+        <!-- Nama Pelapor -->
         <div class="form-group">
-            <label for="nama">Nama Pelapor *</label>
-            <input type="text" id="nama" name="nama" class="form-control" value="<?= esc(session('nama')) ?>" required readonly />
+            <label>Nama Pelapor *</label>
+            <input type="text" name="nama_pelapor" class="form-control"
+                   value="<?= esc(session('nama_pelapor')) ?>" required readonly />
         </div>
 
-        <div class="form-group">
-            <label for="npm">NPM *</label>
-            <input type="text" id="npm" name="npm" class="form-control" value="<?= esc(session('npm')) ?>" required readonly />
-        </div>
-
+        <!-- Lokasi Kerusakan -->
         <div class="form-group">
             <label for="lokasi">Lokasi Kerusakan *</label>
-            <select id="lokasi" name="lokasi" class="form-control" required>
+            <select id="lokasi" name="lokasi_kerusakan" class="form-control" required>
                 <option value="">Pilih Lokasi</option>
-                <option value="gedung-a" <?= old('lokasi') == 'gedung-a' ? 'selected' : '' ?>>Gedung A</option>
-                <option value="gedung-b" <?= old('lokasi') == 'gedung-b' ? 'selected' : '' ?>>Gedung B</option>
-                <option value="laboratorium" <?= old('lokasi') == 'laboratorium' ? 'selected' : '' ?>>Laboratorium</option>
-                <option value="perpustakaan" <?= old('lokasi') == 'perpustakaan' ? 'selected' : '' ?>>Perpustakaan</option>
-                <option value="lainnya" <?= old('lokasi') == 'lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                <option value="Gedung A">Gedung A</option>
+                <option value="Gedung B">Gedung B</option>
+                <option value="Perpustakaan">Perpustakaan</option>
+                <option value="Laboratorium">Laboratorium</option>
+                <option value="Lainnya">Lainnya</option>
             </select>
         </div>
 
+        <!-- Lokasi Spesifik -->
         <div class="form-group">
-            <label for="lokasiSpesifik">Lokasi Spesifik *</label>
-            <input type="text" id="lokasiSpesifik" name="lokasiSpesifik" class="form-control" placeholder="Contoh: Ruang 101, Lantai 2, dekat jendela" value="<?= old('lokasiSpesifik') ?>" required />
+            <label>Lokasi Spesifik *</label>
+            <input type="text" name="lokasi_spesifik" class="form-control"
+                   placeholder="Contoh: Ruang 101, Lantai 2" required />
         </div>
 
+        <!-- Kategori Kerusakan -->
         <div class="form-group">
-            <label for="kategori">Kategori Kerusakan *</label>
-            <select id="kategori" name="kategori" class="form-control" required>
+            <label>Kategori Kerusakan *</label>
+            <select name="kategori_kerusakan" class="form-control" required>
                 <option value="">Pilih Kategori</option>
-                <option value="listrik" <?= old('kategori') == 'listrik' ? 'selected' : '' ?>>Kelistrikan (Lampu, Stop Kontak)</option>
-                <option value="air" <?= old('kategori') == 'air' ? 'selected' : '' ?>>Air/Plumbing (Keran, Toilet)</option>
-                <option value="ac" <?= old('kategori') == 'ac' ? 'selected' : '' ?>>AC/Ventilasi</option>
-                <option value="furniture" <?= old('kategori') == 'furniture' ? 'selected' : '' ?>>Furniture (Meja, Kursi)</option>
-                <option value="bangunan" <?= old('kategori') == 'bangunan' ? 'selected' : '' ?>>Struktur Bangunan (Dinding, Atap)</option>
-                <option value="lainnya" <?= old('kategori') == 'lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                <option value="listrik">Kelistrikan</option>
+                <option value="air">Air / Plumbing</option>
+                <option value="ac">AC / Ventilasi</option>
+                <option value="furniture">Furniture</option>
+                <option value="bangunan">Bangunan</option>
+                <option value="lainnya">Lainnya</option>
             </select>
         </div>
 
+        <!-- Tingkat Prioritas -->
         <div class="form-group">
-            <label for="prioritas">Tingkat Prioritas *</label>
-            <select id="prioritas" name="prioritas" class="form-control" required>
+            <label>Tingkat Prioritas *</label>
+            <select name="tingkat_prioritas" class="form-control" required>
                 <option value="">Pilih Prioritas</option>
-                <option value="Rendah" <?= old('prioritas') == 'Rendah' ? 'selected' : '' ?>>Rendah - Tidak mengganggu</option>
-                <option value="Sedang" <?= old('prioritas') == 'Sedang' ? 'selected' : '' ?>>Sedang - Sedikit mengganggu</option>
-                <option value="Tinggi" <?= old('prioritas') == 'Tinggi' ? 'selected' : '' ?>>Tinggi - Sangat mengganggu/Berbahaya</option>
+                <option value="Rendah">Rendah</option>
+                <option value="Sedang">Sedang</option>
+                <option value="Tinggi">Tinggi</option>
             </select>
         </div>
 
+        <!-- Deskripsi -->
         <div class="form-group">
-            <label for="deskripsi">Deskripsi Kerusakan *</label>
-            <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="Jelaskan secara detail kerusakan yang ditemukan..." required rows="5"><?= old('deskripsi') ?></textarea>
+            <label>Deskripsi Kerusakan *</label>
+            <textarea name="deskripsi_kerusakan" class="form-control" rows="5" required></textarea>
         </div>
 
+        <!-- Upload Foto -->
         <div class="form-group">
-            <label for="foto">Foto Kerusakan (Opsional, max: 2MB per file)</label>
-            <input type="file" class="form-control" id="foto" name="foto[]" accept="image/*" multiple />
+            <label>Foto Kerusakan (bisa lebih dari 1)</label>
+            <input type="file" name="foto[]" class="form-control" accept="image/*" multiple />
         </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn" style="width: 100%">Kirim Laporan</button>
-        </div>
+        <button type="submit" class="btn" style="width: 100%">Kirim Laporan</button>
     </form>
 </div>
 
