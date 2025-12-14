@@ -12,26 +12,32 @@ $routes->get('/', 'Home::index');
 // Rute Autentikasi (Untuk Login, Logout, dll.)
 $routes->get('/login', 'AuthController::index');
 $routes->post('/login', 'AuthController::login');
-$routes->get('/logout', 'AuthController::logout'); // <-- Baris ini sudah diperbaiki
+$routes->get('/logout', 'AuthController::logout');
 $routes->post('/forgot-password', 'AuthController::forgotPassword');
-$routes->get('register', 'AuthController::registerForm');
-$routes->post('register', 'AuthController::register');
+
+// --- TAMBAHAN BARU UNTUK REGISTER ---
+$routes->get('/register', 'AuthController::register');          // 1. Menampilkan Halaman Daftar
+$routes->post('/register/process', 'AuthController::processRegister'); // 2. Memproses Data (AJAX)
 
 // Rute yang Dilindungi (Membutuhkan Login)
 // Filter 'auth' akan berjalan sebelum mengakses controller ini.
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
-$routes->get('lapor', 'LaporController::buat');
-$routes->post('lapor/store', 'LaporController::simpan');
+$routes->get('/laporan', 'LaporController::index', ['filter' => 'auth']);
+$routes->post('laporan/store', 'LaporController::store', ['filter' => 'auth']);
 
-// Status semua laporan user
-$routes->get('lapor/status', 'LaporController::status');
+$routes->get('laporan/edit/(:num)', 'LaporController::edit/$1', ['filter' => 'auth']);
+$routes->post('laporan/update/(:num)', 'LaporController::update/$1', ['filter' => 'auth']);
+$routes->post('laporan/delete/(:num)', 'LaporController::delete/$1', ['filter' => 'auth']);
 
-// Riwayat laporan selesai
-$routes->get('lapor/riwayat', 'LaporController::riwayat');
 
-// Detail laporan
-$routes->get('lapor/detail/(:num)', 'LaporController::detail/$1'); // <-- TAMBAHKAN INI
+$routes->get('/laporan/saya', 'LaporController::status', ['filter' => 'auth']);
 
+
+$routes->get('/laporan/riwayat', 'LaporController::riwayat', ['filter' => 'auth']);
+$routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
+
+$routes->get('/profile', 'ProfileController::index', ['filter' => 'auth']);
+$routes->post('/profile/update', 'ProfileController::update', ['filter' => 'auth']);
 
 
 
@@ -69,7 +75,7 @@ $routes->get('/admindetail/(:num)', 'AdminLaporController::detail/$1', ['filter'
 $routes->get('/profileadmin', 'ProfileAdminController::index', ['filter' => 'auth']);
 $routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter' => 'auth']);
 
-$routes->group('', ['namespace' => 'App\Controllers'], function($routes) {
+$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 
     // ===========================
     // AKUN
@@ -87,6 +93,4 @@ $routes->group('', ['namespace' => 'App\Controllers'], function($routes) {
     $routes->post('gedung/create', 'AdminGedungController::store');
     $routes->post('gedung/update', 'AdminGedungController::update');
     $routes->get('gedung/delete/(:num)', 'AdminGedungController::delete/$1');
-
 });
-

@@ -3,42 +3,30 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\LaporanModel;
-use App\Models\GedungModel;
-use App\Models\KategoriModel;
-use App\Models\PrioritasModel;
+use App\Models\LaporanModel; // 1. Panggil LaporanModel
 
 class Dashboard extends BaseController
 {
     public function index()
     {
-        // Model
-        $laporanModel   = new LaporanModel();
-        $gedungModel    = new GedungModel();
-        $kategoriModel  = new KategoriModel();
-        $prioritasModel = new PrioritasModel();
+        // 2. Buat instance dari LaporanModel
+        $laporanModel = new LaporanModel();
 
-        // Statistik laporan untuk user
+        // 3. Ambil data statistik dari method getStatistik()
         $statistik = $laporanModel->getStatistik();
 
-        // Ambil data dropdown dari database
-        $gedung    = $gedungModel->findAll();
-        $kategori  = $kategoriModel->findAll();
-        $prioritas = $prioritasModel->findAll();
-
-        // Data yang dikirim ke view
+        // Siapkan data yang akan dikirim ke view
         $data = [
-            'title'     => 'Dashboard Utama',
-            'user'      => [
+            'title' => 'Dashboard Utama',
+            'user'  => [ // Data session tetap sama
                 'nama' => session('nama'),
                 'npm'  => session('npm'),
             ],
-            'stats'     => $statistik,
-            'gedung'    => $gedung,
-            'kategori'  => $kategori,
-            'prioritas' => $prioritas,
+            // 4. Gunakan data statistik dari database, bukan data statis
+            'stats' => $statistik,
         ];
 
+        // Tampilkan view dashboard dan kirimkan datanya
         return view('dashboard/index', $data);
     }
 }

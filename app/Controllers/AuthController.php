@@ -27,62 +27,165 @@ class AuthController extends Controller
         return view('auth/login_view');
     }
 
-public function login()
-{
-    // Validasi input
-    $validation = \Config\Services::validation();
-    $rules = [
-        'login_identifier' => ['rules' => 'required', 'errors' => ['required' => 'NPM atau Email harus diisi.']],
-        'password' => ['rules' => 'required', 'errors' => ['required' => 'Password tidak boleh kosong.']]
-    ];
+    public function login()
+    {
+        // Validasi input
+        $validation = \Config\Services::validation();
+        $rules = [
+            'login_identifier' => ['rules' => 'required', 'errors' => ['required' => 'NPM atau Email harus diisi.']],
+            'password' => ['rules' => 'required', 'errors' => ['required' => 'Password tidak boleh kosong.']]
+        ];
 
-    if (!$this->validate($rules)) {
-        $errors = $validation->getErrors();
-        return $this->response->setJSON(['success' => false, 'message' => reset($errors)]);
+        if (!$this->validate($rules)) {
+            $errors = $validation->getErrors();
+            return $this->response->setJSON(['success' => false, 'message' => reset($errors)]);
+        }
+
+        $identifier = $this->request->getPost('login_identifier');
+        $password = $this->request->getPost('password');
+
+        // Cari user berdasarkan NPM atau Email
+        $user = $this->userModel
+            ->where('npm', $identifier)
+            ->orWhere('email', $identifier)
+            ->first();
+
+        if (!$user || !password_verify($password, $user['password'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'NPM/Email atau Password salah.']);
+        }
+
+        // Simpan session
+        $sessionData = [
+            'user_id'    => $user['id'],
+            'npm'        => $user['npm'],
+            'nama'       => $user['nama'],
+            'email'      => $user['email'],
+            'img'        => $user['img'],
+            'role'       => $user['role'],         // Tambahkan role ke session
+            'isLoggedIn' => true
+        ];
+        $this->session->set($sessionData);
+
+        // Redirect URL sesuai role
+        $redirectUrl = ($user['role'] === 'admin') ? base_url('/dashboardadmin') : base_url('/dashboard');
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Login berhasil!',
+            'redirect' => $redirectUrl
+        ]);
     }
 
-    $identifier = $this->request->getPost('login_identifier');
-    $password = $this->request->getPost('password');
+    // =========================================================================
+    // 3. HALAMAN REGISTER
+    // =========================================================================
+    public function register()
+    {
+        // Jika sudah login, lempar ke dashboard
+        if ($this->session->get('isLoggedIn')) {
+            return redirect()->to('dashboard');
+        }
 
-    // Cari user berdasarkan NPM atau Email
-    $user = $this->userModel
-        ->where('npm', $identifier)
-        ->orWhere('email', $identifier)
-        ->first();
-
-    if (!$user || !password_verify($password, $user['password'])) {
-        return $this->response->setJSON(['success' => false, 'message' => 'NPM/Email atau Password salah.']);
+        // Tampilkan view register
+        return view('auth/register');
     }
 
-    // Simpan session
-    $sessionData = [
-        'user_id'    => $user['id'],
-        'npm'        => $user['npm'],
-        'nama'       => $user['nama'],
-        'email'      => $user['email'],
-        'img'        => $user['img'],
-        'role'       => $user['role'],         // Tambahkan role ke session
-        'isLoggedIn' => true
-    ];
-    $this->session->set($sessionData);
+    // =========================================================================
+    // 4. PROSES REGISTER (Otomatis Role Mahasiswa)
+    // =========================================================================
+    public function processRegister()
+    {
+        $validation = \Config\Services::validation();
 
-    // Redirect URL sesuai role
-    $redirectUrl = ($user['role'] === 'admin') ? base_url('/dashboardadmin') : base_url('/dashboard');
+        // Aturan Validasi Input
+        $rules = [
+            'fullname' => [
+                'rules' => 'required|min_length[3]',
+                'errors' => [
+                    'required' => 'Nama lengkap wajib diisi.',
+                    'min_length' => 'Nama minimal 3 karakter.'
+                ]
+            ],
+            'username' => [
+                'rules' => 'required|is_unique[users.npm]', // Cek unik di tabel users kolom npm
+                'errors' => [
+                    'required' => 'NPM wajib diisi.',
+                    'is_unique' => 'NPM ini sudah terdaftar.'
+                ]
+            ],
+            'email' => [
+                'rules' => 'required|valid_email|is_unique[users.email]',
+                'errors' => [
+                    'required' => 'Email wajib diisi.',
+                    'valid_email' => 'Format email tidak valid.',
+                    'is_unique' => 'Email ini sudah terdaftar.'
+                ]
+            ],
+            'password' => [
+                'rules' => 'required|min_length[6]',
+                'errors' => [
+                    'required' => 'Password wajib diisi.',
+                    'min_length' => 'Password minimal 6 karakter.'
+                ]
+            ],
+            'conf_password' => [
+                'rules' => 'required|matches[password]',
+                'errors' => [
+                    'required' => 'Konfirmasi password wajib diisi.',
+                    'matches' => 'Konfirmasi password tidak cocok.'
+                ]
+            ]
+        ];
 
-    return $this->response->setJSON([
-        'success' => true,
-        'message' => 'Login berhasil!',
-        'redirect' => $redirectUrl
-    ]);
-}
+        // Jalankan Validasi
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Silakan periksa kembali inputan Anda.',
+                'errors' => $validation->getErrors()
+            ]);
+        }
 
+        // Siapkan Data untuk Disimpan
+        $data = [
+            'nama'      => $this->request->getPost('fullname'),
+            'npm'       => $this->request->getPost('username'),
+            'email'     => $this->request->getPost('email'),
+            'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role'      => 'mahasiswa',     // Default role otomatis
+            'img'       => 'default.jpg',   // Default foto profil
+            'created_at' => date('Y-m-d H:i:s')
+        ];
 
+        // Simpan ke Database
+        try {
+            $this->userModel->insert($data);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Registrasi berhasil! Silakan login.',
+                'redirect' => base_url('login')
+            ]);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    // =========================================================================
+    // 5. LOGOUT
+    // =========================================================================
     public function logout()
     {
         $this->session->destroy();
         return redirect()->to('login');
     }
 
+    // =========================================================================
+    // 6. LUPA PASSWORD
+    // =========================================================================
     public function forgotPassword()
     {
         $rules = ['email' => 'required|valid_email'];
@@ -93,14 +196,12 @@ public function login()
         $email = $this->request->getPost('email');
         $user = $this->userModel->where('email', $email)->first();
 
-        // Untuk keamanan, selalu berikan pesan sukses meskipun email tidak ditemukan.
+        // Selalu return true agar tidak bisa ditebak emailnya (security practice)
         if (!$user) {
             return $this->response->setJSON(['success' => true, 'message' => 'Jika email terdaftar, link reset telah dikirim.']);
         }
 
-        // TODO: Logika untuk generate token dan kirim email
-        // $resetToken = bin2hex(random_bytes(32));
-        // Simpan token dan kirim email...
+        // Di sini nanti logika kirim email
 
         return $this->response->setJSON(['success' => true, 'message' => 'Link reset telah dikirim ke ' . $email]);
     }

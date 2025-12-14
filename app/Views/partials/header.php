@@ -1,46 +1,75 @@
-<header class="header">
+<nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-        <div class="header-content">
-            <div class="logo">
-                <a href="<?= site_url('dashboard') ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-tools"></i>
-                    <span>FasilitasKampusKu</span>
-                </a>
+        <a class="navbar-brand d-flex align-items-center" href="<?= site_url('dashboard') ?>">
+            <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
+            <div>
+                <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">E-Fasilitas</span>
+                <span class="d-block text-muted small" style="font-size: 0.75rem;">Politeknik Negeri Lampung</span>
             </div>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <nav class="nav-center">
-                <ul class="nav-menu">
-                    <li><a href="<?= site_url('dashboard') ?>">Beranda</a></li>
-                    <li><a href="<?= site_url('lapor/status') ?>">Status</a></li>
-                    <li><a href="<?= site_url('lapor/riwayat') ?>">Riwayat Laporan</a></li>
-                </ul>
-            </nav>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#alur">Alur Laporan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#statistik">Statistik</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan') ?>">Buat Laporan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/saya') ?>">Laporan Saya</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/riwayat') ?>">Riwayat Laporan</a></li>
+                <li class="nav-item">
+                    <a class="nav-link position-relative me-4" href="<?= site_url('notifikasi') ?>" title="Notifikasi">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                </li>
 
-            <div class="user-profile">
-                <div class="profile-info" onclick="toggleDropdown()">
-                    <?php
-                    // Logika untuk menentukan URL gambar
-                    $avatarUrl = (session('img') && session('img') !== 'default.jpg')
-                        ? base_url('uploads/avatars/' . session('img'))
-                        : "https://ui-avatars.com/api/?name=" . urlencode(session('nama') ?? 'User') . "&background=random";
-                    ?>
-                    <img src="<?= $avatarUrl ?>" alt="Profile" class="profile-pic" />
-                    <span class="username"><?= esc(session('nama') ?? 'Guest') ?></span>
-                </div>
-                <div class="dropdown" id="profileDropdown">
-                    <div class="profile-header">
-                        <img src="<?= $avatarUrl ?>" alt="Profile" class="profile-pic-large" />
-                        <div>
-                            <div class="username"><?= esc(session('nama')) ?></div>
-                            <div class="role"><?= esc(session('npm')) ?></div>
-                        </div>
+                <li class="nav-item">
+                    <div class="profile-info" onclick="toggleDropdown()">
+                        <?php
+
+                        $imgSession = session('img');
+
+                        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.jpg';
+
+                        $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
+                        ?>
+
+                        <img src="<?= $avatarUrl ?>" alt="Profile" class="profile-pic" />
+                        <span class="username"><?= esc(session('nama') ?? 'Guest') ?></span>
                     </div>
-                    <ul>
-                        <li><a href="<?= site_url('profile') ?>"><i class="fas fa-user-circle" style="margin-right: 8px"></i>My Profile</a></li>
-                        <li><a href="<?= site_url('logout') ?>"><i class="fas fa-sign-out-alt" style="margin-right: 8px"></i>Keluar</a></li>
-                    </ul>
-                </div>
-            </div>
+
+                    <div class="dropdown" id="profileDropdown">
+                        <div class="profile-header">
+                            <img src="<?= $avatarUrl ?>" alt="Profile" class="profile-pic-large" />
+                            <div>
+                                <div class="username"><?= esc(session('nama')) ?></div>
+                                <div class="role"><?= esc(session('npm')) ?></div>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>
+                                <a href="<?= site_url('laporan/saya') ?>">Laporan Saya</a>
+                            </li>
+                            <hr class="dropdown-divider">
+                            <li>
+                                <a href="<?= site_url('profile') ?>">Ubah Profil</a>
+                            </li>
+                            <li>
+                                <a href="<?= site_url('notifikasi') ?>">Notifikasi</a>
+                            </li>
+                            <li>
+                                <a href="<?= site_url('password') ?>">Ubah Password</a>
+                            </li>
+                            <hr class="dropdown-divider">
+                            <li>
+                                <a href="<?= site_url('logout') ?>" class="text-danger">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
-</header>
+</nav>
