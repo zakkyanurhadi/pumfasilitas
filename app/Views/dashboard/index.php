@@ -268,18 +268,27 @@
                     </p>
                     <div class="d-flex flex-column flex-md-row gap-2">
                         <?php if (session()->get('isLoggedIn')) : ?>
-                            <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
-                                <i class="fas fa-plus-circle me-2"></i> Buat Laporan Baru
-                            </a>
+                            <div class="tooltip-wrap">
+                                <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
+                                    <i class="fas fa-plus-circle me-2"></i> Buat Laporan Baru
+                                </a>
+                                <span class="tooltip-text">Mulai membuat laporan</span>
+                            </div>
                         <?php else : ?>
-                            <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
-                                <i class="fas fa-paper-plane me-2"></i> Lapor Sekarang
-                            </a>
-                        <?php endif; ?>
 
-                        <a href="#alur" class="btn btn-hero btn-outline-custom">
-                            <i class="fas fa-info-circle me-2"></i> Cara Kerja
-                        </a>
+                            <div class="tooltip-wrap">
+                                <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
+                                    <i class="fas fa-paper-plane me-2"></i> Lapor Sekarang
+                                </a>
+                                <span class="tooltip-text">Mulai membuat laporan</span>
+                            </div>
+                        <?php endif; ?>
+                        <div class="tooltip-wrap">
+                            <a href="#alur" class="btn btn-hero btn-outline-custom">
+                                <i class="fas fa-info-circle me-2"></i> Cara Kerja
+                            </a>
+                            <span class="tooltip-text">Klik untuk melihat cara kerja</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -192,13 +192,20 @@
 
                         <!-- Submit Buttons -->
                         <div class="d-flex justify-content-between pt-4 border-top mt-4">
-                            <a href="<?= site_url('dashboard') ?>" class="btn btn-outline-secondary btn-lg">
-                                <i class="bi bi-arrow-left me-2"></i>Kembali
-                            </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
-                                <i class="bi bi-send-fill me-2"></i>Kirim Laporan
-                            </button>
-                        </div>
+                            <div class="d-flex gap-3">
+                                <div class="tooltip-wrap">
+                                    <a href="<?= site_url('dashboard') ?>" class="btn btn-outline-secondary btn-lg">
+                                        <i class="bi bi-arrow-left me-2"></i>Kembali
+                                    </a>
+                                    <span class="tooltip-text">Kembali ke dashboard</span>
+                                </div>
+                            </div>
+                            <div class="tooltip-wrap">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="bi bi-send-fill me-2"></i>Kirim Laporan
+                                </button>
+                                <span class="tooltip-text">Kirim laporan Anda</span>
+                            </div>
                     </form>
                 </div>
             </div>
