@@ -48,23 +48,79 @@
     }
 
     .status-badge {
-        padding: 0.3rem 0.8rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 9999px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: #fff;
-        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
     }
 
     .status-selesai {
-        background-color: var(--success-color);
+        background-color: #3db158ff;
+        color: #ffffff;
+        letter-spacing: 0.3px;
     }
 
+
+
+    /* WRAPPER TENGAH */
     .pagination-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         margin-top: 1.5rem;
     }
+
+    /* LIST */
+    .pagination {
+        gap: 0.4rem;
+    }
+
+    /* ITEM */
+    .page-item .page-link {
+        width: 34px;
+        /* ⬅ lebih kecil */
+        height: 34px;
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: #f1f5f9;
+        /* abu terang */
+        color: #2563eb;
+        /* biru tema */
+        border: 1px solid #e5e7eb;
+
+        font-size: 0.85rem;
+        font-weight: 600;
+
+        transition: all 0.2s ease;
+    }
+
+    /* HOVER */
+    .page-item .page-link:hover {
+        background-color: #e0e7ff;
+        /* biru muda */
+        color: #1e40af;
+    }
+
+    /* ACTIVE */
+    .page-item.active .page-link {
+        background-color: #2563eb;
+        /* biru utama */
+        color: #ffffff;
+        border-color: #2563eb;
+    }
+
+    /* DISABLED */
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+
 
     .empty-state {
         text-align: center;
@@ -117,8 +173,12 @@
                             </tr>
                         <?php else: ?>
                             <?php
-                            $no = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
+                            $no = 1;
+                            if (isset($pager)) {
+                                $no = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
+                            }
                             ?>
+
                             <?php foreach ($laporan as $item): ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
@@ -150,12 +210,13 @@
             </div>
 
             <!-- PAGINATION -->
-            <div class="pagination-container">
-                <?= $pager->links() ?>
-            </div>
+            <?php if ($pager->getPageCount() > 1): ?>
+                <div class="pagination-container mt-3">
+                    <?= $pager->links('default', 'circle') ?>
+                </div>
+            <?php endif ?>
 
         </div>
-
     </div>
 </div>
 

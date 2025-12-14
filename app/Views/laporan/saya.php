@@ -77,6 +77,62 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
+    /* WRAPPER TENGAH */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    /* LIST */
+    .pagination {
+        gap: 0.4rem;
+    }
+
+    /* ITEM */
+    .page-item .page-link {
+        width: 34px;
+        /* ⬅ lebih kecil */
+        height: 34px;
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: #f1f5f9;
+        /* abu terang */
+        color: #2563eb;
+        /* biru tema */
+        border: 1px solid #e5e7eb;
+
+        font-size: 0.85rem;
+        font-weight: 600;
+
+        transition: all 0.2s ease;
+    }
+
+    /* HOVER */
+    .page-item .page-link:hover {
+        background-color: #e0e7ff;
+        /* biru muda */
+        color: #1e40af;
+    }
+
+    /* ACTIVE */
+    .page-item.active .page-link {
+        background-color: #2563eb;
+        /* biru utama */
+        color: #ffffff;
+        border-color: #2563eb;
+    }
+
+    /* DISABLED */
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="container py-4">
@@ -242,9 +298,14 @@
         </div>
 
         <!-- PAGINATION -->
-        <div class="mt-3">
-            <?= $pager_links ?>
-        </div>
+        <?php if ($pager->getPageCount() > 1): ?>
+            <div class="pagination-container mt-3">
+                <?= $pager->links('default', 'circle') ?>
+            </div>
+        <?php endif; ?>
+
+
+
     </div>
 </div>
 

@@ -25,6 +25,8 @@ class LaporanModel extends Model
         'admin_verifikator',
         'tanggal_verifikasi',
         'keterangan_verifikasi',
+        'created_at',
+        'updated_at',
     ];
     /* ================= KPI ================= */
 

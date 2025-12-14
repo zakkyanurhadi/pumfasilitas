@@ -150,8 +150,11 @@ class LaporController extends BaseController
                 ->groupEnd();
         }
 
+        $perPage = 10;
         // Pagination
-        $laporan = $builder->orderBy('created_at', 'DESC')->paginate(10);
+        $laporan = $builder
+            ->orderBy('created_at', 'DESC')
+            ->paginate($perPage, 'default');
         $pager = $this->laporanModel->pager;
 
         // Statistik
@@ -170,7 +173,7 @@ class LaporController extends BaseController
         $data = [
             'title'       => 'Laporan Saya',
             'laporan'     => $laporan,
-            'pager_links' => $pager->links(),
+            'pager'   => $pager,
             'stats'       => $stats,
             'status'      => $status,
             'keyword'     => $keyword
@@ -351,71 +354,7 @@ class LaporController extends BaseController
     }
 
 
-    public function status()
-    {
-        $db    = \Config\Database::connect();
-        $pager = \Config\Services::pager();
-        $perPage = 5;
 
-        // 🔐 Ambil user login
-        $userId = session()->get('user_id');
-        if (!$userId) {
-            return redirect()->to('/login');
-        }
-
-        // Filter input
-        $keyword = $this->request->getGet('keyword') ?? '';
-        $status  = $this->request->getGet('status') ?? '';
-
-        // Query builder + JOIN
-        $builder = $db->table('laporan')
-            ->select('
-            laporan.*,
-            gedung.nama AS nama_gedung,
-            ruangan.nama_ruangan
-        ')
-            ->join('gedung', 'gedung.id = laporan.gedung_id', 'left')
-            ->join('ruangan', 'ruangan.id = laporan.ruangan_id', 'left')
-            ->where('laporan.user_id', $userId);
-
-        // 🔍 Search
-        if ($keyword) {
-            $builder->groupStart()
-                ->like('laporan.lokasi_kerusakan', $keyword)
-                ->orLike('laporan.lokasi_spesifik', $keyword)
-                ->orLike('laporan.kategori', $keyword)
-                ->orLike('gedung.nama', $keyword)
-                ->orLike('ruangan.nama_ruangan', $keyword)
-                ->groupEnd();
-        }
-
-        // 🎯 Filter status
-        if ($status && in_array($status, ['pending', 'diproses'])) {
-            $builder->where('laporan.status', $status);
-        } else {
-            // Default: belum selesai
-            $builder->whereIn('laporan.status', ['pending', 'diproses']);
-        }
-
-        // ⏱️ Urut terbaru
-        $builder->orderBy('laporan.created_at', 'DESC');
-
-        // Pagination
-        $currentPage = $this->request->getGet('page') ?? 1;
-        $total       = $builder->countAllResults(false);
-        $laporan     = $builder->get($perPage, ($currentPage - 1) * $perPage)
-            ->getResultArray();
-
-        $pager_links = $pager->makeLinks($currentPage, $perPage, $total, 'default_full');
-
-        return view('laporan/saya', [
-            'title'       => 'Laporan Saya',
-            'laporan'     => $laporan,
-            'pager_links' => $pager_links,
-            'keyword'     => $keyword,
-            'status'      => $status,
-        ]);
-    }
 
 
     /* =========================
@@ -463,13 +402,13 @@ class LaporController extends BaseController
 
     public function riwayat()
     {
-        $perPage = 5;
+        $perPage = 10;
+
         $keyword = $this->request->getGet('keyword');
 
         $model = new LaporanModel();
 
-        // Filter utama: hanya laporan selesai
-        $model->where('status', 'selesai');
+
 
         // Pencarian
         if (!empty($keyword)) {

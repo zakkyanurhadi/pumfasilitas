@@ -36,7 +36,9 @@ $routes->get('/laporan/delete/(:num)', 'LaporController::delete/$1', ['filter' =
 
 
 
-$routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
+// $routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
+$routes->get('laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
+
 
 $routes->get('/laporan/riwayat', 'LaporController::riwayat', ['filter' => 'auth']);
 
