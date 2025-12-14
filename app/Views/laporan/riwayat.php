@@ -78,25 +78,7 @@
         gap: 0.4rem;
     }
 
-    /* .page-item .page-link {
-        width: 34px;
-        height: 34px;
-        padding: 0;
-        line-height: 1;
 
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: #f1f5f9;
-        color: #2563eb;
-        border: 1px solid #e5e7eb;
-
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    } */
 
 
     /* HOVER */
