@@ -14,6 +14,7 @@
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
         margin-bottom: 2rem;
+        overflow: visible !important;
     }
 
     .report-table {
@@ -66,6 +67,7 @@
 
     /* WRAPPER TENGAH */
     .pagination-container {
+        overflow: visible;
         display: flex;
         justify-content: center;
         margin-top: 1.5rem;
