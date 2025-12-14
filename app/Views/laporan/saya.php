@@ -299,7 +299,7 @@
 
         <!-- PAGINATION -->
         <?php if ($pager->getPageCount() > 1): ?>
-            <div class="pagination-container mt-3">
+            <div class="pagination-container">
                 <?= $pager->links('default', 'circle') ?>
             </div>
         <?php endif; ?>

@@ -66,12 +66,12 @@
 
 
     /* WRAPPER TENGAH */
-    .pagination-container {
+    /* .pagination-container {
         overflow: visible;
         display: flex;
         justify-content: center;
         margin-top: 1.5rem;
-    }
+    } */
 
     /* LIST */
     .pagination {
@@ -120,7 +120,7 @@
     .page-item.disabled .page-link {
         opacity: 0.5;
         cursor: not-allowed;
-    }
+    } 
 
 
 
