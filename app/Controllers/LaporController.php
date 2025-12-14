@@ -404,7 +404,7 @@ class LaporController extends BaseController
     {
 
 
-        $perPage = 10;
+        $perPage = 5;
 
         $keyword = $this->request->getGet('keyword');
 
