@@ -25,16 +25,20 @@ $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->get('/laporan', 'LaporController::index', ['filter' => 'auth']);
 $routes->post('laporan/store', 'LaporController::store', ['filter' => 'auth']);
 
+
+
+
+$routes->get('/laporan/saya', 'LaporController::saya', ['filter' => 'auth']);
 $routes->get('laporan/edit/(:num)', 'LaporController::edit/$1', ['filter' => 'auth']);
 $routes->post('laporan/update/(:num)', 'LaporController::update/$1', ['filter' => 'auth']);
-$routes->post('laporan/delete/(:num)', 'LaporController::delete/$1', ['filter' => 'auth']);
+$routes->post('/laporan/update/(:num)', 'LaporController::update/$1', ['filter' => 'auth']);
+$routes->get('/laporan/delete/(:num)', 'LaporController::delete/$1', ['filter' => 'auth']);
 
 
-$routes->get('/laporan/saya', 'LaporController::status', ['filter' => 'auth']);
 
+$routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
 
 $routes->get('/laporan/riwayat', 'LaporController::riwayat', ['filter' => 'auth']);
-$routes->get('/laporan/detail/(:num)', 'LaporController::detail/$1', ['filter' => 'auth']);
 
 $routes->get('/profile', 'ProfileController::index', ['filter' => 'auth']);
 $routes->post('/profile/update', 'ProfileController::update', ['filter' => 'auth']);

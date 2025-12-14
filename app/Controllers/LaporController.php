@@ -10,31 +10,36 @@ use App\Models\RuanganModel;
 class LaporController extends BaseController
 {
     protected $laporanModel;
+    protected $gedungModel;
+    protected $ruanganModel;
 
     public function __construct()
     {
         $this->laporanModel = new LaporanModel();
+        $this->gedungModel = new GedungModel();
+        $this->ruanganModel = new RuanganModel();
     }
 
-    /* =========================
-       CREATE FORM
-    ========================= */
     public function index()
     {
-        return view('laporan/index', [
-            'title'   => 'Buat Laporan',
-            'laporan' => null, // penting untuk edit/create satu form
-            'gedung'  => (new GedungModel())->findAll(),
-            'ruangan' => (new RuanganModel())->findAll(),
-        ]);
+        $data = [
+            'title' => 'Buat Laporan Kerusakan',
+            'gedung' => $this->gedungModel->findAll(),
+            'ruangan' => $this->ruanganModel->findAll()
+        ];
+
+        return view('laporan/index', $data);
     }
 
-    /* =========================
-       STORE (CREATE)
-    ========================= */
     public function store()
     {
+        // Cek apakah user sudah login (sesuai dengan AuthFilter)
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
         $rules = [
+            'nama_pelapor'     => 'required|min_length[3]',
             'lokasi_kerusakan' => 'required',
             'lokasi_spesifik'  => 'required',
             'gedung_id'        => 'required|is_not_unique[gedung.id]',
@@ -49,75 +54,301 @@ class LaporController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        // Handle upload foto
         $fotoName = null;
         $foto = $this->request->getFile('foto');
 
-        if ($foto && $foto->isValid()) {
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            // Buat folder jika belum ada
+            $uploadPath = FCPATH . 'uploads/laporan';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+
             $fotoName = $foto->getRandomName();
-            $foto->move(FCPATH . 'uploads/laporan', $fotoName);
+            $foto->move($uploadPath, $fotoName);
         }
 
-        $user = session()->get('user');
+        // Ambil user_id dari session
+        // Coba beberapa kemungkinan struktur session
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
 
-        $this->laporanModel->insert([
-            'nama_pelapor'     => $user['nama'],
+        // Jika user_id masih null, coba ambil dari session langsung
+        if (!$userId) {
+            // Debug: tampilkan semua isi session
+            log_message('error', 'Session data: ' . print_r(session()->get(), true));
+
+            session()->setFlashdata('error', 'Session tidak valid. Silakan login kembali');
+            return redirect()->to('/login');
+        }
+
+        // Siapkan data untuk disimpan
+        $data = [
+            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
             'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
             'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
             'deskripsi'        => $this->request->getPost('deskripsi'),
             'foto'             => $fotoName,
             'status'           => 'pending',
-            'user_id'          => $user['id'],
+            'user_id'          => $userId,
             'gedung_id'        => $this->request->getPost('gedung_id'),
             'ruangan_id'       => $this->request->getPost('ruangan_id'),
             'prioritas'        => $this->request->getPost('prioritas'),
             'kategori'         => $this->request->getPost('kategori'),
-        ]);
+        ];
 
-        return redirect()->to('/laporan')->with('success', 'Laporan berhasil dikirim');
+        try {
+            if ($this->laporanModel->insert($data)) {
+                return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil dikirim');
+            } else {
+                $errors = $this->laporanModel->errors();
+                log_message('error', 'Insert failed: ' . print_r($errors, true));
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan laporan');
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Exception: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+        }
+    }
+    // Halaman Laporan Saya
+    public function saya()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id dari session
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil filter
+        $status = $this->request->getGet('status');
+        $keyword = $this->request->getGet('keyword');
+
+        // Query builder
+        $builder = $this->laporanModel->where('user_id', $userId);
+
+        // Filter status
+        if ($status) {
+            $builder->where('status', $status);
+        }
+
+        // Filter keyword
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('lokasi_kerusakan', $keyword)
+                ->orLike('lokasi_spesifik', $keyword)
+                ->orLike('kategori', $keyword)
+                ->orLike('deskripsi', $keyword)
+                ->groupEnd();
+        }
+
+        // Pagination
+        $laporan = $builder->orderBy('created_at', 'DESC')->paginate(10);
+        $pager = $this->laporanModel->pager;
+
+        // Statistik
+        $stats = $this->laporanModel
+            ->select("
+                COUNT(id) AS total,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status = 'diproses' THEN 1 ELSE 0 END) AS diproses,
+                SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) AS selesai,
+                SUM(CASE WHEN status = 'ditolak' THEN 1 ELSE 0 END) AS ditolak
+            ")
+            ->where('user_id', $userId)
+            ->get()
+            ->getRowArray();
+
+        $data = [
+            'title'       => 'Laporan Saya',
+            'laporan'     => $laporan,
+            'pager_links' => $pager->links(),
+            'stats'       => $stats,
+            'status'      => $status,
+            'keyword'     => $keyword
+        ];
+
+        return view('laporan/saya', $data);
     }
 
-    /* =========================
-       EDIT FORM (PAKAI FORM YANG SAMA)
-    ========================= */
-    // EDIT
+
+    // Halaman Edit
     public function edit($id)
     {
-        $laporan = $this->laporanModel->find($id);
-        $userId  = session()->get('user_id');
-
-        if (!$laporan || $laporan['user_id'] != $userId || $laporan['status'] !== 'pending') {
-            return redirect()->to('/laporan/saya');
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        return view('laporan/index', [
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
+        $laporan = $this->laporanModel->find($id);
+
+        // Validasi
+        if (!$laporan) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak ditemukan');
+        }
+
+        // Cek kepemilikan
+        if ($laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Anda tidak memiliki akses');
+        }
+
+        // Cek status - hanya pending dan ditolak yang bisa diedit
+        if (!in_array($laporan['status'], ['pending', 'ditolak'])) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak dapat diedit');
+        }
+
+        $data = [
             'title'   => 'Edit Laporan',
             'laporan' => $laporan,
-            'gedung'  => (new GedungModel())->findAll(),
-            'ruangan' => (new RuanganModel())->findAll(),
-        ]);
+            'gedung'  => $this->gedungModel->findAll(),
+            'ruangan' => $this->ruanganModel->findAll()
+        ];
+
+        return view('laporan/edit', $data);
     }
 
-    // DELETE
+    // Update Laporan
+    public function update($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
+        $laporan = $this->laporanModel->find($id);
+
+        if (!$laporan || $laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Akses ditolak');
+        }
+
+        // Validasi
+        $rules = [
+            'nama_pelapor'     => 'required|min_length[3]',
+            'lokasi_kerusakan' => 'required',
+            'lokasi_spesifik'  => 'required',
+            'gedung_id'        => 'required|is_not_unique[gedung.id]',
+            'ruangan_id'       => 'required|is_not_unique[ruangan.id]',
+            'kategori'         => 'required',
+            'prioritas'        => 'required|in_list[low,medium,high]',
+            'deskripsi'        => 'required|min_length[5]',
+            'foto'             => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Handle foto baru
+        $fotoName = $laporan['foto']; // Gunakan foto lama
+        $foto = $this->request->getFile('foto');
+
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            // Hapus foto lama jika ada
+            if ($laporan['foto'] && file_exists(FCPATH . 'uploads/laporan/' . $laporan['foto'])) {
+                unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
+            }
+
+            // Upload foto baru
+            $uploadPath = FCPATH . 'uploads/laporan';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            $fotoName = $foto->getRandomName();
+            $foto->move($uploadPath, $fotoName);
+        }
+
+        // Update data
+        $data = [
+            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
+            'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
+            'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
+            'deskripsi'        => $this->request->getPost('deskripsi'),
+            'foto'             => $fotoName,
+            'gedung_id'        => $this->request->getPost('gedung_id'),
+            'ruangan_id'       => $this->request->getPost('ruangan_id'),
+            'prioritas'        => $this->request->getPost('prioritas'),
+            'kategori'         => $this->request->getPost('kategori'),
+        ];
+
+        if ($this->laporanModel->update($id, $data)) {
+            return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil diupdate');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal mengupdate laporan');
+        }
+    }
+
+    // Hapus Laporan
     public function delete($id)
     {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
         $laporan = $this->laporanModel->find($id);
-        $userId  = session()->get('user_id');
 
-        if (!$laporan || $laporan['user_id'] != $userId || $laporan['status'] !== 'pending') {
-            return redirect()->to('/laporan/saya');
+        // Validasi
+        if (!$laporan) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak ditemukan');
         }
 
-        if ($laporan['foto']) {
-            @unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
+        // Cek kepemilikan
+        if ($laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Anda tidak memiliki akses');
         }
 
-        $this->laporanModel->delete($id);
+        // Cek status - hanya pending dan ditolak yang bisa dihapus
+        if (!in_array($laporan['status'], ['pending', 'ditolak'])) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak dapat dihapus');
+        }
 
-        return redirect()->to('/laporan/saya')
-            ->with('success', 'Laporan berhasil dihapus');
+        // Hapus foto jika ada
+        if ($laporan['foto'] && file_exists(FCPATH . 'uploads/laporan/' . $laporan['foto'])) {
+            unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
+        }
+
+        // Hapus laporan
+        if ($this->laporanModel->delete($id)) {
+            return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil dihapus');
+        } else {
+            return redirect()->to('/laporan/saya')->with('error', 'Gagal menghapus laporan');
+        }
     }
-
-
 
 
     public function status()

@@ -176,7 +176,7 @@
 
     <!-- ACTION -->
     <div class="text-center mt-4">
-        <a href="<?= site_url('laporan/status') ?>" class="btn btn-outline-secondary px-4">
+        <a href="<?= site_url('laporan/saya') ?>" class="btn btn-outline-secondary px-4">
             ← Kembali ke Daftar Laporan
         </a>
     </div>
