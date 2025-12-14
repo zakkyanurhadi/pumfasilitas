@@ -90,28 +90,6 @@
         gap: 0.4rem;
     }
 
-    /* ITEM */
-    .page-item .page-link {
-        width: 34px;
-        /* ⬅ lebih kecil */
-        height: 34px;
-        border-radius: 50%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: #f1f5f9;
-        /* abu terang */
-        color: #2563eb;
-        /* biru tema */
-        border: 1px solid #e5e7eb;
-
-        font-size: 0.85rem;
-        font-weight: 600;
-
-        transition: all 0.2s ease;
-    }
 
     /* HOVER */
     .page-item .page-link:hover {
@@ -209,6 +187,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                    $no = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
+                    ?>
 
                     <?php if (empty($laporan)): ?>
                         <tr>
@@ -229,7 +210,8 @@
                         ];
                         ?>
                         <tr>
-                            <td><strong>#<?= esc($item['id']) ?></strong></td>
+                            <td><strong><?= $no++ ?></strong></td>
+
 
                             <td>
                                 <div class="fw-semibold"><?= esc($item['lokasi_kerusakan']) ?></div>
@@ -299,7 +281,7 @@
 
         <!-- PAGINATION -->
         <?php if ($pager->getPageCount() > 1): ?>
-            <div class="pagination-container mt-3">
+            <div class="pagination-container">
                 <?= $pager->links('default', 'circle') ?>
             </div>
         <?php endif; ?>

@@ -402,12 +402,16 @@ class LaporController extends BaseController
 
     public function riwayat()
     {
+
+
         $perPage = 10;
 
         $keyword = $this->request->getGet('keyword');
 
         $model = new LaporanModel();
 
+        // ✅ FILTER UTAMA
+        $model->where('status', 'selesai');
 
 
         // Pencarian
