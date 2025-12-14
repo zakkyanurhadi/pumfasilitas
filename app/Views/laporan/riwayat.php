@@ -66,25 +66,23 @@
 
 
     /* WRAPPER TENGAH */
-    /* .pagination-container {
+    .pagination-container {
         overflow: visible;
         display: flex;
         justify-content: center;
         margin-top: 1.5rem;
-    } */
+    }
 
     /* LIST */
     .pagination {
         gap: 0.4rem;
     }
 
-    .page-item .page-link {
+    /* .page-item .page-link {
         width: 34px;
         height: 34px;
         padding: 0;
-        /* ⬅ WAJIB */
         line-height: 1;
-        /* ⬅ WAJIB */
 
         border-radius: 50%;
         display: flex;
@@ -98,7 +96,7 @@
         font-size: 0.85rem;
         font-weight: 600;
         transition: all 0.2s ease;
-    }
+    } */
 
 
     /* HOVER */
