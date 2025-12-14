@@ -278,6 +278,38 @@
             color: white;
         }
 
+        .tooltip-wrap {
+            position: relative;
+            display: inline-block;
+            /* penting! */
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+
+            position: absolute;
+            bottom: 120%;
+            /* tampil di atas tombol */
+            left: 50%;
+            transform: translateX(-50%);
+
+            background: #000;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 9.5px;
+            border-radius: 6px;
+            white-space: nowrap;
+
+            transition: opacity 0.2s ease;
+            z-index: 9999;
+        }
+
+        .tooltip-wrap:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 992px) {
 
@@ -318,7 +350,7 @@
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
                 <div>
-                    <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">FasilitasKampusKu</span>
+                    <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">E-Fasilitas</span>
                     <span class="d-block text-muted small" style="font-size: 0.75rem;">Politeknik Negeri Lampung</span>
                 </div>
             </a>
@@ -357,18 +389,30 @@
                     </p>
                     <div class="d-flex flex-column flex-md-row gap-2">
                         <?php if (session()->get('isLoggedIn')) : ?>
-                            <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
-                                <i class="fas fa-plus-circle me-2"></i> Buat Laporan Baru
-                            </a>
+
+                            <div class="tooltip-wrap">
+                                <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
+                                    <i class="fas fa-plus-circle me-2"></i> Buat Laporan Baru
+                                </a>
+                                <span class="tooltip-text">Mulai membuat laporan</span>
+                            </div>
                         <?php else : ?>
-                            <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
-                                <i class="fas fa-paper-plane me-2"></i> Lapor Sekarang
-                            </a>
+
+                            <div class="tooltip-wrap">
+                                <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
+                                    <i class="fas fa-paper-plane me-2"></i> Lapor Sekarang
+                                </a>
+                                <span class="tooltip-text">Mulai membuat laporan</span>
+                            </div>
                         <?php endif; ?>
 
-                        <a href="#alur" class="btn btn-hero btn-outline-custom">
-                            <i class="fas fa-info-circle me-2"></i> Cara Kerja
-                        </a>
+
+                        <div class="tooltip-wrap">
+                            <a href="#alur" class="btn btn-hero btn-outline-custom">
+                                <i class="fas fa-info-circle me-2"></i> Cara Kerja
+                            </a>
+                            <span class="tooltip-text">Klik untuk melihat cara kerja</span>
+                        </div>
                     </div>
                 </div>
             </div>

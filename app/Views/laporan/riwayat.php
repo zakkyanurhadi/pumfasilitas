@@ -1,15 +1,19 @@
-<?= $this->extend('layouts/user/main') ?>
-
+<?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <style>
-    /* Gunakan style yang sama dengan halaman status */
+    /* OFFSET karena navbar fixed-top */
+    .page-wrapper {
+        padding-top: 90px;
+        /* sesuaikan tinggi navbar */
+    }
+
     .report-table-container {
         background: var(--white);
         padding: 2rem;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        margin: 2rem auto;
+        margin-bottom: 2rem;
     }
 
     .report-table {
@@ -22,6 +26,7 @@
     .report-table td {
         padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--gray-200);
+        vertical-align: middle;
         text-align: left;
     }
 
@@ -33,111 +38,185 @@
     .filter-form {
         display: flex;
         gap: 1rem;
-        align-items: center;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-form input {
+        flex: 1;
+        min-width: 220px;
     }
 
     .status-badge {
-        padding: 0.25rem 0.75rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 9999px;
-        font-weight: 500;
-        font-size: 0.8rem;
-        color: var(--white);
+        font-size: 0.75rem;
+        font-weight: 600;
         text-align: center;
+        white-space: nowrap;
     }
 
     .status-selesai {
-        background-color: var(--success-color);
+        background-color: #3db158ff;
+        color: #ffffff;
+        letter-spacing: 0.3px;
     }
 
-    /* public/assets/css/style.css */
 
+
+    /* WRAPPER TENGAH */
     .pagination-container {
         display: flex;
-        justify-content: flex-end;
-        /* Mengatur posisi ke kanan */
+        justify-content: center;
         margin-top: 1.5rem;
     }
 
+    /* LIST */
     .pagination {
+        gap: 0.4rem;
+    }
+
+    /* ITEM */
+    .page-item .page-link {
+        width: 34px;
+        /* ⬅ lebih kecil */
+        height: 34px;
+        border-radius: 50%;
+
         display: flex;
-        list-style: none;
-        padding: 0;
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-    }
+        align-items: center;
+        justify-content: center;
 
-    .pagination li a {
-        display: block;
-        padding: 0.75rem 1rem;
-        color: var(--primary-color);
-        text-decoration: none;
-        background: var(--white);
-        border-right: 1px solid var(--gray-200);
-        transition: background-color 0.2s ease;
-    }
+        background-color: #f1f5f9;
+        /* abu terang */
+        color: #2563eb;
+        /* biru tema */
+        border: 1px solid #e5e7eb;
 
-    .pagination li:last-child a {
-        border-right: none;
-    }
-
-    .pagination li a:hover {
-        background-color: var(--gray-100);
-    }
-
-    .pagination li.active a {
-        background-color: var(--primary-color);
-        color: var(--white);
+        font-size: 0.85rem;
         font-weight: 600;
+
+        transition: all 0.2s ease;
+    }
+
+    /* HOVER */
+    .page-item .page-link:hover {
+        background-color: #e0e7ff;
+        /* biru muda */
+        color: #1e40af;
+    }
+
+    /* ACTIVE */
+    .page-item.active .page-link {
+        background-color: #2563eb;
+        /* biru utama */
+        color: #ffffff;
+        border-color: #2563eb;
+    }
+
+    /* DISABLED */
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray-500);
+        font-style: italic;
     }
 </style>
 
-<div class="report-table-container">
-    <h2 class="text-center">Riwayat Laporan Selesai</h2>
+<div class="page-wrapper">
+    <div class="container">
 
-    <form action="<?= site_url('laporan/riwayat') ?>" method="get" class="filter-form mt-3">
-        <div class="form-group" style="flex-grow: 1;">
-            <input type="text" name="keyword" class="form-control" placeholder="Cari riwayat laporan..." value="<?= esc($keyword) ?>">
-        </div>
-        <button type="submit" class="btn">Cari</button>
-    </form>
+        <div class="report-table-container">
 
-    <div style="overflow-x: auto;">
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Lokasi</th>
-                    <th>Kategori</th>
-                    <th>Tanggal Selesai</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($laporan)): ?>
-                    <tr>
-                        <td colspan="6" class="text-center">Tidak ada riwayat laporan yang selesai.</td>
-                    </tr>
-                <?php else: ?>
-                    <?php $startNumber = ($currentPage - 1) * $perPage; ?>
-                    <?php foreach ($laporan as $key => $item): ?>
+            <h2 class="text-center mb-3">Riwayat Laporan Selesai</h2>
+
+            <!-- SEARCH -->
+            <form method="get" action="<?= site_url('laporan/riwayat') ?>" class="filter-form">
+                <input
+                    type="text"
+                    name="keyword"
+                    class="form-control"
+                    placeholder="Cari lokasi, kategori, atau nama pelapor..."
+                    value="<?= esc($keyword ?? '') ?>">
+                <button type="submit" class="btn btn-primary">
+                    Cari
+                </button>
+            </form>
+
+            <!-- TABLE -->
+            <div class="table-responsive">
+                <table class="report-table">
+                    <thead>
                         <tr>
-                            <td><?= $startNumber + $key + 1 ?></td>
-                            <td><?= esc($item['lokasi_kerusakan']) ?></td>
-                            <td><?= esc($item['kategori_kerusakan']) ?></td>
-                            <td><?= date('d M Y, H:i', strtotime($item['updated_at'])) ?></td>
-                            <td><span class="status-badge status-selesai"><?= esc($item['status']) ?></span></td>
-                            <td><a href="<?= site_url('laporan/detail/' . $item['id']) ?>" class="btn" style="padding: 0.5rem 1rem;">Detail</a></td>
+                            <th width="5%">No</th>
+                            <th>Nama Pelapor</th>
+                            <th>Lokasi Kerusakan</th>
+                            <th>Kategori</th>
+                            <th width="20%">Tanggal Selesai</th>
+                            <th width="10%">Status</th>
+                            <th width="10%">Aksi</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($laporan)): ?>
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    Tidak ada riwayat laporan selesai.
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php
+                            $no = 1;
+                            if (isset($pager)) {
+                                $no = 1 + ($pager->getCurrentPage() - 1) * $pager->getPerPage();
+                            }
+                            ?>
 
-    <div class="pagination-container">
-        <?= $pager_links ?>
+                            <?php foreach ($laporan as $item): ?>
+                                <tr>
+                                    <td><?= $no++ ?></td>
+                                    <td><?= esc($item['nama_pelapor'] ?? '-') ?></td>
+                                    <td><?= esc($item['lokasi_kerusakan'] ?? '-') ?></td>
+                                    <td><?= esc($item['kategori'] ?? '-') ?></td>
+                                    <td>
+                                        <?= !empty($item['updated_at'])
+                                            ? date('d M Y, H:i', strtotime($item['updated_at']))
+                                            : '-' ?>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-selesai">
+                                            Selesai
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a
+                                            href="<?= site_url('laporan/detail/' . $item['id']) ?>"
+                                            class="btn btn-sm btn-outline-primary">
+                                            Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        <?php endif ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION -->
+            <?php if ($pager->getPageCount() > 1): ?>
+                <div class="pagination-container mt-3">
+                    <?= $pager->links('default', 'circle') ?>
+                </div>
+            <?php endif ?>
+
+        </div>
     </div>
 </div>
 

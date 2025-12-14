@@ -5,8 +5,7 @@ db_facility_report
 
 run terminal
 php spark migrate
-
-php spark db:seed UserSeeder
+php spark make:seeder UserSeeder
 usr pw default ->App\Database\Seeds
 23753041
 

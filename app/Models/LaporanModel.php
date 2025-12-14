@@ -6,117 +6,197 @@ use CodeIgniter\Model;
 
 class LaporanModel extends Model
 {
-    protected $table            = 'laporan';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $table = 'laporan';
+    protected $primaryKey = 'id';
+    protected $returnType = 'array';
     protected $protectFields    = true;
-    protected $allowedFields    = [
-        'nama',
-        'npm',
+    protected $allowedFields = [
+        'nama_pelapor',
         'lokasi_kerusakan',
         'lokasi_spesifik',
-        'kategori_kerusakan',
-        'tingkat_prioritas',
-        'deskripsi_kerusakan',
-        'foto_kerusakan',
+        'deskripsi',
+        'foto',
         'status',
-        'keterangan_verifikasi',
-        'verifikator',
+        'user_id',
+        'gedung_id',
+        'ruangan_id',
+        'prioritas',
+        'kategori',
+        'admin_verifikator',
         'tanggal_verifikasi',
+        'keterangan_verifikasi',
+        'created_at',
+        'updated_at',
     ];
+    /* ================= KPI ================= */
 
-    // Dates
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    public function getTotalLaporan()
+    {
+        // Gunakan query builder baru setiap kali
+        return $this->builder()->countAllResults();
+    }
 
-    /**
-     * Statistik umum untuk user dashboard
-     */
     public function getStatistik()
     {
-        $query = $this->select("
-                COUNT(id) as total,
-                SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN status = 'Diproses' THEN 1 ELSE 0 END) as diproses,
-                SUM(CASE WHEN status = 'Selesai' THEN 1 ELSE 0 END) as selesai
+        return $this->select("
+                COUNT(id) AS total,
+                SUM(status = 'pending') AS pending,
+                SUM(status = 'diproses') AS diproses,
+                SUM(status = 'selesai') AS selesai,
+                SUM(status = 'ditolak') AS ditolak
             ")
             ->get()
             ->getRowArray();
+    }
 
+
+    public function getCompletionRate()
+    {
+        $result = $this->builder()
+            ->select("ROUND((SUM(CASE WHEN status='selesai' THEN 1 ELSE 0 END) / COUNT(*)) * 100, 2) as rate")
+            ->get()
+            ->getRowArray();
+
+        return $result['rate'] ?? 0;
+    }
+
+    public function getAvgWaktuSelesai()
+    {
+        $result = $this->builder()
+            ->select("ROUND(AVG(TIMESTAMPDIFF(HOUR, created_at, tanggal_verifikasi))) as jam")
+            ->where('status', 'selesai')
+            ->get()
+            ->getRowArray();
+
+        return $result['jam'] ?? 0;
+    }
+
+    public function getHighRiskAktif()
+    {
+        return $this->builder()
+            ->where('prioritas', 'high')
+            ->where('status !=', 'selesai')
+            ->countAllResults();
+    }
+
+    public function getLaporanBulanIni()
+    {
+        return $this->builder()
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
+            ->countAllResults();
+    }
+
+    /* ================= STATISTIK HOMEPAGE ================= */
+
+    public function getTotalLaporanSelesai()
+    {
+        return $this->builder()
+            ->where('status', 'selesai')
+            ->countAllResults();
+    }
+
+    public function getAvgWaktuRespon()
+    {
+        $result = $this->builder()
+            ->select("ROUND(AVG(TIMESTAMPDIFF(HOUR, created_at, COALESCE(tanggal_verifikasi, updated_at)))) AS avg_hours")
+            ->where('status !=', 'pending')
+            ->where('updated_at IS NOT NULL')
+            ->get()
+            ->getRowArray();
+
+        return $result['avg_hours'] ?? null;
+    }
+
+    public function getFormattedAvgWaktuRespon()
+    {
+        $avgHours = $this->getAvgWaktuRespon();
+
+        if (!$avgHours || $avgHours == 0) {
+            return '24 Jam';
+        }
+
+        if ($avgHours < 24) {
+            return round($avgHours) . ' Jam';
+        } else {
+            $days = round($avgHours / 24);
+            return $days . ' Hari';
+        }
+    }
+
+    public function getStatistikHomepage()
+    {
         return [
-            'total'     => $query['total'] ?? 0,
-            'pending'   => $query['pending'] ?? 0,
-            'diproses'  => $query['diproses'] ?? 0,
-            'selesai'   => $query['selesai'] ?? 0,
+            'total_laporan'     => $this->getTotalLaporan(),
+            'laporan_selesai'   => $this->getTotalLaporanSelesai(),
+            'rata_rata_respon'  => $this->getFormattedAvgWaktuRespon(),
+            'avg_hours'         => $this->getAvgWaktuRespon()
         ];
     }
 
-    /**
-     * Statistik khusus dashboard admin
-     */
-    public function getAdminStatistik()
-{
-    $query = $this->select("
-        COUNT(id) as total,
-        SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) as pending,
-        SUM(CASE WHEN status = 'Diproses' THEN 1 ELSE 0 END) as diproses,
-        SUM(CASE WHEN status = 'Selesai' THEN 1 ELSE 0 END) as selesai
-    ")
-    ->get()
-    ->getRowArray();
+    /* ================= GRAFIK ================= */
+    // ... method lainnya tetap sama
+    /* ================= GRAFIK ================= */
 
-    return [
-        'total'     => $query['total'] ?? 0,
-        'pending'   => $query['pending'] ?? 0,
-        'diproses'  => $query['diproses'] ?? 0,
-        'selesai'   => $query['selesai'] ?? 0,
-    ];
-}
-
-    /**
-     * Ambil semua laporan untuk admin (dengan urutan terbaru)
-     */
-    public function getAllLaporan($perPage = 10)
+    public function getTrendBulanan()
     {
-    return $this->orderBy('created_at', 'DESC')->paginate($perPage);
+        return $this->select("MONTH(created_at) bulan, COUNT(*) total")
+            ->groupBy('bulan')
+            ->orderBy('bulan')
+            ->findAll();
     }
 
-
-    /**
-     * Ambil laporan berdasarkan ID
-     */
-    public function getLaporanById($id)
+    public function getDistribusiPrioritas()
     {
-        return $this->where('id', $id)->first();
+        return $this->select("prioritas, COUNT(*) total")
+            ->groupBy('prioritas')
+            ->findAll();
     }
 
-    /**
-     * Ambil laporan berdasarkan user (misal untuk pengguna biasa)
-     */
-    public function getLaporanByNpm($npm)
+    public function getLaporanPerGedung()
     {
-        return $this->where('npm', $npm)->orderBy('created_at', 'DESC')->findAll();
+        return $this->db->query("
+            SELECT g.nama, COUNT(l.id) total
+            FROM gedung g
+            LEFT JOIN laporan l ON g.id = l.gedung_id
+            GROUP BY g.id
+            ORDER BY total DESC
+            LIMIT 5
+        ")->getResultArray();
     }
 
-    /**
-     * Laporan selesai + fitur pencarian keyword (untuk riwayat)
-     */
-    public function getLaporanSelesaiQuery($keyword = null)
+    /* ================= OPERASIONAL ================= */
+
+    public function getLaporanTerbaru()
     {
-        $builder = $this->where('status', 'Selesai')->orderBy('updated_at', 'DESC');
+        return $this->db->query("
+            SELECT 
+                l.id,
+                g.nama AS gedung,
+                l.status,
+                l.prioritas,
+                TIMESTAMPDIFF(HOUR, l.created_at, NOW()) AS umur_jam
+            FROM laporan l
+            LEFT JOIN gedung g ON g.id = l.gedung_id
+            ORDER BY l.created_at DESC
+            LIMIT 5
+        ")->getResultArray();
+    }
 
-        if (!empty($keyword)) {
-            $builder->groupStart()
-                ->like('lokasi_kerusakan', $keyword)
-                ->orLike('kategori_kerusakan', $keyword)
-                ->orLike('lokasi_spesifik', $keyword)
-                ->groupEnd();
-        }
+    public function getKinerjaAdmin()
+    {
+        return $this->db->query("
+            SELECT u.nama, COUNT(*) total
+            FROM log_aktivitas la
+            JOIN users u ON u.id = la.admin_id
+            GROUP BY la.admin_id
+        ")->getResultArray();
+    }
 
-        return $builder;
+    public function getNotifikasiAktif()
+    {
+        return $this->db->table('notifikasi')
+            ->where('terbaca', 0)
+            ->countAllResults();
     }
 }

@@ -1,142 +1,186 @@
-<?= $this->extend('layouts/user/main') ?>
-
+<?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <style>
     .detail-card {
-        background: var(--white);
+        background: #fff;
         padding: 2rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
         margin: 2rem auto;
+        max-width: 900px;
     }
 
-    .detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 1rem 2rem;
+    .detail-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
     }
 
-    .detail-grid dt {
-        /* dt = description term (label) */
+    .status-badge {
+        padding: .35rem 1rem;
+        border-radius: 999px;
         font-weight: 600;
-        color: var(--secondary-color);
+        font-size: .85rem;
+        text-transform: capitalize;
+        color: #fff;
     }
 
-    .detail-grid dd {
-        /* dd = description details (value) */
-        margin-left: 0;
+    .status-pending {
+        background: #dc3545;
+    }
+
+    .status-diproses {
+        background: #fd7e14;
+    }
+
+    .status-selesai {
+        background: #198754;
+    }
+
+    .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .meta-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .meta-label {
+        font-size: .75rem;
+        text-transform: uppercase;
+        color: #6c757d;
+        font-weight: 600;
+        margin-bottom: .25rem;
+    }
+
+    .meta-value {
+        font-weight: 600;
+        color: #212529;
     }
 
     .photo-gallery {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 1rem;
         margin-top: 1rem;
     }
 
     .photo-gallery img {
-        width: 150px;
-        height: 150px;
+        width: 100%;
+        height: 140px;
         object-fit: cover;
-        border-radius: var(--border-radius);
-        border: 2px solid var(--gray-200);
-        cursor: pointer;
-        transition: transform 0.2s;
+        border-radius: 10px;
+        transition: transform .2s, box-shadow .2s;
+        border: 1px solid #dee2e6;
     }
 
     .photo-gallery img:hover {
         transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
     }
 
-    /* Status badge styles bisa dipindahkan ke style.css jika belum */
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-weight: 500;
-        font-size: 1rem;
-        color: var(--white);
-    }
-
-    .status-pending {
-        background-color: red;
-    }
-
-    .status-diproses {
-        background-color: orange;
-    }
-
-    .status-selesai {
-        background-color: var(--success-color);
-    }
-
-    @media (max-width: 768px) {
-        .detail-grid {
-            grid-template-columns: 1fr;
-        }
+    .section-title {
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: .75rem;
     }
 </style>
 
 <div class="detail-card">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-0">Detail Laporan #<?= esc($laporan['id']) ?></h2>
+
+    <!-- HEADER -->
+    <div class="detail-header">
+        <div>
+            <h3 class="fw-bold mb-1">Detail Laporan #<?= esc($laporan['id']) ?></h3>
+            <small class="text-muted">
+                Dilaporkan pada
+                <?= date('d F Y, H:i', strtotime($laporan['created_at'])) ?> WIB
+            </small>
+        </div>
+
         <?php
-        $statusClass = '';
-        if ($laporan['status'] == 'Pending') $statusClass = 'status-pending';
-        if ($laporan['status'] == 'Diproses') $statusClass = 'status-diproses';
-        if ($laporan['status'] == 'Selesai') $statusClass = 'status-selesai';
+        $statusClass = match (strtolower($laporan['status'])) {
+            'pending'   => 'status-pending',
+            'diproses'  => 'status-diproses',
+            'selesai'   => 'status-selesai',
+            default     => 'status-pending',
+        };
         ?>
-        <span class="status-badge <?= $statusClass ?>"><?= esc($laporan['status']) ?></span>
+        <span class="status-badge <?= $statusClass ?>">
+            <?= esc($laporan['status']) ?>
+        </span>
     </div>
 
-    <hr class="mb-3">
+    <!-- INFO GRID -->
+    <div class="meta-grid">
+        <div class="meta-item">
+            <div class="meta-label">Nama Pelapor</div>
+            <div class="meta-value"><?= esc($laporan['nama_pelapor']) ?></div>
+        </div>
 
-    <dl class="detail-grid">
-        <dt>Nama Pelapor</dt>
-        <dd><?= esc($laporan['nama']) ?></dd>
+        <div class="meta-item">
+            <div class="meta-label">Gedung</div>
+            <div class="meta-value"><?= esc($laporan['nama_gedung'] ?? '-') ?></div>
+        </div>
 
-        <dt>NPM</dt>
-        <dd><?= esc($laporan['npm']) ?></dd>
+        <div class="meta-item">
+            <div class="meta-label">Ruangan</div>
+            <div class="meta-value"><?= esc($laporan['nama_ruangan'] ?? '-') ?></div>
+        </div>
 
-        <dt>Tanggal Lapor</dt>
-        <dd><?= date('d F Y, H:i', strtotime($laporan['created_at'])) ?> WIB</dd>
+        <div class="meta-item">
+            <div class="meta-label">Kategori</div>
+            <div class="meta-value"><?= esc($laporan['kategori']) ?></div>
+        </div>
 
-        <dt>Lokasi</dt>
-        <dd><?= esc($laporan['lokasi_kerusakan']) ?> - <?= esc($laporan['lokasi_spesifik']) ?></dd>
+        <div class="meta-item">
+            <div class="meta-label">Prioritas</div>
+            <div class="meta-value text-capitalize"><?= esc($laporan['prioritas']) ?></div>
+        </div>
 
-        <dt>Kategori</dt>
-        <dd><?= esc($laporan['kategori_kerusakan']) ?></dd>
-
-        <dt>Prioritas</dt>
-        <dd><?= esc($laporan['tingkat_prioritas']) ?></dd>
-    </dl>
-
-    <hr class="my-3">
-
-    <h4>Deskripsi Kerusakan</h4>
-    <p><?= nl2br(esc($laporan['deskripsi_kerusakan'])) ?></p>
-
-    <h4 class="mt-3">Foto Kerusakan</h4>
-    <div class="photo-gallery">
-        <?php
-        $foto_files = json_decode($laporan['foto_kerusakan'], true);
-        if (!empty($foto_files)):
-            foreach ($foto_files as $foto):
-        ?>
-                <a href="<?= base_url('uploads/laporan/' . esc($foto)) ?>" target="_blank">
-                    <img src="<?= base_url('uploads/laporan/' . esc($foto)) ?>" alt="Foto Kerusakan">
-                </a>
-            <?php
-            endforeach;
-        else:
-            ?>
-            <p class="text-secondary">Tidak ada foto yang dilampirkan.</p>
-        <?php endif; ?>
+        <div class="meta-item">
+            <div class="meta-label">Lokasi Kerusakan</div>
+            <div class="meta-value">
+                <?= esc($laporan['lokasi_kerusakan']) ?><br>
+                <small class="text-muted"><?= esc($laporan['lokasi_spesifik']) ?></small>
+            </div>
+        </div>
     </div>
 
-    <div class="mt-4 text-center">
-        <a href="<?= site_url('laporan/status') ?>" class="btn btn-secondary">Kembali ke Daftar Laporan</a>
+    <!-- DESKRIPSI -->
+    <h5 class="section-title">Deskripsi Kerusakan</h5>
+    <p class="text-muted" style="white-space: pre-line;">
+        <?= esc($laporan['deskripsi']) ?>
+    </p>
+
+    <!-- FOTO -->
+    <h5 class="section-title">Foto Kerusakan</h5>
+    <?php if (!empty($laporan['foto'])): ?>
+        <div class="photo-gallery">
+            <a href="<?= base_url('uploads/laporan/' . $laporan['foto']) ?>" target="_blank">
+                <img src="<?= base_url('uploads/laporan/' . $laporan['foto']) ?>" alt="Foto Kerusakan">
+            </a>
+        </div>
+    <?php else: ?>
+        <p class="text-muted">Tidak ada foto yang dilampirkan.</p>
+    <?php endif; ?>
+
+    <!-- ACTION -->
+    <div class="text-center mt-4">
+        <a href="<?= site_url('laporan/saya') ?>" class="btn btn-outline-secondary px-4">
+            ← Kembali ke Daftar Laporan
+        </a>
     </div>
+
 </div>
 
 <?= $this->endSection() ?>

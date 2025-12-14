@@ -1,61 +1,55 @@
 <?= $this->extend('admin/layouts/main') ?>
-
 <?= $this->section('content') ?>
 
 <style>
-    /* Gunakan style yang sama dengan halaman status */
+    .grid-riwayat {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+        align-items: start;
+    }
+    @media(max-width: 992px) {
+        .grid-riwayat {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Style bawaan list */
     .report-table-container {
         background: var(--white);
         padding: 2rem;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        margin: 2rem auto;
     }
-
-    .report-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1.5rem;
-    }
-
-    .report-table th,
-    .report-table td {
+    .report-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    .report-table th, .report-table td {
         padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--gray-200);
         text-align: left;
     }
-
     .report-table th {
-        background-color: var(--gray-100);
+        background: var(--gray-100);
         font-weight: 600;
     }
-
-    .filter-form {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-weight: 500;
-        font-size: 0.8rem;
-        color: var(--white);
-        text-align: center;
-    }
-
     .status-selesai {
-        background-color: var(--success-color);
+        background: var(--success-color);
+        padding: .25rem .75rem;
+        border-radius: 50px;
+        color: white;
+        font-size: .75rem;
     }
 
-    /* public/assets/css/style.css */
+        .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
 
-    .pagination-container {
+        .pagination-container {
         display: flex;
         justify-content: flex-end;
-        /* Mengatur posisi ke kanan */
-        margin-top: 1.5rem;
+        margin-top: 1.3rem;
     }
 
     .pagination {
@@ -69,7 +63,7 @@
 
     .pagination li a {
         display: block;
-        padding: 0.75rem 1rem;
+        padding: 0.30rem 0.6rem;
         color: var(--primary-color);
         text-decoration: none;
         background: var(--white);
@@ -90,55 +84,83 @@
         color: var(--white);
         font-weight: 600;
     }
+
 </style>
 
-<div class="report-table-container">
-    <h2 class="text-center">Riwayat Laporan Selesai</h2>
+<div class="grid-riwayat">
 
-    <form action="<?= site_url('laporan/riwayat') ?>" method="get" class="filter-form mt-3">
-        <div class="form-group" style="flex-grow: 1;">
-            <input type="text" name="keyword" class="form-control" placeholder="Cari riwayat laporan..." value="<?= esc($keyword) ?>">
-        </div>
-        <button type="submit" class="btn">Cari</button>
-    </form>
+    <!-- ==========================
+            LIST RIWAYAT (KIRI)
+    =========================== -->
+    <div>
+        <div class="report-table-container">
+            <h2 class="text-center">Riwayat Laporan Selesai</h2>
 
-    <div style="overflow-x: auto;">
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Lokasi</th>
-                    <th>Kategori</th>
-                    <th>Tanggal Selesai</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($laporan)): ?>
+            <form method="get" class="filter-form mt-3">
+                <div style="flex-grow:1;">
+                    <input type="text" name="keyword" class="form-control"
+                        placeholder="Cari laporan..."
+                        value="<?= esc($keyword) ?>"><button class="btn btn-sm btn-info text-white">Cari</button>
+                </div>
+            </form>
+
+            <table class="report-table">
+                <thead>
                     <tr>
-                        <td colspan="6" class="text-center">Tidak ada riwayat laporan yang selesai.</td>
+                        <th>No.</th>
+                        <th>Lokasi</th>
+                        <th>Kategori</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
+                </thead>
+
+                <tbody>
+                <?php if (empty($laporan)): ?>
+                    <tr><td colspan="6" class="text-center">Tidak ada data</td></tr>
                 <?php else: ?>
-                    <?php $startNumber = ($currentPage - 1) * $perPage; ?>
-                    <?php foreach ($laporan as $key => $item): ?>
+                    <?php $start = ($currentPage - 1) * $perPage; ?>
+                    <?php foreach ($laporan as $i => $item): ?>
                         <tr>
-                            <td><?= $startNumber + $key + 1 ?></td>
+                            <td><?= $start + $i + 1 ?></td>
                             <td><?= esc($item['lokasi_kerusakan']) ?></td>
-                            <td><?= esc($item['kategori_kerusakan']) ?></td>
+                            <td><?= esc($item['kategori']) ?></td>
                             <td><?= date('d M Y, H:i', strtotime($item['updated_at'])) ?></td>
-                            <td><span class="status-badge status-selesai"><?= esc($item['status']) ?></span></td>
-                            <td><a href="<?= site_url('laporan/detail/' . $item['id']) ?>" class="btn" style="padding: 0.5rem 1rem;">Detail</a></td>
+                            <td><span class="status-selesai">Selesai</span></td>
+
+                            <td>
+                                <a href="?detail=<?= $item['id'] ?>" class="btn btn-sm btn-info text-white">
+                                    Detail
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+
+            <div class="pagination-container">
+                <?= $pager_links ?>
+            </div>
+        </div>
     </div>
 
-    <div class="pagination-container">
-        <?= $pager_links ?>
+    <!-- ==========================
+            DETAIL (KANAN)
+    =========================== -->
+    <div>
+        <?php if ($detail): ?>
+
+            <?= $this->include('admin/detail') ?>
+
+        <?php else: ?>
+            <div class="detail-card" style="padding:2rem; text-align:center; opacity:.6;">
+                <h4>Pilih laporan untuk melihat detail</h4>
+            </div>
+        <?php endif; ?>
     </div>
+
 </div>
 
 <?= $this->endSection() ?>

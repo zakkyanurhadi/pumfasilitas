@@ -1,96 +1,160 @@
-<?= $this->extend('layouts/user/main') ?>
-
+<?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
 <style>
-    /* Style tambahan khusus untuk halaman profil */
+    /* Tema putih – biru */
     .profile-card {
-        background: var(--white);
-        padding: 2rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
-        max-width: 700px;
-        margin: 2rem auto;
-    }
-
-    .profile-avatar {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2rem;
+        border-radius: 1rem;
+        border: none;
+        box-shadow: 0 8px 24px rgba(13, 110, 253, .08);
     }
 
     .profile-avatar img {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
+        width: 130px;
+        height: 130px;
         object-fit: cover;
-        margin-bottom: 1rem;
-        border: 4px solid var(--gray-200);
+        border-radius: 50%;
+        border: 4px solid #e7f1ff;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, .2);
     }
 
-    .error-message {
-        color: var(--danger-color);
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
+    .profile-avatar label {
+        cursor: pointer;
     }
 
-    .form-control[readonly] {
-        background-color: var(--gray-100);
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .25);
+    }
+
+    .divider-text {
+        font-size: .85rem;
+        color: #6c757d;
     }
 </style>
 
-<div class="profile-card">
-    <h2 class="text-center mb-3">Edit Profil</h2>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
 
-    <form action="<?= site_url('profile/update') ?>" method="post" enctype="multipart/form-data">
-        <?= csrf_field() ?>
+            <div class="card profile-card">
+                <div class="card-body p-4 p-md-5">
 
-        <div class="profile-avatar">
-            <img src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>" alt="User Avatar">
-            <label for="avatar">Ubah Foto Profil</label>
-            <input type="file" id="avatar" name="avatar" class="form-control mt-2" accept="image/png, image/jpeg, image/gif">
-            <small class="text-secondary mt-2">Kosongkan jika tidak ingin merubah foto. (JPG, PNG, GIF | Max: 2MB)</small>
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <h3 class="fw-semibold text-primary mb-1">Edit Profil</h3>
+                        <p class="text-muted mb-0">Perbarui informasi akun Anda</p>
+                    </div>
+
+                    <form action="<?= site_url('profile/update') ?>" method="post" enctype="multipart/form-data">
+                        <?= csrf_field() ?>
+
+                        <!-- Avatar -->
+                        <div class="profile-avatar text-center mb-4">
+                            <img id="avatarPreview"
+                                src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>"
+                                alt="Avatar">
+
+                            <div class="mt-3">
+                                <label for="avatar" class="btn btn-outline-primary btn-sm">
+                                    Ubah Foto Profil
+                                </label>
+                                <input type="file"
+                                    id="avatar"
+                                    name="avatar"
+                                    class="d-none"
+                                    accept="image/png, image/jpeg, image/gif">
+                            </div>
+
+                            <small class="text-muted d-block mt-2">
+                                JPG / PNG / GIF — Maks 2MB
+                            </small>
+                        </div>
+
+
+                        <!-- NPM -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">NPM</label>
+                            <input type="text" class="form-control" value="<?= esc($user['npm']) ?>" readonly>
+                        </div>
+
+                        <!-- Nama -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Nama</label>
+                            <input type="text" name="nama" class="form-control"
+                                value="<?= old('nama', esc($user['nama'])) ?>" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Email</label>
+                            <input type="email" name="email" class="form-control"
+                                value="<?= old('email', esc($user['email'])) ?>" required>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="text-center my-4 divider-text">
+                            Kosongkan password jika tidak ingin mengubahnya
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Password Baru</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+
+                        <!-- Konfirmasi -->
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Konfirmasi Password Baru</label>
+                            <input type="password" name="pass_confirm" class="form-control">
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
         </div>
-
-        <div class="form-group">
-            <label for="npm">NPM</label>
-            <input type="text" id="npm" name="npm" class="form-control" value="<?= esc($user['npm']) ?>" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="nama">Nama</label>
-            <input type="text" id="nama" name="nama" class="form-control" value="<?= old('nama', esc($user['nama'])) ?>" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" value="<?= old('email', esc($user['email'])) ?>" required>
-        </div>
-
-        <hr class="mb-3 mt-3">
-        <p class="text-secondary text-center">Kosongkan password jika tidak ingin mengubahnya.</p>
-
-        <div class="form-group">
-            <label for="password">Password Baru</label>
-            <input type="password" id="password" name="password" class="form-control">
-            <?php if (session('errors.password')) : ?>
-                <div class="error-message"><?= session('errors.password') ?></div>
-            <?php endif ?>
-        </div>
-
-        <div class="form-group">
-            <label for="pass_confirm">Konfirmasi Password Baru</label>
-            <input type="password" id="pass_confirm" name="pass_confirm" class="form-control">
-            <?php if (session('errors.pass_confirm')) : ?>
-                <div class="error-message"><?= session('errors.pass_confirm') ?></div>
-            <?php endif ?>
-        </div>
-
-        <div class="form-group mt-3">
-            <button type="submit" class="btn" style="width: 100%;">Simpan Perubahan</button>
-        </div>
-    </form>
+    </div>
 </div>
+<script>
+    const avatarInput = document.getElementById('avatar');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    avatarInput.addEventListener('change', function() {
+        const file = this.files[0];
+
+        if (!file) return;
+
+        // Validasi tipe file
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Format gambar tidak didukung!');
+            this.value = '';
+            return;
+        }
+
+        // Validasi ukuran (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2MB!');
+            this.value = '';
+            return;
+        }
+
+        // Preview image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            avatarPreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+
 
 <?= $this->endSection() ?>

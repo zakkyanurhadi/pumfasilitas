@@ -373,6 +373,39 @@ footer {
     color: white;
 }
 
+
+
+    .tooltip-wrap {
+        position: relative;
+        display: inline-block; /* penting! */
+    }
+
+    .tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+
+        position: absolute;
+        bottom: 120%;        /* tampil di atas tombol */
+        left: 50%;
+        transform: translateX(-50%);
+
+        background: #000;
+        color: #fff;
+        padding: 4px 8px;
+        font-size: 9.5px;
+        border-radius: 6px;
+        white-space: nowrap;
+
+        transition: opacity 0.2s ease;
+        z-index: 9999;
+    }
+
+    .tooltip-wrap:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+
 /* === RESPONSIVE === */
 @media (max-width: 992px) {
     .steps-timeline::before {

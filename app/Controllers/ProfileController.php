@@ -44,7 +44,7 @@ class ProfileController extends BaseController
 
         // Aturan validasi password (hanya jika diisi)
         if ($this->request->getPost('password')) {
-            $rules['password'] = 'required|min_length[5]';
+            $rules['password'] = 'required|min_length[8]';
             $rules['pass_confirm'] = 'required|matches[password]';
         }
 

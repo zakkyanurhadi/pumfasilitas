@@ -6,9 +6,6 @@ function toggleDropdown() {
     dropdown.style.display === "block" ? "none" : "block";
 }
 
-function openReportModal() {
-  document.getElementById("reportModal").style.display = "block";
-}
 function openReportModalAdmin(id) {
   const modal = document.getElementById("reportModal");
   const form = document.getElementById("reportForm");
@@ -22,10 +19,18 @@ function openReportModalAdmin(id) {
   modal.style.display = "block";
 }
 
+function closeReportModalAdmin() {
+  document.getElementById("reportModal").style.display = "none";
+}
+
+
 function closeReportModal() {
   document.getElementById("reportModal").style.display = "none";
 }
 
+function openReportModal(id) {
+  document.getElementById("reportModal").style.display = "block";
+}
 
 
 window.onclick = function (event) {
@@ -66,11 +71,11 @@ document.getElementById("foto")?.addEventListener("change", function (e) {
 
 // Placeholder functions
 function showReportsList() {
-  window.location.href = "laporan/status";
+  window.location.href = "lapor/status";
 }
 
 function showHistory() {
-  window.location.href = "laporan/riwayat";
+  window.location.href = "lapor/riwayat";
 }
 
 // Smooth scroll
@@ -98,5 +103,70 @@ function animateCounters() {
   });
 }
 
+function toggleSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const toggle = document.querySelector(".sidebar-toggle");
+    const icon = document.querySelector(".toggle-icon");
+
+    // toggle class pada sidebar & button
+    sidebar.classList.toggle("sidebar-closed");
+    toggle.classList.toggle("closed");
+
+    // ubah icon sesuai kondisi
+    icon.textContent = sidebar.classList.contains("sidebar-closed")
+        ? "❯"
+        : "❮";
+
+    // Tambahan: atur body agar main-content ikut menyesuaikan
+    if (sidebar.classList.contains("sidebar-closed")) {
+        document.body.classList.add("sidebar-closed");
+        document.body.classList.remove("sidebar-open");
+    } else {
+        document.body.classList.add("sidebar-open");
+        document.body.classList.remove("sidebar-closed");
+    }
+}
+
+// Dropdown sidebar
+document.querySelectorAll('.sidebar-dropdown > a').forEach(drop => {
+    drop.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const parent = this.parentElement;
+        const submenu = parent.querySelector('.sidebar-submenu');
+
+        // Tutup yang lain
+        document.querySelectorAll('.sidebar-dropdown').forEach(item => {
+            if (item !== parent) {
+                item.classList.remove('active');
+                const sub = item.querySelector('.sidebar-submenu');
+                if (sub) sub.style.maxHeight = null;
+            }
+        });
+
+        // Toggle dropdown yang diklik
+        parent.classList.toggle('active');
+        submenu.style.maxHeight = parent.classList.contains('active') 
+            ? submenu.scrollHeight + "px"
+            : null;
+    });
+});
+
+// ===== AUTO OPEN DROPDOWN JIKA SUBMENU AKTIF =====
+document.addEventListener("DOMContentLoaded", function () {
+
+    const activeSub = document.querySelector(".active-submenu");
+    if (activeSub) {
+
+        const parentDrop = activeSub.closest(".sidebar-dropdown");
+        const submenu = parentDrop.querySelector(".sidebar-submenu");
+
+        parentDrop.classList.add("active");
+        submenu.style.maxHeight = submenu.scrollHeight + "px";
+    }
+});
+
+
 // Panggil animasi saat DOM siap
 document.addEventListener("DOMContentLoaded", animateCounters);
+

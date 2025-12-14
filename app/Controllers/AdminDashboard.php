@@ -7,35 +7,44 @@ use App\Models\LaporanModel;
 
 class AdminDashboard extends BaseController
 {
-    protected $laporanModel;
+    protected LaporanModel $laporanModel;
 
     public function __construct()
     {
-        // Inisialisasi model
         $this->laporanModel = new LaporanModel();
     }
 
     public function index()
     {
-        // Ambil data statistik khusus untuk admin
-        $statistik = $this->laporanModel->getAdminStatistik(); // Buat method ini di LaporanModel
-        $keyword = $this->request->getGet('keyword');
-        $model = new LaporanModel();
+        // ================= KPI =================
+        $total            = $this->laporanModel->getTotalLaporan();
+        $completionRate   = $this->laporanModel->getCompletionRate();
+        $avgSelesai       = $this->laporanModel->getAvgWaktuSelesai();
+        $highRisk         = $this->laporanModel->getHighRiskAktif();
+        $bulanIni         = $this->laporanModel->getLaporanBulanIni();
 
-        // Siapkan data untuk dikirim ke view
-        $data['laporan'] = $model->getLaporanSelesaiQuery($keyword)->paginate(10);
-        $data['pager_links'] = $model->pager->links();
-        $data = [
-            'title' => 'Dashboard Admin',
-            'user'  => [
-                'nama' => session('nama'),
-                'npm'  => session('npm'),
-            ],
-            'stats' => $statistik,
-        ];
+        // ================= GRAFIK =================
+        $trendBulanan     = $this->laporanModel->getTrendBulanan();
+        $prioritas        = $this->laporanModel->getDistribusiPrioritas();
+        $gedung           = $this->laporanModel->getLaporanPerGedung();
 
-        // Tampilkan view khusus dashboard admin
-        return view('admin/dashboard', $data);
+        // ================= OPERASIONAL =================
+        $laporanTerbaru   = $this->laporanModel->getLaporanTerbaru();
+        $adminPerformance = $this->laporanModel->getKinerjaAdmin();
+        $notifikasi       = $this->laporanModel->getNotifikasiAktif();
+
+        return view('admin/dashboard', compact(
+            'total',
+            'completionRate',
+            'avgSelesai',
+            'highRisk',
+            'bulanIni',
+            'trendBulanan',
+            'prioritas',
+            'gedung',
+            'laporanTerbaru',
+            'adminPerformance',
+            'notifikasi'
+        ));
     }
 }
-

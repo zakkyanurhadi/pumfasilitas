@@ -4,202 +4,431 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
+use App\Models\GedungModel;
+use App\Models\RuanganModel;
 
 class LaporController extends BaseController
 {
-    /**
-     * Menampilkan halaman form untuk membuat laporan baru.
-     */
+    protected $laporanModel;
+    protected $gedungModel;
+    protected $ruanganModel;
+
+    public function __construct()
+    {
+        $this->laporanModel = new LaporanModel();
+        $this->gedungModel = new GedungModel();
+        $this->ruanganModel = new RuanganModel();
+    }
+
     public function index()
     {
         $data = [
-            'title' => 'Buat Laporan Baru',
+            'title' => 'Buat Laporan Kerusakan',
+            'gedung' => $this->gedungModel->findAll(),
+            'ruangan' => $this->ruanganModel->findAll()
         ];
+
         return view('laporan/index', $data);
     }
-    /**
-     * Menyimpan data laporan baru dari form.
-     */
+
     public function store()
     {
-        // Aturan validasi
+        // Cek apakah user sudah login (sesuai dengan AuthFilter)
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
         $rules = [
-            'nama'           => 'required|min_length[3]',
-            'npm'            => 'required|exact_length[8]',
-            'lokasi'         => 'required',
-            'lokasiSpesifik' => 'required',
-            'kategori'       => 'required',
-            'prioritas'      => 'required',
-            'deskripsi'      => 'required|min_length[1]',
-            'foto.*'         => 'max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/gif]',
+            'nama_pelapor'     => 'required|min_length[3]',
+            'lokasi_kerusakan' => 'required',
+            'lokasi_spesifik'  => 'required',
+            'gedung_id'        => 'required|is_not_unique[gedung.id]',
+            'ruangan_id'       => 'required|is_not_unique[ruangan.id]',
+            'kategori'         => 'required',
+            'prioritas'        => 'required|in_list[low,medium,high]',
+            'deskripsi'        => 'required|min_length[5]',
+            'foto'             => 'permit_empty|max_size[foto,2048]|is_image[foto]',
         ];
+
         if (!$this->validate($rules)) {
-            // Jika validasi gagal, kembali ke form dengan error
-            return redirect()->to('/dashboard')->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Proses upload file jika ada
-        $imageFiles = $this->request->getFiles('foto');
-        $uploadedImageNames = [];
+        // Handle upload foto
+        $fotoName = null;
+        $foto = $this->request->getFile('foto');
 
-        if ($imageFiles) {
-            foreach ($imageFiles['foto'] as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = $file->getRandomName();
-                    $file->move(FCPATH . 'uploads/laporan', $newName);
-                    $uploadedImageNames[] = $newName;
-                }
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            // Buat folder jika belum ada
+            $uploadPath = FCPATH . 'uploads/laporan';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
             }
+
+            $fotoName = $foto->getRandomName();
+            $foto->move($uploadPath, $fotoName);
         }
 
-        // Siapkan data untuk disimpan ke database
-        $laporanModel = new LaporanModel();
-        $dataToSave = [
-            'nama'                => $this->request->getPost('nama'),
-            'npm'                 => $this->request->getPost('npm'),
-            'lokasi_kerusakan'    => $this->request->getPost('lokasi'),
-            'lokasi_spesifik'     => $this->request->getPost('lokasiSpesifik'),
-            'kategori_kerusakan'  => $this->request->getPost('kategori'),
-            'tingkat_prioritas'   => $this->request->getPost('prioritas'),
-            'deskripsi_kerusakan' => $this->request->getPost('deskripsi'),
-            'foto_kerusakan'      => json_encode($uploadedImageNames), // Simpan sebagai JSON
-            'status'              => 'Pending', // Status default
-        ];
+        // Ambil user_id dari session
+        // Coba beberapa kemungkinan struktur session
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
 
-        // Simpan data
-        $laporanModel->save($dataToSave);
+        // Jika user_id masih null, coba ambil dari session langsung
+        if (!$userId) {
+            // Debug: tampilkan semua isi session
+            log_message('error', 'Session data: ' . print_r(session()->get(), true));
 
-        // Redirect ke dashboard dengan pesan sukses
-        return redirect()->to('/dashboard')->with('success', 'Laporan Anda telah berhasil dikirim!');
-    }
-
-    // app/Controllers/LaporController.php
-
-    public function status()
-    {
-        // 1. Panggil service database & pager secara langsung
-        $db    = \Config\Database::connect();
-        $pager = \Config\Services::pager();
-        $perPage = 5; // Jumlah item per halaman
-
-        // 2. Ambil input dari URL untuk filter & pencarian
-        $keyword = $this->request->getGet('keyword') ?? '';
-        $status  = $this->request->getGet('status') ?? '';
-
-        // 3. Buat instance Query Builder untuk tabel 'laporan'
-        $builder = $db->table('laporan');
-
-        // 4. Terapkan filter & pencarian (logika dari model dipindahkan ke sini)
-        if ($keyword) {
-            $builder->groupStart();
-            $builder->like('nama', $keyword);
-            $builder->orLike('npm', $keyword);
-            $builder->orLike('lokasi_kerusakan', $keyword);
-            $builder->orLike('lokasi_spesifik', $keyword);
-            $builder->orLike('kategori_kerusakan', 'keyword');
-            $builder->groupEnd();
-        }
-        // --- PERUBAHAN LOGIKA FILTER STATUS ---
-        if ($status && in_array($status, ['Pending', 'Diproses'])) {
-            // Jika user memfilter status tertentu ('Pending' atau 'Diproses')
-            $builder->where('status', $status);
-        } else {
-            // Jika tidak ada filter, secara default tampilkan Pending DAN Diproses
-            $builder->whereIn('status', ['Pending', 'Diproses']);
+            session()->setFlashdata('error', 'Session tidak valid. Silakan login kembali');
+            return redirect()->to('/login');
         }
 
-
-        // 5. Terapkan pengurutan (dari yang terbaru ke terlama)
-        $builder->orderBy('created_at', 'ASC');
-
-        // 6. Logika Pagination Manual
-        // Dapatkan halaman saat ini dari URL (misal: ?page=2)
-        $currentPage = $this->request->getGet('page') ? (int) $this->request->getGet('page') : 1;
-
-        // Hitung total baris data yang cocok dengan kriteria filter (PENTING: parameter false agar tidak mereset query)
-        $total = $builder->countAllResults(false);
-
-        // Dapatkan data untuk halaman saat ini
-        $laporan = $builder->get($perPage, ($currentPage - 1) * $perPage)->getResultArray();
-
-        // Buat link navigasi halaman
-        $pager_links = $pager->makeLinks($currentPage, $perPage, $total, 'default_full');
-
-        // 7. Siapkan data untuk dikirim ke view
+        // Siapkan data untuk disimpan
         $data = [
-            'title'       => 'Status Laporan',
-            'laporan'     => $laporan,
-            'pager_links' => $pager_links, // Kirim link HTML pager
-            'keyword'     => $keyword,
-            'status'      => $status,
-            'currentPage' => $currentPage,
-            'perPage'     => $perPage,
+            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
+            'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
+            'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
+            'deskripsi'        => $this->request->getPost('deskripsi'),
+            'foto'             => $fotoName,
+            'status'           => 'pending',
+            'user_id'          => $userId,
+            'gedung_id'        => $this->request->getPost('gedung_id'),
+            'ruangan_id'       => $this->request->getPost('ruangan_id'),
+            'prioritas'        => $this->request->getPost('prioritas'),
+            'kategori'         => $this->request->getPost('kategori'),
         ];
 
-        return view('laporan/status', $data);
+        try {
+            if ($this->laporanModel->insert($data)) {
+                return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil dikirim');
+            } else {
+                $errors = $this->laporanModel->errors();
+                log_message('error', 'Insert failed: ' . print_r($errors, true));
+                return redirect()->back()->withInput()->with('error', 'Gagal menyimpan laporan');
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Exception: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+        }
+    }
+    // Halaman Laporan Saya
+    public function saya()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id dari session
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil filter
+        $status = $this->request->getGet('status');
+        $keyword = $this->request->getGet('keyword');
+
+        // Query builder
+        $builder = $this->laporanModel->where('user_id', $userId);
+
+        // Filter status
+        if ($status) {
+            $builder->where('status', $status);
+        }
+
+        // Filter keyword
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('lokasi_kerusakan', $keyword)
+                ->orLike('lokasi_spesifik', $keyword)
+                ->orLike('kategori', $keyword)
+                ->orLike('deskripsi', $keyword)
+                ->groupEnd();
+        }
+
+        $perPage = 10;
+        // Pagination
+        $laporan = $builder
+            ->orderBy('created_at', 'DESC')
+            ->paginate($perPage, 'default');
+        $pager = $this->laporanModel->pager;
+
+        // Statistik
+        $stats = $this->laporanModel
+            ->select("
+                COUNT(id) AS total,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status = 'diproses' THEN 1 ELSE 0 END) AS diproses,
+                SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) AS selesai,
+                SUM(CASE WHEN status = 'ditolak' THEN 1 ELSE 0 END) AS ditolak
+            ")
+            ->where('user_id', $userId)
+            ->get()
+            ->getRowArray();
+
+        $data = [
+            'title'       => 'Laporan Saya',
+            'laporan'     => $laporan,
+            'pager'   => $pager,
+            'stats'       => $stats,
+            'status'      => $status,
+            'keyword'     => $keyword
+        ];
+
+        return view('laporan/saya', $data);
     }
 
+
+    // Halaman Edit
+    public function edit($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
+        $laporan = $this->laporanModel->find($id);
+
+        // Validasi
+        if (!$laporan) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak ditemukan');
+        }
+
+        // Cek kepemilikan
+        if ($laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Anda tidak memiliki akses');
+        }
+
+        // Cek status - hanya pending dan ditolak yang bisa diedit
+        if (!in_array($laporan['status'], ['pending', 'ditolak'])) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak dapat diedit');
+        }
+
+        $data = [
+            'title'   => 'Edit Laporan',
+            'laporan' => $laporan,
+            'gedung'  => $this->gedungModel->findAll(),
+            'ruangan' => $this->ruanganModel->findAll()
+        ];
+
+        return view('laporan/edit', $data);
+    }
+
+    // Update Laporan
+    public function update($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
+        $laporan = $this->laporanModel->find($id);
+
+        if (!$laporan || $laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Akses ditolak');
+        }
+
+        // Validasi
+        $rules = [
+            'nama_pelapor'     => 'required|min_length[3]',
+            'lokasi_kerusakan' => 'required',
+            'lokasi_spesifik'  => 'required',
+            'gedung_id'        => 'required|is_not_unique[gedung.id]',
+            'ruangan_id'       => 'required|is_not_unique[ruangan.id]',
+            'kategori'         => 'required',
+            'prioritas'        => 'required|in_list[low,medium,high]',
+            'deskripsi'        => 'required|min_length[5]',
+            'foto'             => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Handle foto baru
+        $fotoName = $laporan['foto']; // Gunakan foto lama
+        $foto = $this->request->getFile('foto');
+
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            // Hapus foto lama jika ada
+            if ($laporan['foto'] && file_exists(FCPATH . 'uploads/laporan/' . $laporan['foto'])) {
+                unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
+            }
+
+            // Upload foto baru
+            $uploadPath = FCPATH . 'uploads/laporan';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            $fotoName = $foto->getRandomName();
+            $foto->move($uploadPath, $fotoName);
+        }
+
+        // Update data
+        $data = [
+            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
+            'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
+            'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
+            'deskripsi'        => $this->request->getPost('deskripsi'),
+            'foto'             => $fotoName,
+            'gedung_id'        => $this->request->getPost('gedung_id'),
+            'ruangan_id'       => $this->request->getPost('ruangan_id'),
+            'prioritas'        => $this->request->getPost('prioritas'),
+            'kategori'         => $this->request->getPost('kategori'),
+        ];
+
+        if ($this->laporanModel->update($id, $data)) {
+            return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil diupdate');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal mengupdate laporan');
+        }
+    }
+
+    // Hapus Laporan
+    public function delete($id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Ambil user_id
+        $userId = session()->get('user_id')
+            ?? session()->get('id')
+            ?? (is_array(session()->get('user')) ? session()->get('user')['id'] : null);
+
+        if (!$userId) {
+            return redirect()->to('/login')->with('error', 'Session tidak valid');
+        }
+
+        // Ambil data laporan
+        $laporan = $this->laporanModel->find($id);
+
+        // Validasi
+        if (!$laporan) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak ditemukan');
+        }
+
+        // Cek kepemilikan
+        if ($laporan['user_id'] != $userId) {
+            return redirect()->to('/laporan/saya')->with('error', 'Anda tidak memiliki akses');
+        }
+
+        // Cek status - hanya pending dan ditolak yang bisa dihapus
+        if (!in_array($laporan['status'], ['pending', 'ditolak'])) {
+            return redirect()->to('/laporan/saya')->with('error', 'Laporan tidak dapat dihapus');
+        }
+
+        // Hapus foto jika ada
+        if ($laporan['foto'] && file_exists(FCPATH . 'uploads/laporan/' . $laporan['foto'])) {
+            unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
+        }
+
+        // Hapus laporan
+        if ($this->laporanModel->delete($id)) {
+            return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil dihapus');
+        } else {
+            return redirect()->to('/laporan/saya')->with('error', 'Gagal menghapus laporan');
+        }
+    }
+
+
+
+
+
+    /* =========================
+       DETAIL
+    ========================= */
     public function detail($id)
     {
-        $laporanModel = new LaporanModel();
-        $laporan = $laporanModel->find($id);
+        $db = \Config\Database::connect();
 
-        // Jika data laporan tidak ditemukan, tampilkan halaman error 404
-        if (!$laporan) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan tidak ditemukan dengan ID: ' . $id);
+        // 🔐 Cek login
+        $userId = session()->get('user_id');
+        if (!$userId) {
+            return redirect()->to('/login');
         }
 
-        $data = [
+        // 📌 Ambil laporan + join gedung & ruangan
+        $laporan = $db->table('laporan l')
+            ->select('
+            l.*,
+            g.nama AS nama_gedung,
+            r.nama_ruangan
+        ')
+            ->join('gedung g', 'g.id = l.gedung_id', 'left')
+            ->join('ruangan r', 'r.id = l.ruangan_id', 'left')
+            ->where('l.id', $id)
+            ->get()
+            ->getRowArray();
+
+        if (!$laporan) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan tidak ditemukan');
+        }
+
+        // 🔒 Hak akses: hanya pemilik laporan atau admin
+        $role = session()->get('role') ?? 'user';
+        if ($laporan['user_id'] != $userId && !in_array($role, ['admin', 'staff'])) {
+            return redirect()->to('/laporan')
+                ->with('error', 'Anda tidak memiliki akses ke laporan ini.');
+        }
+
+        return view('laporan/detail', [
             'title'   => 'Detail Laporan',
             'laporan' => $laporan,
-        ];
-
-        return view('laporan/detail', $data);
+        ]);
     }
-
-
-    // app/Controllers/LaporController.php
-
-    // ... (tambahkan method ini di dalam class LaporController)
 
     public function riwayat()
     {
-        $db    = \Config\Database::connect();
-        $pager = \Config\Services::pager();
-        $perPage = 5; // Tampilkan 10 riwayat per halaman
+        $perPage = 10;
 
-        $builder = $db->table('laporan');
+        $keyword = $this->request->getGet('keyword');
 
-        // Filter UTAMA: Hanya tampilkan yang statusnya 'Selesai'
-        $builder->where('status', 'Selesai');
+        $model = new LaporanModel();
 
-        // Tambahkan fungsionalitas pencarian jika ada keyword
-        if ($keyword = $this->request->getGet('keyword')) {
-            $builder->groupStart();
-            $builder->like('lokasi_kerusakan', $keyword);
-            $builder->orLike('kategori_kerusakan', $keyword);
-            $builder->orLike('nama', $keyword);
-            $builder->groupEnd();
+
+
+        // Pencarian
+        if (!empty($keyword)) {
+            $model->groupStart()
+                ->like('lokasi_kerusakan', $keyword)
+                ->orLike('kategori', $keyword)
+                ->orLike('nama_pelapor', $keyword)
+                ->groupEnd();
         }
 
-        // Urutkan berdasarkan kapan laporan diselesaikan (updated_at)
-        $builder->orderBy('updated_at', 'ASC');
+        // Pagination CI4 Native
+        $laporan = $model
+            ->orderBy('updated_at', 'DESC')
+            ->paginate($perPage, 'default');
 
-        // Logika Pagination
-        $currentPage = $this->request->getGet('page') ?? 1;
-        $total = $builder->countAllResults(false);
-        $laporan = $builder->get($perPage, ($currentPage - 1) * $perPage)->getResultArray();
-        $pager_links = $pager->makeLinks($currentPage, $perPage, $total, 'default_full');
-
-        $data = [
-            'title'       => 'Riwayat Laporan Selesai',
-            'laporan'     => $laporan,
-            'pager_links' => $pager_links,
-            'keyword'     => $keyword,
-            'currentPage' => $currentPage,
-            'perPage'     => $perPage,
-        ];
-
-        return view('laporan/riwayat', $data);
+        return view('laporan/riwayat', [
+            'title'   => 'Riwayat Laporan Selesai',
+            'laporan' => $laporan,
+            'pager'   => $model->pager,
+            'keyword' => $keyword,
+        ]);
     }
 }
