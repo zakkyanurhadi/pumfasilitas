@@ -137,10 +137,20 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
         <div class="top-right">
             <div class="top-icon"><i class="fa-solid fa-bell"></i></div>
             <div class="top-icon"><i class="fa-solid fa-gear"></i></div>
+            <?php
+            $imgSession = session('img');
+
+            $namaFileGambar = ($imgSession && !empty($imgSession))
+                ? $imgSession
+                : 'default.png';
+
+            $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
+            ?>
 
             <div class="user-box">
-                <img src="default.png" alt="User">
+                <img src="<?= $avatarUrl ?>" alt="User">
             </div>
+
         </div>
     </nav>
 
