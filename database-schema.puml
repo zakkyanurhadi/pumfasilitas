@@ -1,0 +1,79 @@
+@startuml Facility Report Database Schema
+
+!define PRIMARY_KEY <b><color:#FFD700>🔑</color></b>
+!define FOREIGN_KEY <b><color:#4169E1>🔗</color></b>
+!define REQUIRED <color:#FF6347>*</color>
+
+skinparam class {
+    BackgroundColor<<Table>> #E8F4F8
+    BorderColor #2C5F7C
+    ArrowColor #2C5F7C
+    FontSize 11
+    FontName Arial
+}
+
+skinparam shadowing false
+skinparam linetype ortho
+
+entity "db_facility_report" as laporan <<Table>> {
+  PRIMARY_KEY id : INT UNSIGNED <<AUTO_INCREMENT>>
+  --
+  REQUIRED nama : VARCHAR(255)
+  REQUIRED npm : VARCHAR(50)
+  REQUIRED lokasi_kerusakan : VARCHAR(100)
+  REQUIRED lokasi_spesifik : VARCHAR(255)
+  REQUIRED kategori_kerusakan : VARCHAR(100)
+  REQUIRED tingkat_prioritas : VARCHAR(50)
+  REQUIRED deskripsi_kerusakan : TEXT
+  OPTIONAL foto_kerusakan : TEXT
+  REQUIRED status : ENUM('Pending','Diproses','Selesai','Ditolak')
+  --
+  REQUIRED created_at : DATETIME
+  REQUIRED updated_at : DATETIME
+  OPTIONAL keterangan_verifikasi : TEXT
+  OPTIONAL tanggal_verifikasi : DATETIME
+  FOREIGN_KEY verifikator : VARCHAR(100)
+  OPTIONAL alasan_penolakan : TEXT
+  --
+  <size:9>Indexes:</size>
+  <size:9>- INDEX idx_status (status)</size>
+  <size:9>- INDEX idx_npm (npm)</size>
+  <size:9>- INDEX idx_created (created_at)</size>
+}
+
+entity "db_facility_report_users" as users <<Table>> {
+  PRIMARY_KEY id : INT UNSIGNED <<AUTO_INCREMENT>>
+  --
+  REQUIRED npm : VARCHAR(8)
+  REQUIRED nama : VARCHAR(255)
+  REQUIRED email : VARCHAR(255)
+  REQUIRED password : VARCHAR(255)
+  OPTIONAL img : VARCHAR(255)
+  REQUIRED role : VARCHAR(20)
+  --
+  <size:9>Indexes:</size>
+  <size:9>- UNIQUE idx_npm (npm)</size>
+  <size:9>- UNIQUE idx_email (email)</size>
+  <size:9>- INDEX idx_role (role)</size>
+}
+
+laporan }o--|| users : "dibuat oleh (npm)"
+laporan }o--o| users : "dikelola oleh (verifikator)"
+
+note right of laporan
+  <b>Status Flow:</b>
+  Pending → Diproses → Selesai
+  Pending → Ditolak (spam)
+  
+  <b>Anti-Spam:</b>
+  Admin review manual
+  Status "Ditolak" + alasan_penolakan
+end note
+
+note right of users
+  <b>User Roles:</b>
+  - mahasiswa (pelapor)
+  - admin (verifikator)
+end note
+
+@enduml

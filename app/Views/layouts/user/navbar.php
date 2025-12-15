@@ -3,7 +3,7 @@
         <a class="navbar-brand d-flex align-items-center" href="<?= site_url('dashboard') ?>">
             <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
             <div>
-                <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">E-Fasilitas</span>
+                <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">FasilitasKampusKu</span>
                 <span class="d-block text-muted small" style="font-size: 0.75rem;">Politeknik Negeri Lampung</span>
             </div>
         </a>
@@ -16,9 +16,9 @@
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>">Beranda</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#alur">Alur Laporan</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#statistik">Statistik</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan') ?>">Buat Laporan</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/saya') ?>">Laporan Saya</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/riwayat') ?>">Riwayat Laporan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan') ?>">Laporan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/status') ?>">Laporan Saya</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/riwayat') ?>">Laporan Terbaru</a></li>
                 <li class="nav-item">
                     <a class="nav-link position-relative me-4" href="<?= site_url('notifikasi') ?>" title="Notifikasi">
                         <i class="fas fa-bell"></i>
@@ -31,7 +31,7 @@
 
                         $imgSession = session('img');
 
-                        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.png';
+                        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.jpg';
 
                         $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
                         ?>

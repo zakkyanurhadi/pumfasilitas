@@ -1,0 +1,54 @@
+tabel users mempunyai
+id
+npm
+password
+img
+nama
+email(bisa di isi atau tidaK untuk reset password)
+
+
+untuk Form Laporan Kerusakan Fasilitas
+
+Update dan tambahkan
+Nama Pelapor *
+Npm *
+Email *
+
+dan tampilkan preview gambar saat upload dan hapus animasi Kirim Laporan
+
+
+
+tabel laporan mempunyai
+id
+nama
+npm
+Lokasi Kerusakan
+Lokasi Spesifik
+Kategori Kerusakan
+Tingkat Prioritas
+Deskripsi Kerusakan
+Foto Kerusakan (Optional)
+
+
+Data Profile
+user-avatar
+File yang diizinkan adalah JPG, GIF, atau PNG. File paling besar 2MB
+
+*kosongkan jika tidak ingin merubah foto
+NPM
+23753041
+Nama
+Email
+Password
+
+
+
+
+
+
+
+
+1	gedung-a - sqsqdq	listrik	15 Jun 2025, 16:43	Pending	Detail
+2	gedung-b - sadaddad	air	15 Jun 2025, 16:43	Pending	Detail
+3	gedung-a - adsssssssadada	air	15 Jun 2025, 17:19	Pending	Detail
+

@@ -41,7 +41,7 @@ body {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .kpi {
@@ -124,8 +124,8 @@ body {
 .grid {
   display: grid;
   grid-template-columns: 2.4fr 1.4fr;
-  gap: 32px;
-  margin-bottom: 40px;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .card {
@@ -160,9 +160,10 @@ canvas {
 
 /* ================= BOTTOM ================= */
 .bottom {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: 2.4fr 1fr;
-  gap: 32px;
+  gap: 20px;
 }
 
 /* ================= TABLE ================= */

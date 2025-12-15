@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+<!-- update -->
 
 <head>
     <meta charset="UTF-8">
@@ -261,22 +262,80 @@
         }
 
         /* === FOOTER === */
-        footer {
-            background: #1a202c;
-            color: white;
-            padding: 4rem 0 2rem;
-        }
+/* === FOOTER === */
+/* =========================
+   PURE CUSTOM FOOTER
+========================= */
 
-        .footer-link {
-            color: #a0aec0;
-            text-decoration: none;
-            margin-bottom: 10px;
-            display: block;
-        }
+.site-footer {
+    background: #1a202c;
+    color: #fff;
+    padding: 60px 0 20px;
+}
 
-        .footer-link:hover {
-            color: white;
-        }
+/* wrapper */
+.footer-inner {
+    max-width: 1140px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* row utama */
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* TENGAH VERTIKAL */
+    gap: 40px;
+}
+
+/* kolom */
+.footer-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* judul */
+.site-footer h5,
+.site-footer h6 {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* teks */
+.site-footer p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #cbd5e0;
+    margin: 0;
+}
+
+/* link */
+.footer-links a {
+    font-size: 13px;
+    color: #a0aec0;
+    text-decoration: none;
+    margin-bottom: 6px;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+/* garis */
+.site-footer hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    margin: 30px 0 15px;
+}
+
+/* copyright */
+.footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: #a0aec0;
+}
 
         .tooltip-wrap {
             position: relative;
@@ -325,21 +384,93 @@
             /* Tambah jarak vertikal */
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.2rem;
-            }
+     /* =========================
+   TABLET & HP
+   (≤768px)
+========================= */
+@media (max-width: 768px) {
 
-            .info-cards {
-                margin-top: 2rem;
-            }
+    .site-footer {
+        padding: 40px 0 20px;
+    }
 
-            .btn-hero {
-                width: 100%;
-                margin-bottom: 10px;
-                margin-left: 0;
-            }
-        }
+    .footer-inner {
+        padding: 0 16px;
+    }
+
+    .footer-row {
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .footer-col {
+        align-items: flex-start; /* RATA KIRI */
+        text-align: left;        /* RATA KIRI */
+        width: 100%;
+    }
+
+    .site-footer h5 {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .site-footer h6 {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+
+    .site-footer p {
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .footer-links a {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .site-footer hr {
+        margin: 22px 0 14px;
+    }
+
+    .footer-bottom {
+        text-align: center; /* copyright tetap tengah */
+        font-size: 12px;
+    }
+}
+
+/* =========================
+   HP KECIL
+   (≤480px)
+========================= */
+@media (max-width: 480px) {
+
+    .site-footer {
+        padding: 32px 0 15px;
+    }
+
+    .footer-row {
+        gap: 18px;
+    }
+
+    .site-footer h5 {
+        font-size: 14px;
+    }
+
+    .site-footer h6 {
+        font-size: 13px;
+    }
+
+    .site-footer p,
+    .footer-links a {
+        font-size: 12px;
+    }
+
+    .footer-bottom {
+        font-size: 11px;
+    }
+}
+
     </style>
 </head>
 
@@ -514,33 +645,41 @@
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5 mb-4">
-                    <h5 class="fw-bold text-white mb-3">FasilitasKampusKu</h5>
-                    <p class="text-white-50 small">
-                        Sistem Informasi Pelaporan Kerusakan Fasilitas Kampus Politeknik Negeri Lampung.
-                        Dibuat sebagai proyek pembelajaran TI.
-                    </p>
-                </div>
-                <div class="col-md-2 offset-md-1 mb-4">
-                    <h6 class="fw-bold text-white mb-3">Tautan</h6>
-                    <a href="#" class="footer-link small">Website Polinela</a>
-                    <a href="#" class="footer-link small">Sistem Akademik</a>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h6 class="fw-bold text-white mb-3">Kontak</h6>
-                    <p class="text-white-50 small mb-1"><i class="fas fa-map-marker-alt me-2"></i> Jl. Soekarno Hatta No.10, Rajabasa</p>
-                    <p class="text-white-50 small"><i class="fas fa-envelope me-2"></i> humas@polinela.ac.id</p>
-                </div>
+    <footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-row">
+
+            <div class="footer-col footer-about">
+                <h5>E-Fasilitas</h5>
+                <p>
+                    Sistem Informasi Pelaporan Kerusakan Fasilitas Kampus
+                    Politeknik Negeri Lampung. Dibuat sebagai proyek
+                    pembelajaran TI.
+                </p>
             </div>
-            <hr class="border-secondary my-4">
-            <div class="text-center text-white-50 small">
-                &copy; 2024 Politeknik Negeri Lampung. All rights reserved.
+
+            <div class="footer-col footer-links">
+                <h6>Tautan</h6>
+                <a href="#">Website Polinela</a>
+                <a href="#">Sistem Akademik</a>
             </div>
+
+            <div class="footer-col footer-contact">
+                <h6>Kontak</h6>
+                <p>Jl. Soekarno Hatta No.10, Rajabasa</p>
+                <p>humas@polinela.ac.id</p>
+            </div>
+
         </div>
-    </footer>
+
+        <hr>
+
+        <div class="footer-bottom">
+            &copy; 2024 Politeknik Negeri Lampung. All rights reserved.
+        </div>
+    </div>
+</footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

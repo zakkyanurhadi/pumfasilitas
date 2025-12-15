@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -281,7 +280,6 @@
         </a>
 
         <div class="login-card">
-
             <div class="login-left">
                 <div class="left-content">
                     <h3 class="fw-bold">Sistem Pelaporan</h3>
@@ -400,7 +398,6 @@
                 $('.form-control').removeClass('is-invalid');
                 const btn = $(this).find('button[type="submit"]');
                 const originalText = btn.html();
-
                 btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Memproses...').prop('disabled', true);
 
                 $.ajax({
@@ -448,7 +445,6 @@
                 const btn = $(this).find('button[type="submit"]');
                 const originalText = btn.text();
                 btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...').prop('disabled', true);
-
                 $.ajax({
                     url: "<?= site_url('forgot-password') ?>",
                     type: "POST",
@@ -478,5 +474,4 @@
         });
     </script>
 </body>
-
 </html>

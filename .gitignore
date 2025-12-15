@@ -64,6 +64,7 @@ writable/debugbar/*
 !writable/debugbar/.gitkeep
 
 php_errors.log
+.env
 
 #-------------------------
 # User Guide Temp Files
@@ -124,3 +125,4 @@ _modules/*
 
 /results/
 /phpunit*.xml
+.aider*

@@ -85,7 +85,6 @@ class AuthController extends Controller
         if ($this->session->get('isLoggedIn')) {
             return redirect()->to('dashboard');
         }
-
         // Tampilkan view register
         return view('auth/register');
     }
