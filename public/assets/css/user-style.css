@@ -52,6 +52,7 @@ body {
 }
 
 /* User Profile Dropdown Styling */
+/* update */
 .user-profile {
     z-index: 9999 !important;
     position: relative;
@@ -357,10 +358,49 @@ body {
 }
 
 /* === FOOTER === */
+/* === FOOTER === */
 footer {
     background: #1a202c;
     color: white;
-    padding: 4rem 0 2rem;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Override padding Bootstrap py-5 dan py-3 */
+footer .footer-top {
+    padding: 25px 0 !important;
+}
+
+footer .footer-bottom {
+    padding: 15px 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer .container {
+    padding: 0 15px !important;
+}
+
+footer .row {
+    margin: 0 !important;
+}
+
+footer h5, footer h6 {
+    font-size: 15px !important;
+    margin-bottom: 12px !important;
+}
+
+footer p, footer li {
+    font-size: 13px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.5 !important;
+}
+
+footer ul {
+    margin-bottom: 0 !important;
+}
+
+footer .col-md-3, footer .col-md-4, footer .col-md-5 {
+    margin-bottom: 0 !important;
 }
 
 .footer-link {
@@ -373,7 +413,6 @@ footer {
 .footer-link:hover {
     color: white;
 }
-
 
 
     .tooltip-wrap {
@@ -433,16 +472,86 @@ footer {
     }
 }
 
+/* =========================
+   FOOTER RESPONSIVE FIX
+   HP & TABLET
+========================= */
 @media (max-width: 768px) {
-    .hero-title {
-        font-size: 2.2rem;
+
+    footer {
+        font-size: 12px;
     }
-    .info-cards {
-        margin-top: 2rem;
+
+    footer .footer-top {
+        padding: 12px 0 !important;
     }
-    .btn-hero {
-        width: 100%;
-        margin-bottom: 10px;
-        margin-left: 0;
+
+    footer .footer-bottom {
+        padding: 8px 0 !important;
+    }
+
+    footer h5,
+    footer h6 {
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
+    }
+
+    footer p,
+    footer li {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+        margin-bottom: 4px !important;
+    }
+
+    footer ul {
+        margin-bottom: 6px !important;
+    }
+
+    footer .col-md-3,
+    footer .col-md-4,
+    footer .col-md-5 {
+        margin-bottom: 10px !important;
     }
 }
+@media (max-width: 480px) {
+
+    footer {
+        font-size: 11px;
+    }
+
+    footer .footer-top {
+        padding: 8px 0;
+    }
+
+    footer .footer-bottom {
+        padding: 6px 0;
+    }
+
+    footer h5,
+    footer h6 {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    footer p,
+    footer li {
+        font-size: 11px;
+        line-height: 1.35;
+        margin-bottom: 3px;
+    }
+
+    footer ul {
+        margin-bottom: 4px;
+    }
+
+    footer .row {
+        row-gap: 6px;
+    }
+
+    footer .col-md-3,
+    footer .col-md-4,
+    footer .col-md-5 {
+        margin-bottom: 8px;
+    }
+}
+
