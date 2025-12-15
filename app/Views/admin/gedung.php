@@ -196,6 +196,159 @@
     opacity: 1;
 }
 
+/* =====================================================
+   RESPONSIVE – KELOLA GEDUNG
+===================================================== */
+@media (max-width: 768px) {
+
+    /* ===== CONTAINER ===== */
+    .table-container {
+        margin: 0.75rem;
+        padding: 1.2rem 1rem;
+        border-radius: 16px;
+    }
+
+    .table-container h2 {
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+    }
+
+    /* ===== FILTER BAR ===== */
+    .table-container > div:first-of-type {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+
+    .search-group {
+        width: 100%;
+    }
+
+    .search-group input {
+        width: 100%;
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+
+    .btn-search {
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* tombol tambah */
+    .table-container > div:first-of-type > div:last-child {
+        align-self: flex-end;
+    }
+
+    .table-container > div:first-of-type button {
+        font-size: 0.75rem;
+        padding: 0.45rem 0.8rem;
+        border-radius: 10px;
+    }
+
+    /* ===== TABLE WRAPPER ===== */
+    .table-container > div[style*="overflow-x"] {
+        margin-top: 0.8rem;
+        border-radius: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== TABLE ===== */
+    .table-gedung {
+        min-width: 720px;
+        font-size: 0.75rem;
+    }
+
+    .table-gedung th {
+        font-size: 0.7rem;
+        padding: 0.55rem 0.6rem;
+        position: sticky;
+        top: 0;
+        background: var(--gray-100);
+        z-index: 1;
+    }
+
+    .table-gedung td {
+        padding: 0.55rem 0.6rem;
+        white-space: nowrap;
+    }
+
+    /* ===== AKSI BUTTON ===== */
+    .table-gedung td:last-child {
+        gap: 0.35rem;
+    }
+
+    .btn-sm {
+        font-size: 0.6rem;
+        padding: 0.35rem 0.55rem;
+        border-radius: 8px;
+    }
+
+    /* ===== PAGINATION ===== */
+    .pagination-container {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .pagination li a {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.45rem;
+    }
+
+    /* ===== TOOLTIP (DISABLE HOVER DI MOBILE) ===== */
+    .tooltip-text {
+        display: none;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-content {
+        width: 92%;
+        max-width: 420px;
+        padding: 1.4rem 1.2rem;
+        border-radius: 18px;
+    }
+
+    .modal-content h3 {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+
+    .modal-content button {
+        height: 40px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+}
+
+/* ===== EXTRA SMALL DEVICE ===== */
+@media (max-width: 480px) {
+
+    .table-container {
+        margin: 0.5rem;
+        padding: 1rem 0.9rem;
+    }
+
+    .table-container h2 {
+        font-size: 0.95rem;
+    }
+
+    .table-gedung {
+        min-width: 680px;
+    }
+}
+
+
 </style>
 
 <div class="table-container">

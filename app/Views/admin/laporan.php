@@ -212,6 +212,183 @@
         opacity: 1;
     }
 
+    /* =====================================================
+   RESPONSIVE MOBILE – STATUS LAPORAN (FINAL)
+===================================================== */
+@media (max-width: 768px) {
+
+    /* ===== GRID ===== */
+    .grid-container {
+        grid-template-columns: 1fr;
+        margin: 0.75rem;
+        gap: 0.75rem;
+    }
+
+    /* ===== CARD TABEL ===== */
+    .report-table-container {
+        padding: 1rem 0.9rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 28px rgba(15,23,42,.08);
+    }
+
+    .report-table-container h2 {
+        font-size: 1rem;
+        margin-bottom: 0.6rem;
+        text-align: left;
+        padding-left: 0.25rem;
+    }
+
+    /* ===== FILTER ===== */
+    .report-table-container > div:first-of-type {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .search-group {
+        width: 100%;
+        gap: 0.4rem;
+    }
+
+    .search-group input {
+        width: 100%;
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+
+    .btn-search {
+        height: 38px;
+        font-size: 0.78rem;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* ===== TABLE WRAPPER ===== */
+    .report-table-container > div[style*="overflow-x"] {
+        margin-top: 0.6rem;
+        border-radius: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== TABLE ===== */
+    .report-table {
+        min-width: 720px;
+        font-size: 0.75rem;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .report-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: var(--gray-100);
+        font-size: 0.72rem;
+        padding: 0.55rem 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .report-table td {
+        padding: 0.55rem 0.6rem;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .report-table tbody tr:active {
+        background: #f8fafc;
+    }
+
+    /* ===== STATUS ===== */
+    .status-badge {
+        font-size: 0.6rem;
+        padding: 3px 9px;
+        min-width: unset;
+        font-weight: 600;
+    }
+
+    /* ===== AKSI ===== */
+    .btn-sm {
+        font-size: 0.6rem;
+        padding: 0.35rem 0.55rem;
+        border-radius: 8px;
+    }
+
+    /* ===== PAGINATION ===== */
+    .pagination-container {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .pagination li a {
+        font-size: 0.68rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* ===== PANEL DETAIL ===== */
+    .detail-card,
+    .detail-card * {
+        font-size: 0.85rem;
+    }
+
+    .detail-card {
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 10px 28px rgba(15,23,42,.08);
+    }
+
+    /* ===== MODAL ===== */
+    .modal-content {
+        width: 92%;
+        max-width: 420px;
+        padding: 1.3rem 1.2rem;
+        border-radius: 18px;
+    }
+
+    .modal-content h2 {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 0.8rem;
+    }
+
+    .modal-content input,
+    .modal-content textarea,
+    .modal-content select {
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+
+    .modal-content button {
+        height: 40px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+}
+
+/* ===== EXTRA SMALL DEVICE ===== */
+@media (max-width: 480px) {
+
+    .grid-container {
+        margin: 0.5rem;
+    }
+
+    .report-table-container {
+        padding: 0.85rem;
+    }
+
+    .report-table-container h2 {
+        font-size: 0.92rem;
+    }
+
+    .report-table {
+        min-width: 680px;
+    }
+}
+
 
 </style>
 

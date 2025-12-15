@@ -235,6 +235,197 @@
         visibility: visible;
         opacity: 1;
     }
+
+    /* =====================================================
+   ULTIMATE MOBILE REFINEMENT (APP-LIKE)
+===================================================== */
+@media (max-width: 768px) {
+
+    body {
+        background: #f4f6fb;
+    }
+
+    /* ================= MAIN CARD ================= */
+    .table-container {
+        margin: 0.6rem;
+        padding: 0.9rem;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(15,23,42,.08);
+    }
+
+    .table-container h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        padding-left: 0.3rem;
+    }
+
+    /* ================= FILTER BAR ================= */
+    .table-container > div:first-of-type {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .search-group {
+        width: 100%;
+        display: flex;
+        gap: 0.4rem;
+    }
+
+    .search-group input {
+        width: 100%;
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+        padding: 0 12px;
+    }
+
+    .btn-search {
+        height: 38px;
+        font-size: 0.75rem;
+        padding: 0 14px;
+        border-radius: 12px;
+    }
+
+    .btn-add {
+        width: 100%;
+        padding: 9px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        border-radius: 14px;
+    }
+
+    /* ================= TABLE WRAPPER ================= */
+    .table-container > div[style*="overflow-x"] {
+        margin-top: 0.6rem;
+        border-radius: 14px;
+        background: #fff;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ================= TABLE ================= */
+    .table-users {
+        min-width: 720px;
+        font-size: 0.75rem;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table-users thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f5f9;
+        font-size: 0.72rem;
+        padding: 0.55rem 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        z-index: 2;
+    }
+
+    .table-users tbody tr {
+        transition: background 0.15s ease;
+    }
+
+    .table-users tbody tr:active {
+        background: #f8fafc;
+    }
+
+    .table-users td {
+        padding: 0.55rem 0.6rem;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    /* ================= STATUS ================= */
+    .status-active {
+        background: #22c55e;
+        font-size: 0.6rem;
+        padding: 3px 9px;
+        font-weight: 600;
+    }
+
+    .status-suspended {
+        background: #ef4444;
+        font-size: 0.6rem;
+        padding: 3px 9px;
+        font-weight: 600;
+    }
+
+    /* ================= ACTION BUTTON ================= */
+    .btn-sm {
+        font-size: 0.6rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 8px;
+    }
+
+    /* ================= PAGINATION ================= */
+    .pagination-container {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .pagination {
+        border-radius: 12px;
+    }
+
+    .pagination li a {
+        font-size: 0.68rem;
+        padding: 0.3rem 0.55rem;
+    }
+
+    /* ================= MODAL ================= */
+    .modal-content {
+        width: 92%;
+        max-width: 420px;
+        border-radius: 20px;
+        padding: 1.3rem 1.2rem;
+    }
+
+    .modal-content h3 {
+        font-size: 1rem;
+        margin-bottom: 0.7rem;
+        text-align: center;
+    }
+
+    .modal-content input,
+    .modal-content select {
+        height: 38px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+    }
+
+    .modal-content button {
+        height: 40px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+}
+
+/* ================= EXTRA SMALL DEVICE ================= */
+@media (max-width: 480px) {
+
+    .table-container {
+        margin: 0.4rem;
+        padding: 0.8rem;
+    }
+
+    .table-container h2 {
+        font-size: 0.92rem;
+    }
+
+    .table-users {
+        min-width: 680px;
+    }
+
+    .btn-add {
+        font-size: 0.78rem;
+    }
+}
+
 </style>
 
 <div class="table-container">

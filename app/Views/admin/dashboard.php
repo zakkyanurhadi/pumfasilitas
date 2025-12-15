@@ -258,26 +258,116 @@ tbody tr td:last-child {
   box-shadow: 0 16px 40px rgba(185, 28, 28, .18);
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 1200px) {
-  .kpis {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* ================= RESPONSIVE CONTENT ================= */
 
-@media (max-width: 900px) {
+/* TABLET (≤ 992px) */
+@media (max-width: 992px) {
+
+  .wrapper {
+    padding: 0 12px;
+  }
+
+  /* KPI jadi 2 kolom */
   .kpis {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .kpi h2 {
+    font-size: 28px;
+  }
+
+  /* Chart & card jadi satu kolom */
   .grid,
   .bottom {
     grid-template-columns: 1fr;
   }
+
+  .card {
+    padding: 24px;
+  }
+
+  canvas {
+    height: 300px !important;
+  }
+
+  /* Table font diperkecil */
+  table {
+    font-size: 13px;
+  }
 }
 
-@media (max-width: 480px) {
+/* MOBILE (≤ 576px) */
+@media (max-width: 576px) {
+
+  .wrapper {
+    padding: 0 8px;
+  }
+
+  /* KPI 1 kolom */
   .kpis {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .kpi {
+    padding: 18px 18px 24px;
+  }
+
+  .kpi h2 {
+    font-size: 26px;
+  }
+
+  .badge {
+    top: 14px;
+    right: 14px;
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  /* Card spacing */
+  .card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  canvas {
+    height: 260px !important;
+  }
+
+  /* TABLE RESPONSIVE (scroll horizontal) */
+  .card table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  thead th {
+    font-size: 12px;
+  }
+
+  tbody td {
+    font-size: 12px;
+    padding: 12px;
+  }
+
+  /* Status & priority lebih kecil */
+  .status {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  .priority {
+    font-size: 11px;
+  }
+
+  /* Kinerja Admin */
+  .card p {
+    font-size: 13px;
   }
 }
 </style>
