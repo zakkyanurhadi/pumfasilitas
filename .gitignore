@@ -64,10 +64,7 @@ writable/debugbar/*
 !writable/debugbar/.gitkeep
 
 php_errors.log
-<<<<<<< HEAD
 .env
-=======
->>>>>>> zaky/user
 
 #-------------------------
 # User Guide Temp Files
@@ -128,7 +125,4 @@ _modules/*
 
 /results/
 /phpunit*.xml
-<<<<<<< HEAD
 .aider*
-=======
->>>>>>> zaky/user
