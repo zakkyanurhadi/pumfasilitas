@@ -3,10 +3,9 @@
 
 <style>
     .grid-container {
-        display: grid;
-        grid-template-columns: 3.5fr 1fr;
-        gap: 1rem;
-        align-items: start;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
         width: 100%;
     }
 
@@ -19,12 +18,6 @@
     .search-group input {
         width: 260px;
         /* → atur panjang search bar */
-    }
-
-    @media (max-width: 992px) {
-        .grid-container {
-            grid-template-columns: 1fr;
-        }
     }
 
     .report-table-container {

@@ -106,7 +106,7 @@ function animateCounters() {
 function toggleSidebar() {
     const sidebar = document.querySelector(".sidebar");
     const toggle = document.querySelector(".sidebar-toggle");
-    const icon = document.querySelector(".toggle-icon");
+    const icon = toggle.querySelector("i");
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
@@ -123,19 +123,18 @@ function toggleSidebar() {
         }
         overlay.classList.toggle("active");
         
-        // Update Icon
+        // Update Icon - menggunakan Font Awesome icons
         const isActive = sidebar.classList.contains("mobile-active");
-        icon.textContent = isActive ? "✕" : "☰"; // X (close) or hamburger (open)
+        icon.className = isActive ? "toggle-icon fa-solid fa-times" : "toggle-icon fa-solid fa-bars";
         
     } else {
         // DESKTOP LOGIC: Toggle 'sidebar-closed' (Collapse/Expand)
         sidebar.classList.toggle("sidebar-closed");
         toggle.classList.toggle("closed");
 
-        // ubah icon sesuai kondisi
-        icon.textContent = sidebar.classList.contains("sidebar-closed")
-            ? "❯"
-            : "❮";
+        // Update icon - menggunakan Font Awesome icons
+        const isClosed = sidebar.classList.contains("sidebar-closed");
+        icon.className = isClosed ? "toggle-icon fa-solid fa-chevron-right" : "toggle-icon fa-solid fa-chevron-left";
 
         // Tambahan: atur body agar main-content ikut menyesuaikan
         if (sidebar.classList.contains("sidebar-closed")) {
@@ -174,17 +173,25 @@ document.querySelectorAll('.sidebar-dropdown > a').forEach(drop => {
 });
 
 // ===== AUTO OPEN DROPDOWN JIKA SUBMENU AKTIF =====
-document.addEventListener("DOMContentLoaded", function () {
-
-    const activeSub = document.querySelector(".active-submenu");
-    if (activeSub) {
-
-        const parentDrop = activeSub.closest(".sidebar-dropdown");
-        const submenu = parentDrop.querySelector(".sidebar-submenu");
-
-        parentDrop.classList.add("active");
-        submenu.style.maxHeight = submenu.scrollHeight + "px";
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    // Pasang event listener ke tombol toggle
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
     }
+
+    // Tutup sidebar mobile jika klik di luar area sidebar
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.sidebar');
+        const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
+        const isClickOnToggle = sidebarToggle && sidebarToggle.contains(event.target);
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isClickInsideSidebar && !isClickOnToggle && isMobile && sidebar.classList.contains('mobile-active')) {
+            toggleSidebar();
+        }
+    });
 });
 
 

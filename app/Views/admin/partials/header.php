@@ -2,162 +2,105 @@
 $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 ?>
 
-<body>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <div class="sidebar-logo">
-                <img src="/assets/img/logopolinela.png" alt="Logo">
-            </div>
-            <span class="sidebar-title-up">E-Fasilitas</span>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-logo">
+            <img src="<?= base_url('assets/img/logopolinela.png') ?>" alt="Logo">
         </div>
-
-        <ul class="sidebar-menu">
-            <li class="sidebar-title">Menu</li>
-
-            <li>
-                <a href="<?= site_url('dashboardadmin') ?>"
-                    class="sidebar-item <?= $uri == 'dashboardadmin' ? 'active' : '' ?>">
-                    <div class="icon-box"><i class="fa-solid fa-house"></i></div>
-                    <span>Home</span>
-                </a>
-            </li>
-
-            <li
-                class="sidebar-dropdown
-            <?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'active' : '' ?>">
-
-                <a href="<?= site_url('laporanadmin') ?>"
-                    class="sidebar-item <?= $uri == 'laporanadmin' ? 'active' : '' ?>">
-                    <div class="icon-box"><i class="fa-solid fa-file-lines"></i></div>
-                    <span>Laporan</span>
-                    <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-                </a>
-
-                <ul class="sidebar-submenu"
-                    style="<?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'max-height:500px' : '' ?>">
-
-                    <li>
-                        <a href="<?= site_url('laporanadminpending') ?>"
-                            class="<?= $uri == 'laporanadminpending' ? 'active-submenu' : '' ?>">
-                            <i class="fa-solid fa-clock"></i> Laporan Pending
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="<?= site_url('laporanadmindiproses') ?>"
-                            class="<?= $uri == 'laporanadmindiproses' ? 'active-submenu' : '' ?>">
-                            <i class="fa-solid fa-spinner"></i> Laporan Diproses
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="<?= site_url('riwayatadmin') ?>"
-                            class="<?= $uri == 'riwayatadmin' ? 'active-submenu' : '' ?>">
-                            <i class="fa-solid fa-check-circle"></i> Laporan Selesai
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
-
-
-            <li class="sidebar-dropdown 
-            <?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'active' : '' ?>">
-
-                <a href="<?= site_url('akunadmin') ?>" class="sidebar-item">
-                    <div class="icon-box"><i class="fa-solid fa-user-gear"></i></div>
-                    <span>Akun</span>
-                    <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-                </a>
-
-                <ul class="sidebar-submenu"
-                    style="<?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'max-height:500px' : '' ?>">
-
-                    <?php if (session()->get('role') === 'superadmin'): ?>
-                        <li>
-                            <a href="<?= site_url('akunadmin') ?>"
-                                class="<?= $uri == 'akunadmin' ? 'active-submenu' : '' ?>">
-                                <i class="fa-solid fa-user-shield"></i> Akun Admin
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-                    <li>
-                        <a href="<?= site_url('akunuser') ?>" class="<?= $uri == 'akunuser' ? 'active-submenu' : '' ?>">
-                            <i class="fa-solid fa-users"></i> Akun User
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
-
-
-            <?php if (session()->get('role') === 'superadmin'): ?>
-                <li>
-                    <a href="<?= site_url('gedung') ?>" class="sidebar-item <?= $uri == 'gedung' ? 'active' : '' ?>">
-                        <div class="icon-box"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                        <span>Kelola Gedung</span>
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
-
-
-        <ul class="sidebar-menu section-bottom">
-            <li class="sidebar-title">Akun</li>
-
-            <li>
-                <a href="<?= site_url('profileadmin') ?>"
-                    class="sidebar-item <?= $uri == 'profileadmin' ? 'active' : '' ?>">
-                    <div class="icon-box"><i class="fa-solid fa-user"></i></div>
-                    <span>My Profile</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="<?= site_url('logout') ?>" class="sidebar-item">
-                    <div class="icon-box"><i class="fa-solid fa-right-from-bracket"></i></div>
-                    <span>Keluar</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- TOGGLE BUTTON -->
-    <div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
-        <div class="tooltip-wrap">
-            <span class="toggle-icon">❮</span>
-            <span class="tooltip-text">Geser</span>
-        </div>
+        <span class="sidebar-title">E-Fasilitas</span>
     </div>
 
+    <ul class="sidebar-menu">
+        <li class="sidebar-title">Menu</li>
+        <li>
+            <a href="<?= site_url('dashboardadmin') ?>"
+                class="sidebar-item <?= $uri == 'dashboardadmin' ? 'active' : '' ?>">
+                <div class="icon-box"><i class="fa-solid fa-house"></i></div>
+                <span>Home</span>
+            </a>
+        </li>
 
-    <!-- NAVBAR ATAS -->
-    <nav class="top-navbar">
-        <div class="top-left"></div>
+        <!-- ... (sisa menu laporan, akun, dll) ... -->
+        <li
+            class="sidebar-dropdown <?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'active' : '' ?>">
+            <a href="#" class="sidebar-item">
+                <div class="icon-box"><i class="fa-solid fa-file-lines"></i></div>
+                <span>Laporan</span>
+                <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+            </a>
+            <ul class="sidebar-submenu"
+                style="<?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'max-height:500px' : '' ?>">
+                <li><a href="<?= site_url('laporanadminpending') ?>"><i class="fa-solid fa-clock"></i> Laporan
+                        Pending</a></li>
+                <li><a href="<?= site_url('laporanadmindiproses') ?>"><i class="fa-solid fa-spinner"></i> Laporan
+                        Diproses</a></li>
+                <li><a href="<?= site_url('riwayatadmin') ?>"><i class="fa-solid fa-check-circle"></i> Laporan
+                        Selesai</a></li>
+            </ul>
+        </li>
 
-        <div class="top-right">
-            <div class="top-icon"><i class="fa-solid fa-bell"></i></div>
-            <div class="top-icon"><i class="fa-solid fa-gear"></i></div>
-            <?php
-            $imgSession = session('img');
+        <li class="sidebar-dropdown <?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'active' : '' ?>">
+            <a href="#" class="sidebar-item">
+                <div class="icon-box"><i class="fa-solid fa-user-gear"></i></div>
+                <span>Akun</span>
+                <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+            </a>
+            <ul class="sidebar-submenu"
+                style="<?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'max-height:500px' : '' ?>">
+                <?php if (session()->get('role') === 'superadmin'): ?>
+                    <li><a href="<?= site_url('akunadmin') ?>"><i class="fa-solid fa-user-shield"></i> Akun Admin</a></li>
+                <?php endif; ?>
+                <li><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i> Akun User</a></li>
+            </ul>
+        </li>
 
-            $namaFileGambar = ($imgSession && !empty($imgSession))
-                ? $imgSession
-                : 'default.png';
+        <?php if (session()->get('role') === 'superadmin'): ?>
+            <li>
+                <a href="<?= site_url('gedung') ?>" class="sidebar-item <?= $uri == 'gedung' ? 'active' : '' ?>">
+                    <div class="icon-box"><i class="fa-solid fa-building"></i></div>
+                    <span>Kelola Gedung</span>
+                </a>
+            </li>
+        <?php endif; ?>
+    </ul>
 
-            $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
-            ?>
+    <ul class="sidebar-menu">
+        <li class="sidebar-title">Akun</li>
+        <li>
+            <a href="<?= site_url('profileadmin') ?>"
+                class="sidebar-item <?= $uri == 'profileadmin' ? 'active' : '' ?>">
+                <div class="icon-box"><i class="fa-solid fa-user"></i></div>
+                <span>My Profile</span>
+            </a>
+        </li>
+        <li>
+            <a href="<?= site_url('logout') ?>" class="sidebar-item">
+                <div class="icon-box"><i class="fa-solid fa-right-from-bracket"></i></div>
+                <span>Keluar</span>
+            </a>
+        </li>
+    </ul>
+</aside>
 
-            <div class="user-box">
-                <img src="<?= $avatarUrl ?>" alt="User">
-            </div>
+<!-- TOGGLE BUTTON -->
+<div class="sidebar-toggle" id="sidebarToggle">
+    <i class="toggle-icon fa-solid fa-bars"></i>
+</div>
 
+<!-- NAVBAR ATAS -->
+<nav class="top-navbar">
+    <div class="page-title">Dashboard</div>
+    <div class="top-right">
+        <div class="top-icon"><i class="fa-solid fa-bell"></i></div>
+        <div class="top-icon"><i class="fa-solid fa-gear"></i></div>
+        <?php
+        $imgSession = session('img');
+        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.png';
+        $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
+        ?>
+        <div class="user-box">
+            <img src="<?= $avatarUrl ?>" alt="User Avatar">
         </div>
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <!-- isi halaman -->
+    </div>
+</nav>
