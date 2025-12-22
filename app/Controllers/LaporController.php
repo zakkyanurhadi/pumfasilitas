@@ -39,15 +39,15 @@ class LaporController extends BaseController
         }
 
         $rules = [
-            'nama_pelapor'     => 'required|min_length[3]',
+            'nama_pelapor' => 'required|min_length[3]',
             'lokasi_kerusakan' => 'required',
-            'lokasi_spesifik'  => 'required',
-            'gedung_id'        => 'required|is_not_unique[gedung.id]',
-            'ruangan_id'       => 'required|is_not_unique[ruangan.id]',
-            'kategori'         => 'required',
-            'prioritas'        => 'required|in_list[low,medium,high]',
-            'deskripsi'        => 'required|min_length[5]',
-            'foto'             => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+            'lokasi_spesifik' => 'required',
+            'gedung_id' => 'required|is_not_unique[gedung.id]',
+            'ruangan_id' => 'required|is_not_unique[ruangan.id]',
+            'kategori' => 'required',
+            'prioritas' => 'required|in_list[low,medium,high]',
+            'deskripsi' => 'required|min_length[5]',
+            'foto' => 'permit_empty|max_size[foto,2048]|is_image[foto]',
         ];
 
         if (!$this->validate($rules)) {
@@ -86,17 +86,17 @@ class LaporController extends BaseController
 
         // Siapkan data untuk disimpan
         $data = [
-            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
+            'nama_pelapor' => $this->request->getPost('nama_pelapor'),
             'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
-            'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
-            'deskripsi'        => $this->request->getPost('deskripsi'),
-            'foto'             => $fotoName,
-            'status'           => 'pending',
-            'user_id'          => $userId,
-            'gedung_id'        => $this->request->getPost('gedung_id'),
-            'ruangan_id'       => $this->request->getPost('ruangan_id'),
-            'prioritas'        => $this->request->getPost('prioritas'),
-            'kategori'         => $this->request->getPost('kategori'),
+            'lokasi_spesifik' => $this->request->getPost('lokasi_spesifik'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
+            'foto' => $fotoName,
+            'status' => 'pending',
+            'user_id' => $userId,
+            'gedung_id' => $this->request->getPost('gedung_id'),
+            'ruangan_id' => $this->request->getPost('ruangan_id'),
+            'prioritas' => $this->request->getPost('prioritas'),
+            'kategori' => $this->request->getPost('kategori'),
         ];
 
         try {
@@ -171,12 +171,12 @@ class LaporController extends BaseController
             ->getRowArray();
 
         $data = [
-            'title'       => 'Laporan Saya',
-            'laporan'     => $laporan,
-            'pager'   => $pager,
-            'stats'       => $stats,
-            'status'      => $status,
-            'keyword'     => $keyword
+            'title' => 'Laporan Saya',
+            'laporan' => $laporan,
+            'pager' => $pager,
+            'stats' => $stats,
+            'status' => $status,
+            'keyword' => $keyword
         ];
 
         return view('laporan/saya', $data);
@@ -218,9 +218,9 @@ class LaporController extends BaseController
         }
 
         $data = [
-            'title'   => 'Edit Laporan',
+            'title' => 'Edit Laporan',
             'laporan' => $laporan,
-            'gedung'  => $this->gedungModel->findAll(),
+            'gedung' => $this->gedungModel->findAll(),
             'ruangan' => $this->ruanganModel->findAll()
         ];
 
@@ -252,15 +252,15 @@ class LaporController extends BaseController
 
         // Validasi
         $rules = [
-            'nama_pelapor'     => 'required|min_length[3]',
+            'nama_pelapor' => 'required|min_length[3]',
             'lokasi_kerusakan' => 'required',
-            'lokasi_spesifik'  => 'required',
-            'gedung_id'        => 'required|is_not_unique[gedung.id]',
-            'ruangan_id'       => 'required|is_not_unique[ruangan.id]',
-            'kategori'         => 'required',
-            'prioritas'        => 'required|in_list[low,medium,high]',
-            'deskripsi'        => 'required|min_length[5]',
-            'foto'             => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+            'lokasi_spesifik' => 'required',
+            'gedung_id' => 'required|is_not_unique[gedung.id]',
+            'ruangan_id' => 'required|is_not_unique[ruangan.id]',
+            'kategori' => 'required',
+            'prioritas' => 'required|in_list[low,medium,high]',
+            'deskripsi' => 'required|min_length[5]',
+            'foto' => 'permit_empty|max_size[foto,2048]|is_image[foto]',
         ];
 
         if (!$this->validate($rules)) {
@@ -288,15 +288,15 @@ class LaporController extends BaseController
 
         // Update data
         $data = [
-            'nama_pelapor'     => $this->request->getPost('nama_pelapor'),
+            'nama_pelapor' => $this->request->getPost('nama_pelapor'),
             'lokasi_kerusakan' => $this->request->getPost('lokasi_kerusakan'),
-            'lokasi_spesifik'  => $this->request->getPost('lokasi_spesifik'),
-            'deskripsi'        => $this->request->getPost('deskripsi'),
-            'foto'             => $fotoName,
-            'gedung_id'        => $this->request->getPost('gedung_id'),
-            'ruangan_id'       => $this->request->getPost('ruangan_id'),
-            'prioritas'        => $this->request->getPost('prioritas'),
-            'kategori'         => $this->request->getPost('kategori'),
+            'lokasi_spesifik' => $this->request->getPost('lokasi_spesifik'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
+            'foto' => $fotoName,
+            'gedung_id' => $this->request->getPost('gedung_id'),
+            'ruangan_id' => $this->request->getPost('ruangan_id'),
+            'prioritas' => $this->request->getPost('prioritas'),
+            'kategori' => $this->request->getPost('kategori'),
         ];
 
         if ($this->laporanModel->update($id, $data)) {
@@ -389,13 +389,13 @@ class LaporController extends BaseController
 
         // 🔒 Hak akses: hanya pemilik laporan atau admin
         $role = session()->get('role') ?? 'user';
-        if ($laporan['user_id'] != $userId && !in_array($role, ['admin', 'staff'])) {
+        if ($laporan['user_id'] != $userId && !in_array($role, ['admin', 'staff', 'superadmin'])) {
             return redirect()->to('/laporan')
                 ->with('error', 'Anda tidak memiliki akses ke laporan ini.');
         }
 
         return view('laporan/detail', [
-            'title'   => 'Detail Laporan',
+            'title' => 'Detail Laporan',
             'laporan' => $laporan,
         ]);
     }
@@ -429,9 +429,9 @@ class LaporController extends BaseController
             ->paginate($perPage, 'default');
 
         return view('laporan/riwayat', [
-            'title'   => 'Riwayat Laporan Selesai',
+            'title' => 'Riwayat Laporan Selesai',
             'laporan' => $laporan,
-            'pager'   => $model->pager,
+            'pager' => $model->pager,
             'keyword' => $keyword,
         ]);
     }

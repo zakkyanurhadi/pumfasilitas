@@ -19,6 +19,11 @@ class AdminGedungController extends BaseController
     ========================================================== */
     public function index()
     {
+        // 🔒 Cek hanya Super Admin
+        if (session()->get('role') != 'superadmin') {
+            return redirect()->to('/dashboardadmin');
+        }
+
         $keyword = $this->request->getGet('keyword');
         $currentPage = $this->request->getGet('page') ?? 1;
         $perPage = 10;
@@ -34,29 +39,37 @@ class AdminGedungController extends BaseController
         }
 
         $gedung = $builder->orderBy('created_at', 'DESC')
-                         ->paginate($perPage);
+            ->paginate($perPage);
 
         return view('admin/gedung', [
-            'gedung'       => $gedung,
-            'pager_links'  => $this->gedungModel->pager->links(),
-            'keyword'      => $keyword,
-            'currentPage'  => $currentPage,
-            'perPage'      => $perPage
+            'gedung' => $gedung,
+            'pager_links' => $this->gedungModel->pager->links(),
+            'keyword' => $keyword,
+            'currentPage' => $currentPage,
+            'perPage' => $perPage
         ]);
     }
 
     /* ==========================================================
        TAMBAH GEDUNG
     ========================================================== */
+    /* ==========================================================
+       TAMBAH GEDUNG
+    ========================================================== */
     public function store()
     {
         $data = [
-            'kode'      => $this->request->getPost('kode'),
-            'nama'      => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
+            'nama' => $this->request->getPost('nama'),
             'deskripsi' => $this->request->getPost('deskripsi')
         ];
 
-        $this->gedungModel->insert($data);
+        if ($this->gedungModel->insert($data)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $logModel->catat($adminId, "Menambah gedung: {$data['nama']}");
+        }
 
         return redirect()->back()->with('success', 'Gedung berhasil ditambahkan.');
     }
@@ -68,15 +81,22 @@ class AdminGedungController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        if (!$id) return redirect()->back()->with('error', 'ID tidak valid');
+        if (!$id)
+            return redirect()->back()->with('error', 'ID tidak valid');
 
         $data = [
-            'kode'      => $this->request->getPost('kode'),
-            'nama'      => $this->request->getPost('nama'),
+            'kode' => $this->request->getPost('kode'),
+            'nama' => $this->request->getPost('nama'),
             'deskripsi' => $this->request->getPost('deskripsi')
         ];
 
-        $this->gedungModel->update($id, $data);
+        if ($this->gedungModel->update($id, $data)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $dataLog = "Memperbarui gedung (ID: $id): {$data['nama']}";
+            $logModel->catat($adminId, $dataLog);
+        }
 
         return redirect()->back()->with('success', 'Gedung berhasil diperbarui.');
     }
@@ -87,9 +107,15 @@ class AdminGedungController extends BaseController
     public function delete($id)
     {
         $gedung = $this->gedungModel->find($id);
-        if (!$gedung) return redirect()->back()->with('error', 'Gedung tidak ditemukan!');
+        if (!$gedung)
+            return redirect()->back()->with('error', 'Gedung tidak ditemukan!');
 
-        $this->gedungModel->delete($id);
+        if ($this->gedungModel->delete($id)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $logModel->catat($adminId, "Menghapus gedung: {$gedung['nama']}");
+        }
 
         return redirect()->back()->with('success', 'Gedung berhasil dihapus.');
     }

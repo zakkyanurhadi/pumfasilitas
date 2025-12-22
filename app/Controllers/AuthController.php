@@ -19,8 +19,15 @@ class AuthController extends Controller
 
     public function index()
     {
-        // Jika sudah login, redirect ke dashboard
+        // Jika sudah login, redirect ke dashboard sesuai role
         if ($this->session->get('isLoggedIn')) {
+            $role = $this->session->get('role');
+            if ($role === 'admin' || $role === 'superadmin') {
+                return redirect()->to('dashboardadmin');
+            }
+            if ($role === 'rektor') {
+                return redirect()->to('rektor/dashboard');
+            }
             return redirect()->to('dashboard');
         }
         // Ganti 'auth/login' menjadi nama view Anda, misalnya 'login_view'
@@ -56,18 +63,24 @@ class AuthController extends Controller
 
         // Simpan session
         $sessionData = [
-            'user_id'    => $user['id'],
-            'npm'        => $user['npm'],
-            'nama'       => $user['nama'],
-            'email'      => $user['email'],
-            'img'        => $user['img'],
-            'role'       => $user['role'],         // Tambahkan role ke session
+            'user_id' => $user['id'],
+            'npm' => $user['npm'],
+            'nama' => $user['nama'],
+            'email' => $user['email'],
+            'img' => $user['img'],
+            'role' => $user['role'],         // Tambahkan role ke session
             'isLoggedIn' => true
         ];
         $this->session->set($sessionData);
 
         // Redirect URL sesuai role
-        $redirectUrl = ($user['role'] === 'admin') ? base_url('/dashboardadmin') : base_url('/dashboard');
+        if ($user['role'] === 'admin' || $user['role'] === 'superadmin') {
+            $redirectUrl = base_url('/dashboardadmin');
+        } elseif ($user['role'] === 'rektor') {
+            $redirectUrl = base_url('/rektor/dashboard');
+        } else {
+            $redirectUrl = base_url('/dashboard');
+        }
 
         return $this->response->setJSON([
             'success' => true,
@@ -147,12 +160,12 @@ class AuthController extends Controller
 
         // Siapkan Data untuk Disimpan
         $data = [
-            'nama'      => $this->request->getPost('fullname'),
-            'npm'       => $this->request->getPost('username'),
-            'email'     => $this->request->getPost('email'),
-            'password'  => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role'      => 'mahasiswa',     // Default role otomatis
-            'img'       => 'default.jpg',   // Default foto profil
+            'nama' => $this->request->getPost('fullname'),
+            'npm' => $this->request->getPost('username'),
+            'email' => $this->request->getPost('email'),
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role' => 'mahasiswa',     // Default role otomatis
+            'img' => 'default.jpg',   // Default foto profil
             'created_at' => date('Y-m-d H:i:s')
         ];
 

@@ -201,10 +201,12 @@ body {
 
 /* Main content area */
 /* Default: sidebar terbuka */
+/* Main content area */
+/* Default: sidebar terbuka */
 .main-content { 
-    margin-left: 120px; 
+    margin-left: 300px; 
     padding: 1.5rem;
-    padding-top: 55px !important; 
+    padding-top: 100px !important; 
     transition: 0.3s ease;
 }
 
@@ -598,15 +600,15 @@ select.form-control {
 
 /* Default (sidebar terbuka) */
 body.sidebar-open .main-content {
-    margin-left: 120px;
-    padding-top: 80px;
+    margin-left: 300px;
+    padding-top: 100px;
     padding: 1.5rem;
     transition: 0.3s ease;
 }
 
 /* Sidebar ditutup */
 body.sidebar-closed .main-content {
-    margin-left: 10px;
+    margin-left: 110px;
 }
 
 /* SIDEBAR COLLAPSED */
@@ -895,14 +897,15 @@ body.sidebar-closed .main-content {
     }
 
 /* Responsive design untuk mobile */
+/* Responsive design untuk mobile */
 @media (max-width: 768px) {
   .header-content {
-    flex-direction: row; /* Tetap row tapi wrap */
+    flex-direction: row;
     justify-content: space-between;
   }
 
   .nav-center {
-    display: none; /* Sembunyikan nav di tengah pada mobile */
+    display: none;
   }
 
   .welcome-section h1 {
@@ -920,6 +923,26 @@ body.sidebar-closed .main-content {
   .modal-content {
     margin: 2% auto;
     padding: 1.5rem;
+  }
+
+  /* MOBILE FIXES */
+  .top-navbar {
+      left: 0 !important;
+      right: 0 !important;
+      width: 100%;
+      padding: 0 60px 0 20px; /* Space for toggle button if needed */
+  }
+
+  .main-content {
+      margin-left: 0 !important;
+      width: 100%;
+      padding: 15px;
+      padding-top: 80px !important;
+  }
+
+  .sidebar-toggle {
+      left: 20px !important;
+      top: 80px !important; /* Below navbar */
   }
 }
 

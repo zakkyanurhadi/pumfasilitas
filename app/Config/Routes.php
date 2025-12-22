@@ -100,3 +100,13 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('gedung/update', 'AdminGedungController::update');
     $routes->get('gedung/delete/(:num)', 'AdminGedungController::delete/$1');
 });
+
+// =========================================================================
+// RUTE REKTOR
+// =========================================================================
+$routes->group('rektor', ['filter' => 'auth'], function ($routes) {
+    $routes->get('dashboard', 'RektorController::index');
+    $routes->get('laporan', 'RektorController::laporan');
+    $routes->get('statistik', 'RektorController::statistik');
+    $routes->get('audit-log', 'RektorController::auditLog');
+});

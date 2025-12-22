@@ -23,10 +23,15 @@ class AdminAkunController extends BaseController
         // Ambil segment URL
         $uri = service('uri')->getSegment(1);
 
+        // 🔒 Proteksi: Hanya Superadmin yang boleh akses menu 'akunadmin'
+        if ($uri === 'akunadmin' && session()->get('role') !== 'superadmin') {
+            return redirect()->to('/dashboardadmin');
+        }
+
         // Pemisahan halaman berdasarkan role
         $roleMapper = [
             'akunadmin' => 'admin',
-            'akunuser'  => 'user'
+            'akunuser' => 'user'
         ];
 
         $roleFilter = $roleMapper[$uri] ?? '';
@@ -68,29 +73,34 @@ class AdminAkunController extends BaseController
         );
 
         return view('admin/akun', [
-            'title'        => 'Manajemen Akun',
-            'users'        => $users,
-            'pager_links'  => $pager_links,
-            'keyword'      => $keyword,
-            'roleFilter'   => $roleFilter,
-            'currentPage'  => $currentPage,
-            'perPage'      => $perPage,
-            'uri'          => $uri
+            'title' => 'Manajemen Akun',
+            'users' => $users,
+            'pager_links' => $pager_links,
+            'keyword' => $keyword,
+            'roleFilter' => $roleFilter,
+            'currentPage' => $currentPage,
+            'perPage' => $perPage,
+            'uri' => $uri
         ]);
     }
-    
+
     public function store()
     {
         $data = [
-            'npm'      => $this->request->getPost('npm'),
-            'nama'     => $this->request->getPost('nama'),
-            'email'    => $this->request->getPost('email'),
+            'npm' => $this->request->getPost('npm'),
+            'nama' => $this->request->getPost('nama'),
+            'email' => $this->request->getPost('email'),
             'password' => password_hash('123456', PASSWORD_DEFAULT), // password default
-            'role'     => $this->request->getPost('role'),
-            'status'   => $this->request->getPost('status') ?? 'active'
+            'role' => $this->request->getPost('role'),
+            'status' => $this->request->getPost('status') ?? 'active'
         ];
 
-        $this->userModel->insert($data);
+        if ($this->userModel->insert($data)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $logModel->catat($adminId, "Menambah akun {$data['role']} baru: {$data['nama']}");
+        }
 
         return redirect()->back()->with('success', 'Akun berhasil ditambahkan.');
     }
@@ -99,13 +109,19 @@ class AdminAkunController extends BaseController
     public function delete($id)
     {
         $user = $this->userModel->find($id);
-        if (!$user) return redirect()->back()->with('error', 'User tidak ditemukan!');
+        if (!$user)
+            return redirect()->back()->with('error', 'User tidak ditemukan!');
 
-        $this->userModel->delete($id);
+        if ($this->userModel->delete($id)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $logModel->catat($adminId, "Menghapus akun {$user['role']}: {$user['nama']}");
+        }
 
         return redirect()->back()->with('success', 'Akun berhasil dihapus.');
     }
-    
+
 
 
     /** Edit User (simple update nama/email) */
@@ -113,15 +129,21 @@ class AdminAkunController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        if (!$id) return redirect()->back()->with('error', 'ID tidak valid');
+        if (!$id)
+            return redirect()->back()->with('error', 'ID tidak valid');
 
         $data = [
-            'nama'  => $this->request->getPost('nama'),
+            'nama' => $this->request->getPost('nama'),
             'email' => $this->request->getPost('email'),
             'status' => $this->request->getPost('status')
         ];
 
-        $this->userModel->update($id, $data);
+        if ($this->userModel->update($id, $data)) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $logModel->catat($adminId, "Memperbarui akun (ID: $id): {$data['nama']}");
+        }
 
         return redirect()->back()->with('success', 'Akun berhasil diperbarui.');
     }

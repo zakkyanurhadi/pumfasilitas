@@ -16,7 +16,7 @@ class AdminLaporController extends BaseController
     /* ============================================================
        HALAMAN UTAMA LAPORAN (PENDING + DIPROSES + SELESAI)
     ============================================================ */
-  public function index()
+    public function index()
     {
         $db = \Config\Database::connect();
         $pager = \Config\Services::pager();
@@ -77,15 +77,15 @@ class AdminLaporController extends BaseController
         }
 
         return view('admin/laporan', [
-            'title'        => 'Halaman Laporan',
-            'laporan'      => $laporan,
-            'pager_links'  => $pager_links,
-            'keyword'      => $keyword,
+            'title' => 'Halaman Laporan',
+            'laporan' => $laporan,
+            'pager_links' => $pager_links,
+            'keyword' => $keyword,
             'statusFilter' => $statusFilter,
-            'currentPage'  => $currentPage,
-            'perPage'      => $perPage,
-            'detail'       => $detail,
-            'uri'          => $uri
+            'currentPage' => $currentPage,
+            'perPage' => $perPage,
+            'detail' => $detail,
+            'uri' => $uri
         ]);
     }
 
@@ -94,7 +94,7 @@ class AdminLaporController extends BaseController
     ============================================================ */
     public function riwayat()
     {
-        $db    = \Config\Database::connect();
+        $db = \Config\Database::connect();
         $pager = \Config\Services::pager();
         $perPage = 5;
 
@@ -141,13 +141,13 @@ class AdminLaporController extends BaseController
         }
 
         return view('admin/riwayat', [
-            'title'       => 'Riwayat Laporan Selesai',
-            'laporan'     => $laporan,
+            'title' => 'Riwayat Laporan Selesai',
+            'laporan' => $laporan,
             'pager_links' => $pager_links,
-            'keyword'     => $keyword,
+            'keyword' => $keyword,
             'currentPage' => $currentPage,
-            'perPage'     => $perPage,
-            'detail'      => $detail
+            'perPage' => $perPage,
+            'detail' => $detail
         ]);
     }
 
@@ -157,7 +157,8 @@ class AdminLaporController extends BaseController
     public function verifikasi()
     {
         $id = $this->request->getPost('laporan_id');
-        if (!$id) return redirect()->back()->with('error', 'ID laporan kosong');
+        if (!$id)
+            return redirect()->back()->with('error', 'ID laporan kosong');
 
         $rules = [
             'status' => 'required|in_list[pending,diproses,selesai]',
@@ -168,12 +169,21 @@ class AdminLaporController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Validasi gagal');
         }
 
-        $this->laporanModel->update($id, [
-            'status' => $this->request->getPost('status'),
-            'tanggal_verifikasi' => date('Y-m-d H:i:s'),
-            'verifikator' => session('nama'),
-            'keterangan_verifikasi' => $this->request->getPost('keterangan_verifikasi')
-        ]);
+        if (
+            $this->laporanModel->update($id, [
+                'status' => $this->request->getPost('status'),
+                'tanggal_verifikasi' => date('Y-m-d H:i:s'),
+                'verifikator' => session('nama'),
+                'keterangan_verifikasi' => $this->request->getPost('keterangan_verifikasi')
+            ])
+        ) {
+            // Log Aktivitas
+            $logModel = new \App\Models\LogAktivitasModel();
+            $adminId = session()->get('user_id');
+            $status = $this->request->getPost('status');
+            $dataLog = "Memverifikasi laporan #$id menjadi $status";
+            $logModel->catat($adminId, $dataLog, $id);
+        }
 
         return redirect()->back()->with('success', 'Verifikasi berhasil');
     }
@@ -191,7 +201,7 @@ class AdminLaporController extends BaseController
         }
 
         return view('admin/detail', [
-            'title'   => 'Detail Laporan',
+            'title' => 'Detail Laporan',
             'laporan' => $laporan,
         ]);
     }
