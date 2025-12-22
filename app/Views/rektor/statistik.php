@@ -1,26 +1,27 @@
 <?= $this->extend('rektor/layouts/main') ?>
 
 <?= $this->section('content') ?>
+<div class="container">
+    <div class="stats-grid">
 
-<div class="stats-grid">
+        <!-- CHART 1: PER GEDUNG -->
+        <div class="dashboard-card">
+            <h3 class="card-header-title">Laporan Per Gedung</h3>
+            <canvas id="chartGedung"></canvas>
+        </div>
 
-    <!-- CHART 1: PER GEDUNG -->
-    <div class="dashboard-card">
-        <h3 class="card-header-title">Laporan Per Gedung</h3>
-        <canvas id="chartGedung"></canvas>
+        <!-- CHART 2: PER KATEGORI -->
+        <div class="dashboard-card">
+            <h3 class="card-header-title">Laporan Per Kategori</h3>
+            <canvas id="chartKategori"></canvas>
+        </div>
+
     </div>
 
-    <!-- CHART 2: PER KATEGORI -->
-    <div class="dashboard-card">
-        <h3 class="card-header-title">Laporan Per Kategori</h3>
-        <canvas id="chartKategori"></canvas>
+    <div class="dashboard-card" style="margin-top: 25px;">
+        <h3 class="card-header-title">Tren Kerusakan (Waktu)</h3>
+        <canvas id="chartTrend" height="100"></canvas>
     </div>
-
-</div>
-
-<div class="dashboard-card" style="margin-top: 25px;">
-    <h3 class="card-header-title">Tren Kerusakan (Waktu)</h3>
-    <canvas id="chartTrend" height="100"></canvas>
 </div>
 
 <script>

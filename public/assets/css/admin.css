@@ -5,6 +5,29 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+
 /* Variabel CSS untuk konsistensi warna dan spacing */
 :root {
   --primary-color: #3b82f6;
@@ -53,6 +76,14 @@ body {
   max-width: 1500px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+    overflow-x: auto;
+    max-width: 100vw;
+  }
 }
 .notification {
   padding: 1rem;
@@ -895,15 +926,14 @@ body.sidebar-closed .main-content {
     }
 
 /* Responsive design untuk mobile */
-/* Responsive design untuk mobile */
 @media (max-width: 768px) {
   .header-content {
-    flex-direction: row;
+    flex-direction: row; /* Tetap row tapi wrap */
     justify-content: space-between;
   }
 
   .nav-center {
-    display: none;
+    display: none; /* Sembunyikan nav di tengah pada mobile */
   }
 
   .welcome-section h1 {
@@ -950,24 +980,48 @@ body.sidebar-closed .main-content {
     z-index: 3000;
     background: white;
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
   }
 
   /* Class to show sidebar on mobile */
-  .sidebar.active {
+  .sidebar.mobile-active {
     transform: translateX(0);
   }
 
   /* Button fixed at top-left */
   .sidebar-toggle {
     left: 20px !important;
-    top: 28px !important; /* Align with navbar center (approx) */
+    top: 28px !important; /* Align with navbar center */
     z-index: 3001; /* Above sidebar */
+    background: #3b82f6;
+  }
+
+  .sidebar-toggle .toggle-icon {
+    color: white;
+    font-size: 20px;
   }
   
-  /* Reset logic for sidebar closed on mobile (not used but safe) */
+  /* Reset sidebar-closed behavior on mobile */
   .sidebar.sidebar-closed {
     width: 280px; 
     padding: 18px 14px;
+    transform: translateX(-100%);
+  }
+
+  /* Overlay for mobile sidebar */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2999;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
   }
 }
 

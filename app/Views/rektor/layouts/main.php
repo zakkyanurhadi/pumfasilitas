@@ -30,7 +30,7 @@
 
     <?= $this->include('rektor/partials/footer') ?>
 
-    <script src="<?= base_url('assets/js/script.js') ?>"></script>
+    <script src="<?= base_url('assets/js/rektor.js') ?>"></script>
 </body>
 
 </html>
