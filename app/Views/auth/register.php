@@ -7,7 +7,9 @@
   <title>Daftar Akun - FasilitasKampusKu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;600&display=swap"
+    rel="stylesheet" />
 
   <style>
     /* === RESET & BASE STYLES === */
@@ -274,16 +276,20 @@
           <div class="col-md-6 mb-3">
             <label class="form-label">Password</label>
             <div class="input-group">
-              <input type="password" class="form-control" id="reg_password" name="password" placeholder="••••••••" required>
-              <span class="input-group-text" onclick="toggleRegPassword('reg_password', 'icon1')"><i class="fas fa-eye" id="icon1"></i></span>
+              <input type="password" class="form-control" id="reg_password" name="password" placeholder="password"
+                required>
+              <span class="input-group-text" onclick="toggleRegPassword('reg_password', 'icon1')"><i class="fas fa-eye"
+                  id="icon1"></i></span>
             </div>
             <span class="error-message" id="error-password"></span>
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label">Ulangi Password</label>
             <div class="input-group">
-              <input type="password" class="form-control" id="conf_password" name="conf_password" placeholder="••••••••" required>
-              <span class="input-group-text" onclick="toggleRegPassword('conf_password', 'icon2')"><i class="fas fa-eye" id="icon2"></i></span>
+              <input type="password" class="form-control" id="conf_password" name="conf_password" placeholder="password"
+                required>
+              <span class="input-group-text" onclick="toggleRegPassword('conf_password', 'icon2')"><i class="fas fa-eye"
+                  id="icon2"></i></span>
             </div>
             <span class="error-message" id="error-conf_password"></span>
           </div>
@@ -314,14 +320,14 @@
       }
     }
 
-    $(document).ready(function() {
-      $('input').on('input', function() {
+    $(document).ready(function () {
+      $('input').on('input', function () {
         $(this).removeClass('is-invalid');
         const name = $(this).attr('name');
         $('#error-' + name).text('');
       });
 
-      $('#registerForm').on('submit', function(e) {
+      $('#registerForm').on('submit', function (e) {
         e.preventDefault();
         $('.error-message').text('');
         $('.form-control').removeClass('is-invalid');
@@ -336,7 +342,7 @@
           type: "POST",
           data: $(this).serialize(),
           dataType: "json",
-          success: function(response) {
+          success: function (response) {
             if (response.success) {
               $("#alert-container").html(`<div class="alert alert-success small" style="border-radius:12px;">${response.message}</div>`);
               setTimeout(() => {
@@ -344,7 +350,7 @@
               }, 1500);
             } else {
               if (response.errors) {
-                $.each(response.errors, function(key, val) {
+                $.each(response.errors, function (key, val) {
                   $('[name="' + key + '"]').addClass('is-invalid');
                   $('#error-' + key).text(val);
                 });
@@ -354,7 +360,7 @@
               btn.html(originalText).prop('disabled', false);
             }
           },
-          error: function() {
+          error: function () {
             $("#alert-container").html(`<div class="alert alert-danger small" style="border-radius:12px;">Gagal terhubung ke server.</div>`);
             btn.html(originalText).prop('disabled', false);
           }

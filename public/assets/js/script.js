@@ -107,23 +107,37 @@ function toggleSidebar() {
     const sidebar = document.querySelector(".sidebar");
     const toggle = document.querySelector(".sidebar-toggle");
     const icon = document.querySelector(".toggle-icon");
+    const isMobile = window.innerWidth <= 768;
 
-    // toggle class pada sidebar & button
-    sidebar.classList.toggle("sidebar-closed");
-    toggle.classList.toggle("closed");
+    if (isMobile) {
+        // MOBILE LOGIC: Toggle 'active' class to slide in/out
+        sidebar.classList.toggle("active");
+        
+        // Update Icon
+        const isActive = sidebar.classList.contains("active");
+        icon.textContent = isActive ? "❮" : "❯"; // Panah kiri (tutup) jika aktif
 
-    // ubah icon sesuai kondisi
-    icon.textContent = sidebar.classList.contains("sidebar-closed")
-        ? "❯"
-        : "❮";
-
-    // Tambahan: atur body agar main-content ikut menyesuaikan
-    if (sidebar.classList.contains("sidebar-closed")) {
-        document.body.classList.add("sidebar-closed");
-        document.body.classList.remove("sidebar-open");
+        // Optional: Toggle closed class on button for animation if any
+        toggle.classList.toggle("closed", isActive);
+        
     } else {
-        document.body.classList.add("sidebar-open");
-        document.body.classList.remove("sidebar-closed");
+        // DESKTOP LOGIC: Toggle 'sidebar-closed' (Collapse/Expand)
+        sidebar.classList.toggle("sidebar-closed");
+        toggle.classList.toggle("closed");
+
+        // ubah icon sesuai kondisi
+        icon.textContent = sidebar.classList.contains("sidebar-closed")
+            ? "❯"
+            : "❮";
+
+        // Tambahan: atur body agar main-content ikut menyesuaikan
+        if (sidebar.classList.contains("sidebar-closed")) {
+            document.body.classList.add("sidebar-closed");
+            document.body.classList.remove("sidebar-open");
+        } else {
+            document.body.classList.add("sidebar-open");
+            document.body.classList.remove("sidebar-closed");
+        }
     }
 }
 

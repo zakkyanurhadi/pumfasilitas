@@ -895,14 +895,15 @@ body.sidebar-closed .main-content {
     }
 
 /* Responsive design untuk mobile */
+/* Responsive design untuk mobile */
 @media (max-width: 768px) {
   .header-content {
-    flex-direction: row; /* Tetap row tapi wrap */
+    flex-direction: row;
     justify-content: space-between;
   }
 
   .nav-center {
-    display: none; /* Sembunyikan nav di tengah pada mobile */
+    display: none;
   }
 
   .welcome-section h1 {
@@ -920,6 +921,53 @@ body.sidebar-closed .main-content {
   .modal-content {
     margin: 2% auto;
     padding: 1.5rem;
+  }
+
+  /* MOBILE NAVIGATION & LAYOUT FIXES */
+  .top-navbar {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100%;
+    padding: 0 20px 0 70px; /* Left padding for toggle button */
+    z-index: 900;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100%;
+    padding: 15px;
+    padding-top: 100px !important; /* Space for navbar */
+  }
+
+  /* Mobile Sidebar: Hidden by default (Slide-in) */
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 3000;
+    background: white;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+  }
+
+  /* Class to show sidebar on mobile */
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  /* Button fixed at top-left */
+  .sidebar-toggle {
+    left: 20px !important;
+    top: 28px !important; /* Align with navbar center (approx) */
+    z-index: 3001; /* Above sidebar */
+  }
+  
+  /* Reset logic for sidebar closed on mobile (not used but safe) */
+  .sidebar.sidebar-closed {
+    width: 280px; 
+    padding: 18px 14px;
   }
 }
 
