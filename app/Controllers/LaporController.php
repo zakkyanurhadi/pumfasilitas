@@ -387,9 +387,16 @@ class LaporController extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan tidak ditemukan');
         }
 
-        // 🔒 Hak akses: hanya pemilik laporan atau admin
+        // 🔒 Hak akses:
+        // 1. Pemilik laporan bisa melihat semua status
+        // 2. Admin/staff/superadmin bisa melihat semua
+        // 3. User lain HANYA bisa melihat laporan dengan status 'selesai' atau 'ditolak' (informasi publik)
         $role = session()->get('role') ?? 'user';
-        if ($laporan['user_id'] != $userId && !in_array($role, ['admin', 'staff', 'superadmin'])) {
+        $isOwner = ($laporan['user_id'] == $userId);
+        $isAdmin = in_array($role, ['admin', 'staff', 'superadmin']);
+        $isPublicStatus = in_array($laporan['status'], ['selesai', 'ditolak']);
+
+        if (!$isOwner && !$isAdmin && !$isPublicStatus) {
             return redirect()->to('/laporan')
                 ->with('error', 'Anda tidak memiliki akses ke laporan ini.');
         }

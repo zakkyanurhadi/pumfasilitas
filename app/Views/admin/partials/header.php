@@ -85,7 +85,7 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 
 <!-- TOGGLE BUTTON -->
 <div class="sidebar-toggle" id="sidebarToggle">
-    <i class="toggle-icon fa-solid fa-bars"></i>
+    <i class="toggle-icon">❮</i>
 </div>
 
 <!-- NAVBAR ATAS -->

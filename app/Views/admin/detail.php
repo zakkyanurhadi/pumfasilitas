@@ -157,6 +157,8 @@
             $statusClass = 'status-diproses';
         if ($detail['status'] == 'Selesai')
             $statusClass = 'status-selesai';
+        if ($detail['status'] == 'Ditolak')
+            $statusClass = 'status-ditolak';
         ?>
         <span class="status-badge <?= $statusClass ?>"><?= esc($detail['status']) ?></span>
     </div>

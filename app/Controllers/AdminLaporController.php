@@ -157,35 +157,58 @@ class AdminLaporController extends BaseController
     public function verifikasi()
     {
         $id = $this->request->getPost('laporan_id');
-        if (!$id)
+
+        // Debug: Log request data
+        log_message('debug', 'Verifikasi Request - ID: ' . $id);
+        log_message('debug', 'Verifikasi Request - All POST: ' . json_encode($this->request->getPost()));
+
+        if (!$id) {
+            log_message('error', 'Verifikasi gagal: ID laporan kosong');
             return redirect()->back()->with('error', 'ID laporan kosong');
+        }
 
         $rules = [
-            'status' => 'required|in_list[pending,diproses,selesai]',
+            'status' => 'required|in_list[pending,diproses,selesai,ditolak]',
             'keterangan_verifikasi' => 'required|min_length[5]'
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('error', 'Validasi gagal');
+            $errors = $this->validator->getErrors();
+            log_message('error', 'Verifikasi gagal validasi: ' . json_encode($errors));
+            return redirect()->back()->withInput()->with('error', 'Validasi gagal: ' . implode(', ', $errors));
         }
 
-        if (
-            $this->laporanModel->update($id, [
-                'status' => $this->request->getPost('status'),
-                'tanggal_verifikasi' => date('Y-m-d H:i:s'),
-                'verifikator' => session('nama'),
-                'keterangan_verifikasi' => $this->request->getPost('keterangan_verifikasi')
-            ])
-        ) {
-            // Log Aktivitas
-            $logModel = new \App\Models\LogAktivitasModel();
-            $adminId = session()->get('user_id');
-            $status = $this->request->getPost('status');
-            $dataLog = "Memverifikasi laporan #$id menjadi $status";
-            $logModel->catat($adminId, $dataLog, $id);
-        }
+        $dataUpdate = [
+            'status' => $this->request->getPost('status'),
+            'tanggal_verifikasi' => date('Y-m-d H:i:s'),
+            'verifikator' => session('nama'),
+            'keterangan_verifikasi' => $this->request->getPost('keterangan_verifikasi')
+        ];
 
-        return redirect()->back()->with('success', 'Verifikasi berhasil');
+        log_message('debug', 'Data Update: ' . json_encode($dataUpdate));
+
+        try {
+            $result = $this->laporanModel->update($id, $dataUpdate);
+
+            if ($result) {
+                log_message('info', 'Verifikasi berhasil untuk laporan #' . $id);
+
+                // Log Aktivitas
+                $logModel = new \App\Models\LogAktivitasModel();
+                $adminId = session()->get('user_id');
+                $status = $this->request->getPost('status');
+                $dataLog = "Memverifikasi laporan #$id menjadi $status";
+                $logModel->catat($adminId, $dataLog, $id);
+
+                return redirect()->back()->with('success', 'Verifikasi berhasil disimpan');
+            } else {
+                log_message('error', 'Update gagal untuk laporan #' . $id);
+                return redirect()->back()->with('error', 'Gagal menyimpan verifikasi');
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Exception saat verifikasi: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 
 

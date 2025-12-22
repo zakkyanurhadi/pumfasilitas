@@ -53,35 +53,35 @@ $routes->post('/profileadmin/update', 'ProfileAdminController::update', ['filter
 // ------------------------------------
 
 
-$routes->get('/laporanadminpending', 'AdminLaporController::index');
-$routes->get('/laporanadmindiproses', 'AdminLaporController::index');
-$routes->get('/riwayatadmin', 'AdminLaporController::index');
+$routes->get('/laporanadminpending', 'AdminLaporController::index', ['filter' => 'admin']);
+$routes->get('/laporanadmindiproses', 'AdminLaporController::index', ['filter' => 'admin']);
+$routes->get('/riwayatadmin', 'AdminLaporController::index', ['filter' => 'admin']);
 
-$routes->post('/admin/laporan/verifikasi', 'AdminLaporController::verifikasi');
+$routes->post('/admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin']);
 
 // Manajemen Akun (dropdown)
-$routes->get('akunadmin', 'AdminAkunController::index');
-$routes->get('akunuser', 'AdminAkunController::index');
+$routes->get('akunadmin', 'AdminAkunController::index', ['filter' => 'admin']);
+$routes->get('akunuser', 'AdminAkunController::index', ['filter' => 'admin']);
 
 // Edit & delete
-$routes->post('/akun/store', 'AdminAkunController::store');
-$routes->post('akun/update', 'AdminAkunController::update');
-$routes->get('akun/delete/(:num)', 'AdminAkunController::delete/$1');
+$routes->post('/akun/store', 'AdminAkunController::store', ['filter' => 'admin']);
+$routes->post('akun/update', 'AdminAkunController::update', ['filter' => 'admin']);
+$routes->get('akun/delete/(:num)', 'AdminAkunController::delete/$1', ['filter' => 'admin']);
 
 // Halaman detail (opsional)
-$routes->get('admin/laporan/detail/(:num)', 'AdminLaporController::detail/$1');
+$routes->get('admin/laporan/detail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin']);
 
-$routes->get('/dashboardadmin', 'AdminDashboard::index', ['filter' => 'auth']);
-$routes->get('/laporanadmin', 'AdminLaporController::index', ['filter' => 'auth']);
-$routes->post('/laporanadmin', 'AdminLaporController::index', ['filter' => 'auth']);
-$routes->get('/riwayatadmin', 'AdminLaporController::riwayat', ['filter' => 'auth']);
-$routes->post('admin/laporan/verifikasi', 'AdminLaporController::verifikasi');
-$routes->get('/admindetail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'auth']);
+$routes->get('/dashboardadmin', 'AdminDashboard::index', ['filter' => 'admin']);
+$routes->get('/laporanadmin', 'AdminLaporController::index', ['filter' => 'admin']);
+$routes->post('/laporanadmin', 'AdminLaporController::index', ['filter' => 'admin']);
+$routes->get('/riwayatadmin', 'AdminLaporController::riwayat', ['filter' => 'admin']);
+$routes->post('admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin']);
+$routes->get('/admindetail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin']);
 
-$routes->get('/profileadmin', 'ProfileAdminController::index', ['filter' => 'auth']);
-$routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter' => 'auth']);
+$routes->get('/profileadmin', 'ProfileAdminController::index', ['filter' => 'admin']);
+$routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter' => 'admin']);
 
-$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
+$routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], function ($routes) {
 
     // ===========================
     // AKUN
@@ -104,7 +104,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 // =========================================================================
 // RUTE REKTOR
 // =========================================================================
-$routes->group('rektor', ['filter' => 'auth'], function ($routes) {
+$routes->group('rektor', ['filter' => 'rektor'], function ($routes) {
     $routes->get('dashboard', 'RektorController::index');
     $routes->get('laporan', 'RektorController::laporan');
     $routes->get('statistik', 'RektorController::statistik');

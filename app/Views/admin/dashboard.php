@@ -181,6 +181,11 @@
     padding-bottom: 10px;
   }
 
+  thead th:first-child,
+  thead th:last-child {
+    text-align: center;
+  }
+
   tbody tr {
     background: #ffffff;
     box-shadow: var(--shadow-xs);
@@ -189,6 +194,12 @@
 
   tbody td {
     padding: 14px 16px;
+    vertical-align: middle;
+  }
+
+  tbody td:first-child,
+  tbody td:last-child {
+    text-align: center;
   }
 
   tbody tr td:first-child {
@@ -434,7 +445,7 @@
             <th>Gedung</th>
             <th>Status</th>
             <th>Prioritas</th>
-            <th>Umur</th>
+            <th>Waktu Berlalu</th>
           </tr>
         </thead>
         <tbody>

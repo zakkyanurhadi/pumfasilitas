@@ -89,6 +89,10 @@
         background-color: var(--success-color);
     }
 
+    .status-ditolak {
+        background-color: #dc2626;
+    }
+
     /* Pagination */
     .pagination-container {
         display: flex;
@@ -412,6 +416,7 @@
     <div class="grid-container">
         <div>
             <div class="report-table-container">
+
                 <h2 class="text-center">Status Semua Laporan</h2>
 
                 <!-- FILTER -->
@@ -530,7 +535,7 @@
             <?= csrf_field() ?>
 
             <input type="hidden" name="laporan_id" id="laporan_id">
-            <input type="hidden" name="admin_id" value="<?= esc(session('id')) ?>">
+            <input type="hidden" name="admin_id" value="<?= esc(session('user_id')) ?>">
 
             <div class="form-group mb-2">
                 <label>Nama Admin</label>
@@ -543,6 +548,7 @@
                     <option value="pending">Pending</option>
                     <option value="diproses">Diproses</option>
                     <option value="selesai">Selesai</option>
+                    <option value="ditolak">Ditolak</option>
                 </select>
             </div>
 
