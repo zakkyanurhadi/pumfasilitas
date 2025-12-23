@@ -27,21 +27,18 @@
             overflow-x: hidden;
         }
 
-        /* === WRAPPER UTAMA (Agar tombol bisa melayang di luar) === */
+        /* === WRAPPER UTAMA === */
         .login-wrapper {
             position: relative;
             width: 100%;
             max-width: 1100px;
-            /* Lebar max disamakan dengan card */
         }
 
-        /* === TOMBOL KEMBALI (DI ATAS GAMBAR) === */
+        /* === TOMBOL KEMBALI === */
         .btn-back-home {
             position: absolute;
             top: -60px;
-            /* Naik ke atas keluar dari card */
             left: 0;
-            /* Rata kiri dengan card (area gambar) */
             width: 45px;
             height: 45px;
             background: #fff;
@@ -80,48 +77,63 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* === BAGIAN KIRI (FOTO BACKGROUND) === */
+        /* === BAGIAN KIRI (SLIDESHOW BACKGROUND) === */
         .login-left {
             width: 50%;
-            /* Pastikan gambar ada di public/assets/ */
-            background-image: url('<?= base_url("assets/Polinela.png") ?>');
-            background-size: cover;
-            background-position: center center;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             padding: 3rem;
             color: white;
-            background-color: #2c5ef3;
+            background-color: #2c5ef3; /* Fallback color */
+            overflow: hidden; /* Penting agar gambar tidak keluar */
         }
 
-        /* Gradient Overlay */
+        /* Container untuk gambar slideshow */
+        .slideshow-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Paling bawah */
+        }
+
+        .slideshow-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; /* Default sembunyi */
+            transition: opacity 1.5s ease-in-out; /* Efek halus */
+        }
+
+        .slideshow-img.active {
+            opacity: 1; /* Munculkan yang aktif */
+        }
+
+        /* Gradient Overlay - Di atas gambar tapi di bawah teks */
         .login-left::after {
             content: '';
             position: absolute;
-            top: 50%;
+            top: 0; /* Ubah ke 0 agar full overlay jika perlu, atau sesuaikan */
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.85) 100%);
-            z-index: 1;
+            background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.85) 100%);
+            z-index: 1; 
         }
 
         .left-content {
             position: relative;
-            z-index: 2;
+            z-index: 2; /* Paling atas */
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
@@ -136,37 +148,12 @@
         }
 
         /* === FORM ELEMENTS === */
-        .logo-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .logo-img {
-            width: 80px;
-            height: auto;
-            margin-bottom: 1rem;
-        }
-
-        h2 {
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 0.5rem;
-            font-size: 1.8rem;
-        }
-
-        .subtitle {
-            color: #718096;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #2d3748;
-            font-size: 0.85rem;
-            margin-bottom: 0.4rem;
-        }
-
+        .logo-header { text-align: center; margin-bottom: 2rem; }
+        .logo-img { width: 80px; height: auto; margin-bottom: 1rem; }
+        h2 { font-weight: 700; color: #1a202c; margin-bottom: 0.5rem; font-size: 1.8rem; }
+        .subtitle { color: #718096; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .form-label { font-weight: 600; color: #2d3748; font-size: 0.85rem; margin-bottom: 0.4rem; }
+        
         .form-control {
             border: 2px solid #e2e8f0;
             border-radius: 12px;
@@ -214,59 +201,23 @@
             box-shadow: 0 15px 35px rgba(44, 94, 243, 0.3);
         }
 
-        .forgot-link,
-        .register-link {
+        .forgot-link, .register-link {
             color: #2c5ef3;
             font-size: 0.85rem;
             text-decoration: none;
             font-weight: 600;
         }
 
-        .forgot-link:hover,
-        .register-link:hover {
-            text-decoration: underline;
-        }
-
-        .error-message {
-            font-size: 0.75rem;
-            color: #e53e3e;
-            margin-top: 0.2rem;
-            display: block;
-        }
+        .forgot-link:hover, .register-link:hover { text-decoration: underline; }
+        .error-message { font-size: 0.75rem; color: #e53e3e; margin-top: 0.2rem; display: block; }
 
         @media (max-width: 992px) {
-            .login-card {
-                flex-direction: column;
-                max-width: 500px;
-                margin-top: 0;
-            }
-
-            .login-left {
-                width: 100%;
-                height: 200px;
-                padding: 1.5rem;
-                flex: none;
-            }
-
-            .left-content {
-                display: none;
-            }
-
-            .login-right {
-                width: 100%;
-                padding: 2rem;
-            }
-
-            /* Penyesuaian tombol di HP agar tidak tertutup */
-            .login-wrapper {
-                margin-top: 3rem;
-                max-width: 500px;
-            }
-
-            .btn-back-home {
-                top: -50px;
-                left: 0;
-            }
+            .login-card { flexDirection: column; max-width: 500px; margin-top: 0; }
+            .login-left { width: 100%; height: 200px; padding: 1.5rem; flex: none; }
+            .left-content { display: none; }
+            .login-right { width: 100%; padding: 2rem; }
+            .login-wrapper { margin-top: 3rem; max-width: 500px; }
+            .btn-back-home { top: -50px; left: 0; }
         }
     </style>
 </head>
@@ -281,6 +232,18 @@
 
         <div class="login-card">
             <div class="login-left">
+                
+                <div class="slideshow-wrapper">
+                    <img src="<?= base_url('assets/Polinelaa.jpeg') ?>" class="slideshow-img active" alt="Slide 1">
+                    
+                    <img src="<?= base_url('assets/Polinela.jpeg') ?>" class="slideshow-img" alt="Slide 2"> 
+                    
+                    <img src="<?= base_url('assets/Polinelaaa.jpeg') ?>" class="slideshow-img" alt="Slide 3">
+                    <img src="<?= base_url('assets/Polinelaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 4">
+                    <img src="<?= base_url('assets/Polinelaaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 5">
+                    <img src="<?= base_url('assets/Polinela.png') ?>" class="slideshow-img" alt="Slide 6 ">
+                </div>
+
                 <div class="left-content">
                     <h3 class="fw-bold">Sistem Pelaporan</h3>
                     <p class="mb-0">Kelola fasilitas kampus Politeknik Negeri Lampung dengan mudah dan cepat.</p>
@@ -376,6 +339,23 @@
         }
 
         $(document).ready(function() {
+            // === LOGIKA SLIDESHOW GAMBAR ===
+            const images = document.querySelectorAll('.slideshow-img');
+            if (images.length > 1) {
+                let currentIndex = 0;
+                setInterval(() => {
+                    // Hilangkan class active dari gambar sekarang
+                    images[currentIndex].classList.remove('active');
+                    
+                    // Pindah ke index berikutnya (looping)
+                    currentIndex = (currentIndex + 1) % images.length;
+                    
+                    // Tambahkan class active ke gambar baru
+                    images[currentIndex].classList.add('active');
+                }, 5000); // Ganti setiap 5000ms (5 detik)
+            }
+            // ================================
+
             // Hapus error saat mengetik
             $('#login_identifier, #password').on('input', function() {
                 $(this).removeClass('is-invalid');
@@ -407,7 +387,6 @@
                     dataType: "json",
                     success: function(response) {
                         if (response.success) {
-                            // Simpan Remember Me
                             if ($('#remember').is(':checked')) {
                                 localStorage.setItem('rememberMe', 'true');
                                 localStorage.setItem('savedIdentifier', $('#login_identifier').val());
@@ -415,7 +394,6 @@
                                 localStorage.removeItem('rememberMe');
                                 localStorage.removeItem('savedIdentifier');
                             }
-
                             showAlert(response.message, 'success');
                             setTimeout(() => {
                                 window.location.href = response.redirect;
@@ -463,7 +441,7 @@
                 });
             });
 
-            // LOAD Remember Me (Mengisi input jika pernah dicentang)
+            // LOAD Remember Me
             if (localStorage.getItem('rememberMe') === 'true') {
                 const savedId = localStorage.getItem('savedIdentifier');
                 if (savedId) {
