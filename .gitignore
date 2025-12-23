@@ -45,6 +45,7 @@ $RECYCLE.BIN/
 .env
 .vagrant
 Vagrantfile
+.env.production.example
 
 #-------------------------
 # Temporary Files
