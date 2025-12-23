@@ -178,17 +178,20 @@
 
     <h4>Detail Kerusakan</h4>
     <dl class="detail-grid">
-        <dt>Lokasi</dt>
-        <dd><?= esc($detail['lokasi_kerusakan']) ?></dd>
+        <dt>Gedung</dt>
+        <dd><?= esc($detail['nama_gedung'] ?? 'N/A') ?></dd>
 
-        <dt>Spesifik</dt>
+        <dt>Ruangan</dt>
+        <dd><?= esc($detail['nama_ruangan'] ?? 'N/A') ?></dd>
+
+        <dt>Lokasi Spesifik</dt>
         <dd><?= esc($detail['lokasi_spesifik'] ?? 'N/A') ?></dd>
 
         <dt>Kategori</dt>
         <dd><?= esc($detail['kategori']) ?></dd>
 
         <dt>Prioritas</dt>
-        <dd><?= esc($detail['tingkat_prioritas'] ?? 'Normal') ?></dd>
+        <dd><?= esc($detail['prioritas'] ?? 'Normal') ?></dd>
     </dl>
 
     <h4>Deskripsi Kerusakan</h4>

@@ -136,7 +136,6 @@ function toggleSidebar() {
         // Update icon - menggunakan karakter Unicode untuk desktop
         const isClosed = sidebar.classList.contains("sidebar-closed");
         icon.className = "toggle-icon"; // Remove Font Awesome classes
-        icon.textContent = isClosed ? "❯" : "❮"; // Right chevron (expand) or left chevron (collapse)
 
         // Tambahan: atur body agar main-content ikut menyesuaikan
         if (sidebar.classList.contains("sidebar-closed")) {

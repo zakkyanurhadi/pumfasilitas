@@ -50,9 +50,17 @@ body {
 
 /* Container untuk membatasi lebar konten */
 .container {
-  max-width: 1500px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0; /* No padding - main-content handles alignment */
+  box-sizing: border-box;
+}
+
+/* Reset container padding inside main-content */
+.main-content .container {
+  padding: 0 !important;
+  max-width: 100% !important;
 }
 .notification {
   padding: 1rem;
@@ -201,15 +209,116 @@ body {
 
 /* Main content area */
 /* Default: sidebar terbuka */
-/* Main content area */
-/* Default: sidebar terbuka */
 .main-content { 
-    margin-left: 300px; 
-    padding: 1.5rem;
+    margin-left: 300px;
+    margin-right: 0;
+    padding: 1.5rem 40px 1.5rem 25px; /* Kiri 25px, Kanan 40px - match navbar */
     padding-top: 100px !important; 
     transition: 0.3s ease;
+    box-sizing: border-box;
 }
 
+/* Dashboard card styling */
+.dashboard-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin: 0 0 1.5rem 0; /* No horizontal margin - main-content handles gap */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Dashboard KPI Grid */
+.dashboard-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 0 0 1.5rem 0; /* No horizontal margin */
+    width: 100%;
+}
+
+/* Dashboard Charts Grid */
+.dashboard-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 0 0 1.5rem 0; /* No horizontal margin */
+    width: 100%;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 0 0 1.5rem 0; /* No horizontal margin */
+    width: 100%;
+}
+
+/* KPI Card styling */
+.kpi-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    letter-spacing: 0.5px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+.card-header-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--gray-800);
+}
+
+/* Custom table */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    text-align: left;
+}
+
+.custom-table th {
+    background-color: var(--gray-100);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Detail card */
+.detail-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin: 0; /* No margin - main-content handles gap */
+    width: 100%;
+    box-sizing: border-box;
+}
 
 /* Welcome section dengan card styling */
 .welcome-section {
@@ -511,30 +620,26 @@ select.form-control {
 .top-navbar {
     position: fixed;
     top: 20px;
-    left: 320px; /* mengikuti lebar sidebar normal */
-    right: 60px;
+    left: 325px; /* 300px margin + 25px gap - align with main-content */
+    right: 40px; /* Match main-content padding-right */
 
     height: 65px;
     background: #fff;
-    border-bottom: 1px solid #e6e6e6;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 25px; /* padding aman */
+    padding: 0 25px;
     z-index: 900;
     transition: 0.3s ease;
 }
 
-/* Jika sidebar collapse */
-.sidebar.sidebar-closed ~ .top-navbar {
-    left: 70px;  /* lebar baru sidebar collapse */
-}
-
 /* Saat sidebar collapse */
-.sidebar.sidebar-closed ~ .top-navbar {
-    left: 140px;
+body.sidebar-closed .top-navbar {
+    left: 115px; /* 90px sidebar + 25px gap */
 }
 
 /* Title area */
@@ -601,14 +706,15 @@ select.form-control {
 /* Default (sidebar terbuka) */
 body.sidebar-open .main-content {
     margin-left: 300px;
-    padding-top: 100px;
-    padding: 1.5rem;
+    padding: 1.5rem 40px 1.5rem 25px; /* Match navbar alignment */
+    padding-top: 100px !important;
     transition: 0.3s ease;
 }
 
 /* Sidebar ditutup */
 body.sidebar-closed .main-content {
-    margin-left: 110px;
+    margin-left: 90px;
+    padding: 1.5rem 40px 1.5rem 25px; /* Match navbar alignment */
 }
 
 /* SIDEBAR COLLAPSED */
@@ -641,23 +747,25 @@ body.sidebar-closed .main-content {
 .sidebar-toggle {
     width: 32px;
     height: 32px;
-    background: #fff;
-    border-radius: 50%;
+    background: transparent; /* No background */
+    border-radius: 0; /* No rounded corners */
+    border: none;
     position: fixed;
     top: 86px;
     left: 260px; /* di luar sidebar */
-    display: flex;
+    display: none; /* Hidden by default on desktop */
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: 0.3s ease;
     z-index: 2000;  /* tidak menutupi menu */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    box-shadow: none;
 }
 
 /* PINDAH SAAT COLLAPSE */
 .sidebar-toggle.closed {
     left: 80px; /* di kiri sidebar collapse */
+    background: transparent;
 }
 
 .toggle-icon {
@@ -1209,20 +1317,27 @@ canvas {
     transform: translateX(0);
   }
 
-  /* MOBILE NAVIGATION & LAYOUT FIXES */
+  /* MOBILE NAVIGATION & LAYOUT FIXES - E-KULIAH Style */
   .top-navbar {
-    left: 0 !important;
-    right: 0 !important;
-    width: 100%;
-    padding: 0 20px 0 70px;
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    right: 15px !important;
+    width: auto !important;
+    height: 60px !important;
+    border-radius: 16px !important;
+    padding: 0 15px 0 60px !important;
     z-index: 900;
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
   }
 
   .main-content {
     margin-left: 0 !important;
-    width: 100%;
-    padding: 15px;
-    padding-top: 100px !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    padding: 90px 15px 15px 15px !important; /* Same 15px side gap as navbar */
+    box-sizing: border-box !important;
   }
 
   /* Mobile Sidebar: Hidden by default (Slide-in) */
@@ -1244,17 +1359,133 @@ canvas {
     transform: translateX(0);
   }
 
-  /* Button fixed at top-left */
-  .sidebar-toggle {
-    left: 20px !important;
-    top: 28px !important;
-    z-index: 3001;
-    background: #3b82f6;
+  /* Toggle button - integrated with navbar */
+  /* Maximum specificity to override everything */
+  #sidebarToggle.sidebar-toggle,
+  div.sidebar-toggle,
+  .sidebar-toggle,
+  .sidebar-toggle::before,
+  .sidebar-toggle::after {
+    display: flex !important;
+    position: fixed !important;
+    left: 15px !important;
+    top: 15px !important;
+    width: 50px !important;
+    height: 60px !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    z-index: 3001 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
   }
 
-  .sidebar-toggle .toggle-icon {
-    color: white;
-    font-size: 20px;
+  /* All interactive states */
+  #sidebarToggle.sidebar-toggle:hover,
+  #sidebarToggle.sidebar-toggle:focus,
+  #sidebarToggle.sidebar-toggle:active,
+  #sidebarToggle.sidebar-toggle:visited,
+  #sidebarToggle.sidebar-toggle:focus-visible,
+  .sidebar-toggle:hover,
+  .sidebar-toggle:focus,
+  .sidebar-toggle:active,
+  .sidebar-toggle:visited,
+  .sidebar-toggle:focus-visible,
+  .sidebar-toggle:hover::before,
+  .sidebar-toggle:hover::after,
+  .sidebar-toggle:focus::before,
+  .sidebar-toggle:focus::after,
+  .sidebar-toggle:active::before,
+  .sidebar-toggle:active::after {
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    transform: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Target the icon itself with maximum specificity */
+  #sidebarToggle.sidebar-toggle i,
+  #sidebarToggle.sidebar-toggle .toggle-icon,
+  #sidebarToggle.sidebar-toggle .fa-solid,
+  #sidebarToggle.sidebar-toggle .fa-bars,
+  #sidebarToggle.sidebar-toggle .fa-times,
+  #sidebarToggle.sidebar-toggle .fa-xmark,
+  .sidebar-toggle i,
+  .sidebar-toggle .toggle-icon,
+  .sidebar-toggle .fa-solid,
+  .sidebar-toggle .fa-bars,
+  .sidebar-toggle .fa-times,
+  .sidebar-toggle .fa-xmark,
+  .sidebar-toggle i::before,
+  .sidebar-toggle i::after,
+  .sidebar-toggle .toggle-icon::before,
+  .sidebar-toggle .toggle-icon::after,
+  .sidebar-toggle .fa-solid::before,
+  .sidebar-toggle .fa-solid::after {
+    color: #1e3a5f !important;
+    font-size: 22px !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-block !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* All cards/containers - no side margin */
+  .container,
+  .wrapper,
+  .table-container,
+  .report-table-container,
+  .grid-container,
+  .card,
+  .menu-card,
+  .stat-card,
+  .welcome-section,
+  .stats-section,
+  .dashboard-card,
+  .dashboard-kpi-grid,
+  .dashboard-charts-grid,
+  .kpi-card,
+  .detail-card,
+  .stats-grid {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Responsive grids on mobile */
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .dashboard-charts-grid,
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
   
   /* Reset sidebar-closed behavior on mobile */

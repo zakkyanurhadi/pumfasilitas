@@ -85,16 +85,15 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 
 <!-- TOGGLE BUTTON -->
 <div class="sidebar-toggle" id="sidebarToggle">
-    <i class="toggle-icon">❮</i>
+    <i class="fa-solid fa-bars toggle-icon"></i>
 </div>
 
 <!-- NAVBAR ATAS -->
 <nav class="top-navbar">
-    <div class="page-title" id="realtimeClock">
-        <i class="fa-regular fa-clock" style="margin-right: 8px;"></i>
-        <span id="clockTime">--:--:--</span>
-        <span id="clockDate" style="font-size: 14px; font-weight: 400; color: #64748b; margin-left: 12px;">-- ---
-            ----</span>
+    <div class="page-title" id="realtimeClock"
+        style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+        <span id="clockTime" style="font-size: 18px; font-weight: 600; color: #1e293b;">--:--:--</span>
+        <span id="clockDate" style="font-size: 12px; font-weight: 400; color: #64748b;">-- --- ----</span>
     </div>
     <div class="top-right">
         <a href="<?= site_url('admin/notifikasi') ?>" class="top-icon"

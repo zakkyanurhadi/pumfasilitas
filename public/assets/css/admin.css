@@ -45,10 +45,13 @@ body {
 /* Main content akan mengisi space yang tersedia */
 .main-content {
   flex: 1 0 auto;
-  margin-left: 300px;
-  padding: 1.5rem;
-  padding-top: 100px !important;
-  transition: 0.3s ease;
+  margin-left: 300px; /* Sama dengan lebar sidebar */
+  padding: 1.5rem 40px 1.5rem 25px; /* Kiri 25px (align start navbar), Kanan 40px (align end navbar) */
+  padding-top: 100px !important; /* Space untuk navbar */
+  transition: margin-left 0.3s ease;
+  width: auto; /* Biarkan mengisi sisa lebar */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Footer akan selalu di bawah */
@@ -73,18 +76,25 @@ body {
 
 /* Container untuk membatasi lebar konten */
 .container {
-  max-width: 1600px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0; /* No padding - main-content handles alignment */
+  box-sizing: border-box;
+}
+
+/* Reset container padding inside main-content to fix alignment */
+.main-content .container {
+    padding: 0 !important;
+    max-width: 100% !important;
 }
 
 /* Wrapper untuk dashboard dan halaman lain */
 .wrapper {
-  max-width: 1600px;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0; /* No padding - main-content handles alignment */
 }
 .notification {
   padding: 1rem;
@@ -639,14 +649,15 @@ body.sidebar-closed .footer {
 /* Default (sidebar terbuka) */
 body.sidebar-open .main-content {
   margin-left: 300px;
+  padding: 1.5rem 40px 1.5rem 25px;
   padding-top: 100px;
-  padding: 1.5rem;
-  transition: 0.3s ease;
+  transition: margin-left 0.3s ease;
 }
 
 /* Sidebar ditutup */
 body.sidebar-closed .main-content {
-  margin-left: 110px;
+  margin-left: 90px;
+  padding: 1.5rem 40px 1.5rem 25px;
 }
 
 /* SIDEBAR COLLAPSED */
@@ -679,34 +690,35 @@ body.sidebar-closed .main-content {
 .sidebar-toggle {
   width: 40px;
   height: 40px;
-  background: #fff;
-  border-radius: 50%;
+  background: transparent; /* No background */
+  border-radius: 0; /* No rounded corners */
+  border: none;
   position: fixed;
   top: 86px;
   left: 260px; /* di luar sidebar */
-  display: flex;
+  display: none; /* Hidden by default on desktop */
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: 0.3s ease;
   z-index: 3001; /* di atas semua elemen */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 2px solid #e2e8f0;
+  box-shadow: none;
 }
 
 .sidebar-toggle:hover {
-  background: #f8fafc;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
 }
 
 .sidebar-toggle:active {
-  transform: scale(0.95);
+  transform: none;
 }
 
 /* PINDAH SAAT COLLAPSE */
 .sidebar-toggle.closed {
   left: 80px; /* di kiri sidebar collapse */
+  background: transparent;
 }
 
 .toggle-icon {
@@ -990,46 +1002,129 @@ body.sidebar-closed .main-content {
     padding: 1.5rem;
   }
 
-  /* MOBILE FIXES */
+  /* MOBILE FIXES - Matching E-KULIAH Style */
   .top-navbar {
-    left: 0 !important;
-    right: 0 !important;
-    width: 100%;
-    padding: 0 60px 0 20px; /* Space for toggle button if needed */
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    right: 15px !important;
+    width: auto !important;
+    height: 60px !important;
+    border-radius: 16px !important;
+    padding: 0 15px 0 60px !important;
   }
 
   .main-content {
-    margin-left: 0 !important;   /* reset sidebar offset */
-    padding: 0.15rem !important; /* lebih dekat ke dinding */
-    padding-top: 80px !important;
+    margin: 0 !important;
+    padding: 90px 15px 15px 15px !important; /* Same 15px side gap as navbar */
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   /* Toggle button di mobile - fixed top-left */
-  .sidebar-toggle {
+  /* Maximum specificity to override everything */
+  #sidebarToggle.sidebar-toggle,
+  div.sidebar-toggle,
+  .sidebar-toggle,
+  .sidebar-toggle::before,
+  .sidebar-toggle::after {
+    display: flex !important;
+    position: fixed !important;
     left: 15px !important;
-    top: 25px !important;
-    width: 44px;
-    height: 44px;
-    background: #3b82f6 !important;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-    border: none;
-    z-index: 3001;
+    top: 15px !important;
+    width: 50px !important;
+    height: 60px !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    z-index: 3001 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
   }
 
-  .sidebar-toggle:hover {
-    background: #2563eb !important;
-    transform: scale(1.05);
+  /* All interactive states */
+  #sidebarToggle.sidebar-toggle:hover,
+  #sidebarToggle.sidebar-toggle:focus,
+  #sidebarToggle.sidebar-toggle:active,
+  #sidebarToggle.sidebar-toggle:visited,
+  #sidebarToggle.sidebar-toggle:focus-visible,
+  .sidebar-toggle:hover,
+  .sidebar-toggle:focus,
+  .sidebar-toggle:active,
+  .sidebar-toggle:visited,
+  .sidebar-toggle:focus-visible,
+  .sidebar-toggle:hover::before,
+  .sidebar-toggle:hover::after,
+  .sidebar-toggle:focus::before,
+  .sidebar-toggle:focus::after,
+  .sidebar-toggle:active::before,
+  .sidebar-toggle:active::after {
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    transform: none !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
-  .sidebar-toggle .toggle-icon {
-    color: white !important;
-    font-size: 20px;
+  /* Target the icon itself with maximum specificity */
+  #sidebarToggle.sidebar-toggle i,
+  #sidebarToggle.sidebar-toggle .toggle-icon,
+  #sidebarToggle.sidebar-toggle .fa-solid,
+  #sidebarToggle.sidebar-toggle .fa-bars,
+  #sidebarToggle.sidebar-toggle .fa-times,
+  #sidebarToggle.sidebar-toggle .fa-xmark,
+  .sidebar-toggle i,
+  .sidebar-toggle .toggle-icon,
+  .sidebar-toggle .fa-solid,
+  .sidebar-toggle .fa-bars,
+  .sidebar-toggle .fa-times,
+  .sidebar-toggle .fa-xmark,
+  .sidebar-toggle i::before,
+  .sidebar-toggle i::after,
+  .sidebar-toggle .toggle-icon::before,
+  .sidebar-toggle .toggle-icon::after,
+  .sidebar-toggle .fa-solid::before,
+  .sidebar-toggle .fa-solid::after {
+    color: #1e3a5f !important;
+    font-size: 22px !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-block !important;
+    -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* Reset closed state di mobile */
-  .sidebar-toggle.closed {
+  /* Reset closed state */
+  #sidebarToggle.sidebar-toggle.closed,
+  .sidebar-toggle.closed,
+  .sidebar-toggle.closed::before,
+  .sidebar-toggle.closed::after {
     left: 15px !important;
-    background: #3b82f6 !important;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
   }
 
   /* Footer responsive di mobile */
@@ -1046,6 +1141,28 @@ body.sidebar-closed .main-content {
   .footer p:first-child {
     font-size: 0.95rem;
   }
+}
+
+/* Tambahkan style untuk navbar desktop agar konsisten */
+.top-navbar {
+    position: fixed;
+    top: 20px;
+    left: 325px; /* 300px margin + 25px gap */
+    right: 2.5rem; /* Sama dengan padding kanan main-content */
+    height: 65px;
+    background: #fff;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 900;
+    transition: left 0.3s ease;
+}
+
+body.sidebar-closed .top-navbar {
+    left: 115px; /* 90px sidebar + 25px gap */
 }
 
 /* Utility classes */
@@ -1356,9 +1473,10 @@ canvas {
   .table-container,
   .report-table-container,
   .detail-card {
-    margin: 0.75rem 0.5rem !important;
+    margin: 0 0 15px 0 !important; /* No side margin - main-content handles it */
     padding: 1.25rem !important;
     border-radius: 16px !important;
+    width: 100% !important;
   }
 
   /* Grid containers become single column */
@@ -1368,7 +1486,8 @@ canvas {
   .stats-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
-    margin: 0.5rem !important;
+    margin: 0 !important; /* No margin - main-content handles gap */
+    width: 100% !important;
   }
 
   /* KPI cards spacing */
@@ -1411,7 +1530,7 @@ canvas {
   /* Container & Wrapper responsive */
   .container,
   .wrapper {
-    padding: 0 0.75rem !important;
+    padding: 0 !important; /* Changed from 0.75rem to 0 for perfect alignment */
     max-width: 100% !important;
   }
 

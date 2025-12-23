@@ -70,13 +70,15 @@ class AdminLaporController extends BaseController
             $this->request->getGet()
         );
 
-        // Ambil detail jika dipilih - dengan JOIN ke users untuk mendapatkan username
+        // Ambil detail jika dipilih - dengan JOIN ke users, gedung, dan ruangan
         $detailId = $this->request->getGet('detail');
         $detail = null;
         if ($detailId) {
             $detail = $db->table('laporan l')
-                ->select('l.*, u.npm as username, u.nama as user_nama')
+                ->select('l.*, u.npm as username, u.nama as user_nama, g.nama as nama_gedung, r.nama_ruangan')
                 ->join('users u', 'u.id = l.user_id', 'left')
+                ->join('gedung g', 'g.id = l.gedung_id', 'left')
+                ->join('ruangan r', 'r.id = l.ruangan_id', 'left')
                 ->where('l.id', $detailId)
                 ->get()
                 ->getRowArray();
@@ -138,14 +140,16 @@ class AdminLaporController extends BaseController
             $query
         );
 
-        // GET DETAIL - dengan JOIN ke users untuk mendapatkan username
+        // GET DETAIL - dengan JOIN ke users, gedung, dan ruangan
         $detailId = $this->request->getGet('detail');
         $detail = null;
 
         if ($detailId) {
             $detail = $db->table('laporan l')
-                ->select('l.*, u.npm as username, u.nama as user_nama')
+                ->select('l.*, u.npm as username, u.nama as user_nama, g.nama as nama_gedung, r.nama_ruangan')
                 ->join('users u', 'u.id = l.user_id', 'left')
+                ->join('gedung g', 'g.id = l.gedung_id', 'left')
+                ->join('ruangan r', 'r.id = l.ruangan_id', 'left')
                 ->where('l.id', $detailId)
                 ->get()
                 ->getRowArray();
@@ -262,10 +266,12 @@ class AdminLaporController extends BaseController
     {
         $db = \Config\Database::connect();
 
-        // Query dengan JOIN ke users untuk mendapatkan username
+        // Query dengan JOIN ke users, gedung, dan ruangan
         $laporan = $db->table('laporan l')
-            ->select('l.*, u.npm as username, u.nama as user_nama')
+            ->select('l.*, u.npm as username, u.nama as user_nama, g.nama as nama_gedung, r.nama_ruangan')
             ->join('users u', 'u.id = l.user_id', 'left')
+            ->join('gedung g', 'g.id = l.gedung_id', 'left')
+            ->join('ruangan r', 'r.id = l.ruangan_id', 'left')
             ->where('l.id', $id)
             ->get()
             ->getRowArray();

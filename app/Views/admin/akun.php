@@ -7,14 +7,16 @@
         padding: 2rem;
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
-        margin: 2rem;
+        margin: 0;
+        /* Remove margin - main-content handles gap */
     }
 
     .grid-container {
         display: grid;
         grid-template-columns: 2fr 1fr;
         gap: 1rem;
-        margin: 2rem auto;
+        margin: 0;
+        /* Remove margin - main-content handles gap */
         align-items: start;
     }
 
@@ -40,6 +42,18 @@
     @media (max-width: 992px) {
         .grid-container {
             grid-template-columns: 1fr;
+        }
+    }
+
+    /* Mobile alignment fix */
+    @media (max-width: 768px) {
+
+        .table-container,
+        .grid-container,
+        .report-table-container {
+            margin: 0 !important;
+            padding: 1.25rem;
+            border-radius: 16px;
         }
     }
 
@@ -265,40 +279,31 @@
         }
 
         /* ================= FILTER BAR ================= */
-        .table-container>div:first-of-type {
-            display: flex;
-            flex-direction: column;
-            gap: 0.55rem;
-            margin-bottom: 0.7rem;
-        }
-
         .search-group {
-            width: 100%;
+            flex: 1;
             display: flex;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
         .search-group input {
             width: 100%;
             height: 38px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             border-radius: 12px;
-            padding: 0 12px;
         }
 
-        .btn-search {
+        .btn-search,
+        .btn-add {
             height: 38px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             padding: 0 14px;
             border-radius: 12px;
+            white-space: nowrap;
         }
 
-        .btn-add {
-            width: 100%;
-            padding: 9px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            border-radius: 14px;
+        /* 🔥 HILANGKAN PUSH */
+        .add-wrap {
+            margin-left: 0;
         }
 
         /* ================= TABLE WRAPPER ================= */
@@ -410,6 +415,50 @@
 
     /* ================= EXTRA SMALL DEVICE ================= */
     @media (max-width: 480px) {
+
+        .table-container>div[style*="display:flex"] {
+            gap: 0.4rem;
+            align-items: stretch;
+        }
+
+        /* FORM FULL */
+        .table-container>div[style*="display:flex"] form {
+            flex: 1;
+            width: 100%;
+        }
+
+        /* SEARCH GROUP */
+        .search-group {
+            width: 100%;
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        /* INPUT */
+        .search-group input {
+            flex: 1;
+            width: 100%;
+            height: 36px;
+            font-size: 0.72rem;
+            border-radius: 10px;
+            padding: 0 10px;
+        }
+
+        /* BUTTON */
+        .btn-search,
+        .btn-add {
+            height: 36px;
+            font-size: 0.68rem;
+            padding: 0 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        /* TOOLTIP AMAN */
+        .tooltip-wrap {
+            display: flex;
+            align-items: center;
+        }
 
         .table-container {
             margin: 0.4rem;

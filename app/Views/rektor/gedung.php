@@ -7,7 +7,7 @@
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    margin: 2rem;
+    margin: 0; /* Remove margin - main-content handles gap */
 }
 
 .search-group {
@@ -203,7 +203,7 @@
 
     /* ===== CONTAINER ===== */
     .table-container {
-        margin: 0.75rem;
+        margin: 0; /* No margin - main-content handles 15px gap */
         padding: 1.2rem 1rem;
         border-radius: 16px;
     }
@@ -335,7 +335,7 @@
 @media (max-width: 480px) {
 
     .table-container {
-        margin: 0.5rem;
+        margin: 0; /* No margin */
         padding: 1rem 0.9rem;
     }
 

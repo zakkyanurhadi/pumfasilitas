@@ -513,7 +513,8 @@
     @media (max-width: 480px) {
         .notification-container {
             padding: 0.75rem;
-            margin: 0.5rem;
+            margin: 0;
+            /* No margin - main-content handles gap */
             border-radius: 8px;
         }
 

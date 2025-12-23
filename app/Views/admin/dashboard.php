@@ -41,6 +41,8 @@
     max-width: 100%;
     overflow-x: hidden;
     width: 100%;
+    padding: 0;
+    /* Remove padding - main-content already handles it */
   }
 
   /* ================= KPI ================= */
@@ -429,7 +431,8 @@
   @media (max-width: 992px) {
 
     .wrapper {
-      padding: 0 12px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     /* KPI jadi 2 kolom */
@@ -466,7 +469,8 @@
   @media (max-width: 576px) {
 
     .wrapper {
-      padding: 0 8px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     /* KPI 1 kolom */
@@ -591,7 +595,8 @@
   /* SMALL MOBILE (≤ 480px) */
   @media (max-width: 480px) {
     .wrapper {
-      padding: 0 6px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     .card {
