@@ -271,7 +271,7 @@
         <img src="<?= base_url('assets/polinela3.png') ?>" class="slideshow-img" alt="Slide 3" fetchpriority="high">
         <img src="<?= base_url('assets/polinela4.png') ?>" class="slideshow-img" alt="Slide 4" fetchpriority="high">
         <img src="<?= base_url('assets/polinela5.png') ?>" class="slideshow-img" alt="Slide 5" fetchpriority="high">
-        <img src="<?= base_url('assets/polinela.png') ?>" class="slideshow-img" alt="Slide 6 " fetchpriority="high">
+        <img src="<?= base_url('assets/polinela6.png') ?>" class="slideshow-img" alt="Slide 6 " fetchpriority="high">
       </div>
 
       <div class="left-content">

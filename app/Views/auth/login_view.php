@@ -321,7 +321,7 @@
                         fetchpriority="high">
                     <img src="<?= base_url('assets/polinela5.png') ?>" class="slideshow-img" alt="Slide 5"
                         fetchpriority="high">
-                    <img src="<?= base_url('assets/polinela.png') ?>" class="slideshow-img" alt="Slide 6"
+                    <img src="<?= base_url('assets/polinela6.png') ?>" class="slideshow-img" alt="Slide 6"
                         fetchpriority="high">
                 </div>
 
