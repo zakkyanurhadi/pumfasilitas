@@ -70,11 +70,16 @@ class AdminLaporController extends BaseController
             $this->request->getGet()
         );
 
-        // Ambil detail jika dipilih
+        // Ambil detail jika dipilih - dengan JOIN ke users untuk mendapatkan username
         $detailId = $this->request->getGet('detail');
         $detail = null;
         if ($detailId) {
-            $detail = $db->table('laporan')->where('id', $detailId)->get()->getRowArray();
+            $detail = $db->table('laporan l')
+                ->select('l.*, u.npm as username, u.nama as user_nama')
+                ->join('users u', 'u.id = l.user_id', 'left')
+                ->where('l.id', $detailId)
+                ->get()
+                ->getRowArray();
         }
 
         return view('admin/laporan', [
@@ -133,12 +138,17 @@ class AdminLaporController extends BaseController
             $query
         );
 
-        // GET DETAIL
+        // GET DETAIL - dengan JOIN ke users untuk mendapatkan username
         $detailId = $this->request->getGet('detail');
         $detail = null;
 
         if ($detailId) {
-            $detail = $db->table('laporan')->where('id', $detailId)->get()->getRowArray();
+            $detail = $db->table('laporan l')
+                ->select('l.*, u.npm as username, u.nama as user_nama')
+                ->join('users u', 'u.id = l.user_id', 'left')
+                ->where('l.id', $detailId)
+                ->get()
+                ->getRowArray();
         }
 
         return view('admin/riwayat', [
@@ -250,7 +260,15 @@ class AdminLaporController extends BaseController
     ============================================================ */
     public function detail($id)
     {
-        $laporan = $this->laporanModel->find($id);
+        $db = \Config\Database::connect();
+
+        // Query dengan JOIN ke users untuk mendapatkan username
+        $laporan = $db->table('laporan l')
+            ->select('l.*, u.npm as username, u.nama as user_nama')
+            ->join('users u', 'u.id = l.user_id', 'left')
+            ->where('l.id', $id)
+            ->get()
+            ->getRowArray();
 
         if (!$laporan) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Laporan tidak ditemukan ID: ' . $id);

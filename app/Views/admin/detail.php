@@ -168,11 +168,9 @@
         <dt>Nama Pelapor</dt>
         <dd><?= esc($detail['nama_pelapor'] ?? 'N/A') ?></dd>
 
-        <dt>NPM</dt>
-        <dd><?= esc($detail['npm'] ?? 'N/A') ?></dd>
+        <dt>Username</dt>
+        <dd><?= esc($detail['username'] ?? 'N/A') ?></dd>
 
-        <dt>No. Telp</dt>
-        <dd><?= esc($detail['no_telp'] ?? 'N/A') ?></dd>
 
         <dt>Tanggal Lapor</dt>
         <dd><?= date('d F Y, H:i', strtotime($detail['created_at'])) ?> WIB</dd>
@@ -216,8 +214,9 @@
         <div class="photo-gallery">
             <?php foreach (array_filter($foto) as $img): ?>
                 <?php $path = 'uploads/laporan/' . $img; ?>
-                <img src="<?= strpos($img, 'http') === 0 ? esc($img) : base_url($path) ?>" alt="Foto Kerusakan"
-                    title="Klik untuk melihat lebih besar">
+                <?php $imgUrl = strpos($img, 'http') === 0 ? esc($img) : base_url($path); ?>
+                <img src="<?= $imgUrl ?>" alt="Foto Kerusakan" title="Klik untuk melihat lebih besar"
+                    onclick="openLightbox('<?= $imgUrl ?>')">
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
@@ -242,3 +241,124 @@
         <a href="#" onclick="openReportModalAdmin(<?= esc($detail['id']) ?>)" class="btn btn-warning">Verifikasi</a>
     </div>
 </div>
+
+<!-- Lightbox Modal for Photo -->
+<div id="photoLightbox" class="photo-lightbox" onclick="closeLightbox(event)">
+    <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+    <img id="lightboxImage" src="" alt="Foto Kerusakan">
+    <div class="lightbox-caption">Klik di luar gambar untuk menutup</div>
+</div>
+
+<style>
+    /* Lightbox Modal Styles */
+    .photo-lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .photo-lightbox.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .photo-lightbox img {
+        max-width: 90%;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 40px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10001;
+        transition: color 0.2s ease, transform 0.2s ease;
+        line-height: 1;
+    }
+
+    .lightbox-close:hover {
+        color: #ff6b6b;
+        transform: scale(1.1);
+    }
+
+    .lightbox-caption {
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    /* Photo gallery cursor update */
+    .photo-gallery img {
+        cursor: zoom-in;
+    }
+</style>
+
+<script>
+    function openLightbox(imageSrc) {
+        const lightbox = document.getElementById('photoLightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+
+        lightboxImage.src = imageSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeLightbox(event) {
+        // Only close if clicking on the background or close button, not the image
+        if (event.target.id === 'photoLightbox' || event.target.classList.contains('lightbox-close')) {
+            const lightbox = document.getElementById('photoLightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    }
+
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            const lightbox = document.getElementById('photoLightbox');
+            if (lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+    });
+</script>

@@ -449,6 +449,7 @@
 
     .card {
       padding: 24px;
+      border-radius: 25px;
     }
 
     canvas {
@@ -492,7 +493,7 @@
     /* Card spacing */
     .card {
       padding: 16px;
-      border-radius: 14px;
+      border-radius: 25px;
       max-width: 100%;
       overflow: hidden;
     }

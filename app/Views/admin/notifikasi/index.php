@@ -708,10 +708,12 @@
                                 <p class="deskripsi-text"><?= esc($item['deskripsi'] ?? 'Tidak ada deskripsi') ?></p>
                             </div>
                             <?php if (!empty($item['foto'])): ?>
+                                <?php $fotoUrl = base_url('uploads/laporan/' . $item['foto']); ?>
                                 <div class="detail-section full-width">
                                     <h4><i class="fas fa-image"></i> Foto</h4>
-                                    <img src="<?= base_url('uploads/laporan/' . $item['foto']) ?>" alt="Foto Laporan"
-                                        class="detail-foto">
+                                    <img src="<?= $fotoUrl ?>" alt="Foto Laporan" class="detail-foto"
+                                        onclick="openPhotoLightbox('<?= $fotoUrl ?>')" style="cursor: zoom-in;"
+                                        title="Klik untuk memperbesar">
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -905,6 +907,119 @@
             icon.classList.add('fa-eye');
         }
     }
+
+    // Lightbox functions for photo enlargement
+    function openPhotoLightbox(imageSrc) {
+        const lightbox = document.getElementById('notifPhotoLightbox');
+        const lightboxImage = document.getElementById('notifLightboxImage');
+
+        lightboxImage.src = imageSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoLightbox(event) {
+        if (event.target.id === 'notifPhotoLightbox' || event.target.classList.contains('lightbox-close')) {
+            const lightbox = document.getElementById('notifPhotoLightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            const lightbox = document.getElementById('notifPhotoLightbox');
+            if (lightbox && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+    });
 </script>
+
+<!-- Lightbox Modal for Photo -->
+<div id="notifPhotoLightbox" class="photo-lightbox-modal" onclick="closePhotoLightbox(event)">
+    <span class="lightbox-close" onclick="closePhotoLightbox(event)">&times;</span>
+    <img id="notifLightboxImage" src="" alt="Foto Laporan">
+    <div class="lightbox-caption">Klik di luar gambar atau tekan ESC untuk menutup</div>
+</div>
+
+<style>
+    /* Lightbox Modal Styles */
+    .photo-lightbox-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .photo-lightbox-modal.active {
+        display: flex;
+        animation: lightboxFadeIn 0.3s ease;
+    }
+
+    @keyframes lightboxFadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .photo-lightbox-modal img {
+        max-width: 90%;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        animation: lightboxZoomIn 0.3s ease;
+    }
+
+    @keyframes lightboxZoomIn {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .photo-lightbox-modal .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 40px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10001;
+        transition: color 0.2s ease, transform 0.2s ease;
+        line-height: 1;
+    }
+
+    .photo-lightbox-modal .lightbox-close:hover {
+        color: #ff6b6b;
+        transform: scale(1.1);
+    }
+
+    .photo-lightbox-modal .lightbox-caption {
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 15px;
+        font-size: 14px;
+    }
+</style>
 
 <?= $this->endSection() ?>
