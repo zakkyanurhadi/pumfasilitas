@@ -20,7 +20,7 @@
   --gray-300: #cbd5e1;
   --gray-600: #475569;
   --gray-800: #1e293b;
-  --border-radius: 8px;
+  --border-radius: 25px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
@@ -801,100 +801,46 @@ body.sidebar-closed .main-content {
   font-weight: 600;
 }
 
-/* ===== SUBMENU KONFIGURASI - ICON ONLY MODE ===== */
+/* ===== SUBMENU KONFIGURASI ===== */
 
 .sidebar-submenu {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
   margin-top: 6px;
-  padding-left: 20px;
+  padding-left: 39px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   list-style: none !important;
 }
 
-/* item submenu - icon only */
+/* item submenu - normal with text */
 .sidebar-submenu li {
   position: relative;
 }
 
 .sidebar-submenu a {
-  width: 38px;
-  height: 38px;
-  padding: 0;
+  padding: 10px 14px;
   font-size: 14px;
   border-radius: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
   text-decoration: none !important;
   color: #444;
-  background: #f8f9fa;
-  transition: all 0.2s ease;
-  position: relative;
+  transition: 0.2s ease;
 }
 
 .sidebar-submenu a:hover {
-  background: #e8eefc;
-  color: #2a4dbf;
-  transform: scale(1.05);
+  background: #f3f4f6;
 }
 
-/* Hide text in submenu - show icon only */
-.sidebar-submenu a span,
-.sidebar-submenu a text {
-  display: none !important;
-}
-
-/* icon submenu - centered */
+/* icon submenu */
 .sidebar-submenu a i {
-  width: auto;
-  font-size: 15px;
+  width: 18px;
   text-align: center;
-  margin: 0;
-}
-
-/* Tooltip for submenu items */
-.sidebar-submenu li::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  left: 48px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #1e293b;
-  color: #fff;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s ease;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.sidebar-submenu li::before {
-  content: "";
-  position: absolute;
-  left: 42px;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 5px solid transparent;
-  border-right-color: #1e293b;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.2s ease;
-  z-index: 9999;
-}
-
-.sidebar-submenu li:hover::after,
-.sidebar-submenu li:hover::before {
-  opacity: 1;
-  visibility: visible;
+  flex-shrink: 0;
 }
 
 /* submenu active highlight */
@@ -911,23 +857,34 @@ body.sidebar-closed .main-content {
   transition: 0.25s ease;
 }
 
-/* SIDEBAR COLLAPSE - submenu adjustments */
+/* ===== SIDEBAR COLLAPSE - ICON ONLY MODE ===== */
 .sidebar.sidebar-closed .sidebar-submenu {
   padding-left: 0;
-  margin-left: 20px;
+  margin-left: 10px;
+  gap: 4px;
 }
 
-.sidebar.sidebar-closed .sidebar-submenu a span {
-  display: none !important;
-}
-
+/* Icon-only style when collapsed */
 .sidebar.sidebar-closed .sidebar-submenu a {
-  justify-content: center;
+  width: 38px;
+  height: 38px;
   padding: 0;
+  justify-content: center;
+  background: #f8f9fa;
+  border-radius: 10px;
+  font-size: 0; /* Hide text */
 }
 
-.sidebar.sidebar-closed .sidebar-submenu i {
-  margin: 0 auto;
+.sidebar.sidebar-closed .sidebar-submenu a:hover {
+  background: #e8eefc;
+  color: #2a4dbf;
+  transform: scale(1.05);
+}
+
+.sidebar.sidebar-closed .sidebar-submenu a i {
+  font-size: 15px;
+  width: auto;
+  margin: 0;
 }
 
 /* hanya dropdown icon yang ke kanan */

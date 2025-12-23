@@ -143,11 +143,12 @@
     grid-template-columns: 2.4fr 1.4fr;
     gap: 15px;
     margin-bottom: 15px;
+    border-radius: 25px;
   }
 
   .card {
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 25px;
     padding: 20px;
     box-shadow: var(--shadow-xs);
     position: relative;
