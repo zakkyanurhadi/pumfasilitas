@@ -9,7 +9,7 @@ class LaporanModel extends Model
     protected $table = 'laporan';
     protected $primaryKey = 'id';
     protected $returnType = 'array';
-    protected $protectFields    = true;
+    protected $protectFields = true;
     protected $allowedFields = [
         'nama_pelapor',
         'lokasi_kerusakan',
@@ -127,10 +127,10 @@ class LaporanModel extends Model
     public function getStatistikHomepage()
     {
         return [
-            'total_laporan'     => $this->getTotalLaporan(),
-            'laporan_selesai'   => $this->getTotalLaporanSelesai(),
-            'rata_rata_respon'  => $this->getFormattedAvgWaktuRespon(),
-            'avg_hours'         => $this->getAvgWaktuRespon()
+            'total_laporan' => $this->getTotalLaporan(),
+            'laporan_selesai' => $this->getTotalLaporanSelesai(),
+            'rata_rata_respon' => $this->getFormattedAvgWaktuRespon(),
+            'avg_hours' => $this->getAvgWaktuRespon()
         ];
     }
 
@@ -195,8 +195,9 @@ class LaporanModel extends Model
 
     public function getNotifikasiAktif()
     {
-        return $this->db->table('notifikasi')
-            ->where('terbaca', 0)
+        // Untuk admin: notifikasi aktif = laporan pending yang menunggu verifikasi
+        return $this->builder()
+            ->where('status', 'pending')
             ->countAllResults();
     }
 }

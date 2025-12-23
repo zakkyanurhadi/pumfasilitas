@@ -80,6 +80,31 @@
     </script>
 
 
+    <!-- Script Notifikasi Admin -->
+    <script>
+        function updateAdminNotificationBadge() {
+            fetch('<?= site_url('admin/notifikasi/unread-count') ?>')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('adminNotifBadge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(err => console.log('Admin notification check failed'));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateAdminNotificationBadge();
+            setInterval(updateAdminNotificationBadge, 30000);
+        });
+    </script>
+
     <!-- Panggil JavaScript di akhir body -->
     <script src="<?= base_url('assets/js/script.js') ?>"></script>
 </body>

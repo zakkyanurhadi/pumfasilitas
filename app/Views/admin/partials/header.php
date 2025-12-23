@@ -92,7 +92,12 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 <nav class="top-navbar">
     <div class="page-title">Dashboard</div>
     <div class="top-right">
-        <div class="top-icon"><i class="fa-solid fa-bell"></i></div>
+        <a href="<?= site_url('admin/notifikasi') ?>" class="top-icon"
+            style="position: relative; text-decoration: none; color: inherit;" id="adminNotifLink">
+            <i class="fa-solid fa-bell"></i>
+            <span id="adminNotifBadge"
+                style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;"></span>
+        </a>
         <div class="top-icon"><i class="fa-solid fa-gear"></i></div>
         <?php
         $imgSession = session('img');
