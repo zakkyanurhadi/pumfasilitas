@@ -29,6 +29,7 @@ class Filters extends BaseConfig
         'auth' => \App\Filters\AuthFilter::class,
         'admin' => \App\Filters\AdminFilter::class,
         'rektor' => \App\Filters\RektorFilter::class,
+        'superadmin' => \App\Filters\SuperadminFilter::class,
     ];
 
     // ... sisa file ...

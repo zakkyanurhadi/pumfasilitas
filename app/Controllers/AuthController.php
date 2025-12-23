@@ -164,7 +164,7 @@ class AuthController extends Controller
             'npm' => $this->request->getPost('username'),
             'email' => $this->request->getPost('email'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role' => 'mahasiswa',     // Default role otomatis
+            'role' => 'user',     // Default role otomatis
             'img' => 'default.jpg',   // Default foto profil
             'created_at' => date('Y-m-d H:i:s')
         ];
@@ -236,21 +236,21 @@ class AuthController extends Controller
         }
 
         $email = $this->request->getPost('email');
-        
+
         // 2. Cek User
         $user = $this->userModel->where('email', $email)->first();
 
         if (!$user) {
             // Security: Jangan beritahu user bahwa email tidak terdaftar
             return $this->response->setJSON([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Jika email terdaftar, link reset password telah dikirim ke email Anda.'
             ]);
         }
 
         // 3. Buat Token Random
         $token = bin2hex(random_bytes(32));
-        
+
         // 4. Update Database dengan token dan expired time (1 jam)
         $this->userModel->update($user['id'], [
             'reset_token' => $token,
@@ -262,7 +262,7 @@ class AuthController extends Controller
 
         // 6. Kirim Email
         $emailService = \Config\Services::email();
-        
+
         // Render email template
         $emailBody = view('emails/reset_password_email', [
             'nama' => $user['nama'],
@@ -281,7 +281,7 @@ class AuthController extends Controller
         } else {
             // Log error untuk debugging
             log_message('error', 'Email sending failed: ' . $emailService->printDebugger(['headers']));
-            
+
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Gagal mengirim email. Silakan coba lagi atau hubungi administrator.'
@@ -295,23 +295,23 @@ class AuthController extends Controller
     public function resetPage()
     {
         $token = $this->request->getGet('token');
-        
+
         if (empty($token)) {
             return view('auth/token_expired', ['message' => 'Token tidak ditemukan.']);
         }
-        
+
         // Cek apakah token ada di database
         $user = $this->userModel->where('reset_token', $token)->first();
 
         if (!$user) {
             return view('auth/token_expired', ['message' => 'Token tidak valid atau sudah digunakan.']);
         }
-        
+
         // Cek apakah token sudah expired (1 jam = 3600 detik)
         $tokenCreatedAt = strtotime($user['token_created_at']);
         $now = time();
         $expiryTime = 3600; // 1 jam dalam detik
-        
+
         if (($now - $tokenCreatedAt) > $expiryTime) {
             // Hapus token yang sudah expired
             $this->userModel->update($user['id'], [
@@ -320,7 +320,7 @@ class AuthController extends Controller
             ]);
             return view('auth/token_expired', ['message' => 'Link reset password telah kedaluwarsa. Silakan request ulang.']);
         }
-        
+
         return view('auth/reset_password', ['token' => $token]);
     }
 
@@ -340,7 +340,7 @@ class AuthController extends Controller
                 'reset_token' => null, // Hapus token
                 'token_created_at' => null
             ]);
-            
+
             // Redirect ke login dengan pesan
             session()->setFlashdata('message', 'Password berhasil diubah! Silakan login.');
             return redirect()->to('/'); // Kembali ke Login

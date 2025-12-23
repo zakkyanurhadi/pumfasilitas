@@ -27,8 +27,20 @@ class AuthFilter implements FilterInterface
     {
         // Cek apakah session 'isLoggedIn' tidak ada atau bernilai false
         if (!session()->get('isLoggedIn')) {
-            // Jika belum login, redirect ke halaman login
             return redirect()->to('/login');
+        }
+
+        // Cek apakah user memiliki role user
+        $role = session()->get('role');
+        if ($role !== 'user') {
+            // Redirect sesuai role masing-masing
+            if ($role === 'admin' || $role === 'superadmin') {
+                return redirect()->to('/dashboardadmin')->with('error', 'Akses ditolak! Halaman ini untuk User Mahasiswa.');
+            } elseif ($role === 'rektor') {
+                return redirect()->to('/rektor/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk User Mahasiswa.');
+            } else {
+                return redirect()->to('/login')->with('error', 'Akses ditolak!');
+            }
         }
     }
 

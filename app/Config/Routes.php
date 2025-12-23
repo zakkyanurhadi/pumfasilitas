@@ -66,8 +66,10 @@ $routes->get('/riwayatadmin', 'AdminLaporController::index', ['filter' => 'admin
 
 $routes->post('/admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin']);
 
-// Manajemen Akun (dropdown)
-$routes->get('akunadmin', 'AdminAkunController::index', ['filter' => 'admin']);
+// Manajemen Akun (Superadmin)
+$routes->get('akunadmin', 'AdminAkunController::index', ['filter' => 'superadmin']);
+
+// Manajemen Akun (Admin)
 $routes->get('akunuser', 'AdminAkunController::index', ['filter' => 'admin']);
 
 // Edit & delete
@@ -106,6 +108,11 @@ $routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], func
     $routes->post('gedung/create', 'AdminGedungController::store');
     $routes->post('gedung/update', 'AdminGedungController::update');
     $routes->get('gedung/delete/(:num)', 'AdminGedungController::delete/$1');
+});
+
+// Group Khusus Superadmin (Tambahan)
+$routes->group('superadmin', ['namespace' => 'App\Controllers', 'filter' => 'superadmin'], function ($routes) {
+    // Tambahkan rute khusus superadmin di sini jika ada
 });
 
 // =========================================================================

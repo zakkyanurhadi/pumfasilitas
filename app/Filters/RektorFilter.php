@@ -18,7 +18,12 @@ class RektorFilter implements FilterInterface
         // Cek apakah user memiliki role rektor
         $role = session()->get('role');
         if ($role !== 'rektor') {
-            return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Anda tidak memiliki izin untuk mengakses halaman ini.');
+            // Redirect sesuai role masing-masing
+            if ($role === 'admin' || $role === 'superadmin') {
+                return redirect()->to('/dashboardadmin')->with('error', 'Akses ditolak! Halaman ini untuk Rektor.');
+            } else {
+                return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk Rektor.');
+            }
         }
     }
 
