@@ -9,11 +9,18 @@ use CodeIgniter\Router\RouteCollection;
 // Rute Publik
 $routes->get('/', 'Home::index');
 
+// Route Debug Email (HAPUS SETELAH SELESAI DEBUG)
+$routes->get('/test-email', 'TestEmail::index');
+$routes->get('/test-email/send', 'TestEmail::send');
+
 // Rute Autentikasi (Untuk Login, Logout, dll.)
 $routes->get('/login', 'AuthController::index');
 $routes->post('/login', 'AuthController::login');
 $routes->get('/logout', 'AuthController::logout');
 $routes->post('/forgot-password', 'AuthController::forgotPassword');
+$routes->post('auth/forgot_process', 'AuthController::forgotPasswordProcess');
+$routes->get('auth/reset_page', 'AuthController::resetPage');
+$routes->post('auth/change_password', 'AuthController::changePasswordProcess');
 
 // --- TAMBAHAN BARU UNTUK REGISTER ---
 $routes->get('/register', 'AuthController::register');          // 1. Menampilkan Halaman Daftar

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
     <style>
-        /* === RESET & BASE STYLES === */
+        /* === RESET & GAYA DASAR === */
         * {
             margin: 0;
             padding: 0;
@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
 
-        /* === WRAPPER UTAMA === */
+        /* === PEMBUNGKUS UTAMA === */
         .login-wrapper {
             position: relative;
             width: 100%;
@@ -63,7 +63,7 @@
             border-color: #2c5ef3;
         }
 
-        /* === CARD STYLE === */
+        /* === KARTU LOGIN === */
         .login-card {
             width: 100%;
             background: #fff;
@@ -81,7 +81,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* === BAGIAN KIRI (SLIDESHOW BACKGROUND) === */
+        /* === BAGIAN KIRI (BACKGROUND SLIDESHOW) === */
         .login-left {
             width: 50%;
             position: relative;
@@ -90,11 +90,11 @@
             justify-content: flex-end;
             padding: 3rem;
             color: white;
-            background-color: #2c5ef3; /* Fallback color */
+            background-color: #2c5ef3; /* Warna cadangan */
             overflow: hidden; /* Penting agar gambar tidak keluar */
         }
 
-        /* Container untuk gambar slideshow */
+        /* Wadah untuk gambar slideshow */
         .slideshow-wrapper {
             position: absolute;
             top: 0;
@@ -119,11 +119,11 @@
             opacity: 1; /* Munculkan yang aktif */
         }
 
-        /* Gradient Overlay - Di atas gambar tapi di bawah teks */
+        /* Lapisan Gradasi Gelap - Di atas gambar tapi di bawah teks */
         .login-left::after {
             content: '';
             position: absolute;
-            top: 0; /* Ubah ke 0 agar full overlay jika perlu, atau sesuaikan */
+            top: 0; 
             left: 0;
             right: 0;
             bottom: 0;
@@ -147,7 +147,7 @@
             background: #fff;
         }
 
-        /* === FORM ELEMENTS === */
+        /* === ELEMEN FORM === */
         .logo-header { text-align: center; margin-bottom: 2rem; }
         .logo-img { width: 80px; height: auto; margin-bottom: 1rem; }
         h2 { font-weight: 700; color: #1a202c; margin-bottom: 0.5rem; font-size: 1.8rem; }
@@ -212,7 +212,7 @@
         .error-message { font-size: 0.75rem; color: #e53e3e; margin-top: 0.2rem; display: block; }
 
         @media (max-width: 992px) {
-            .login-card { flexDirection: column; max-width: 500px; margin-top: 0; }
+            .login-card { flex-direction: column; max-width: 500px; margin-top: 0; }
             .login-left { width: 100%; height: 200px; padding: 1.5rem; flex: none; }
             .left-content { display: none; }
             .login-right { width: 100%; padding: 2rem; }
@@ -235,13 +235,11 @@
                 
                 <div class="slideshow-wrapper">
                     <img src="<?= base_url('assets/Polinelaa.jpeg') ?>" class="slideshow-img active" alt="Slide 1">
-                    
                     <img src="<?= base_url('assets/Polinela.jpeg') ?>" class="slideshow-img" alt="Slide 2"> 
-                    
                     <img src="<?= base_url('assets/Polinelaaa.jpeg') ?>" class="slideshow-img" alt="Slide 3">
                     <img src="<?= base_url('assets/Polinelaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 4">
                     <img src="<?= base_url('assets/Polinelaaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 5">
-                    <img src="<?= base_url('assets/Polinela.png') ?>" class="slideshow-img" alt="Slide 6 ">
+                    <img src="<?= base_url('assets/Polinela.png') ?>" class="slideshow-img" alt="Slide 6">
                 </div>
 
                 <div class="left-content">
@@ -352,26 +350,27 @@
                     
                     // Tambahkan class active ke gambar baru
                     images[currentIndex].classList.add('active');
-                }, 5000); // Ganti setiap 5000ms (5 detik)
+                }, 5000); // Ganti gambar setiap 5 detik
             }
             // ================================
 
-            // Hapus error saat mengetik
+            // Hapus error saat user mulai mengetik
             $('#login_identifier, #password').on('input', function() {
                 $(this).removeClass('is-invalid');
                 const errorId = '#error-' + (this.id === 'login_identifier' ? 'identifier' : 'password');
                 $(errorId).text('');
             });
 
+            // === FUNGSI TAMPILKAN ALERT ===
             function showAlert(message, type) {
                 const alertType = type === 'success' ? 'success' : 'danger';
-                $("#alert-container").html(`<div class="alert alert-${alertType} alert-dismissible fade show small" role="alert" style="border-radius: 12px;">${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-                setTimeout(() => {
-                    $(".alert").alert('close');
-                }, 5000);
+                
+                // KITA HAPUS setTimeout DI SINI AGAR ALERT TIDAK HILANG OTOMATIS
+                // (Penting agar user punya waktu klik link simulasi)
+                $("#alert-container").html(`<div class="alert alert-${alertType} alert-dismissible fade show small shadow-sm" role="alert" style="border-radius: 12px;">${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
             }
 
-            // LOGIN PROSES
+            // === PROSES LOGIN ===
             $("#loginForm").on("submit", function(e) {
                 e.preventDefault();
                 $('.error-message').text('');
@@ -417,31 +416,40 @@
                 });
             });
 
-            // RESET PASSWORD PROSES
+            // === PROSES LUPA PASSWORD ===
             $("#resetPasswordForm").on("submit", function(e) {
                 e.preventDefault();
                 const btn = $(this).find('button[type="submit"]');
                 const originalText = btn.text();
                 btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...').prop('disabled', true);
+                
                 $.ajax({
-                    url: "<?= site_url('forgot-password') ?>",
+                    // Pastikan URL ini sesuai dengan routes di AuthController
+                    url: "<?= base_url('auth/forgot_process') ?>",
                     type: "POST",
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(response) {
                         $("#forgotPasswordModal").modal("hide");
                         showAlert(response.message, response.success ? 'success' : 'error');
-                        if (response.success) $('#resetEmail').val('');
+                        
+                        // Scroll ke atas agar notifikasi terlihat
+                        if (response.success) {
+                            $('#resetEmail').val('');
+                            $('html, body').animate({ scrollTop: 0 }, 'fast');
+                        }
+                        
                         btn.text(originalText).prop('disabled', false);
                     },
                     error: function() {
+                        $("#forgotPasswordModal").modal("hide");
                         showAlert('Gagal mengirim permintaan.', 'error');
                         btn.text(originalText).prop('disabled', false);
                     }
                 });
             });
 
-            // LOAD Remember Me
+            // === CEK INGAT SAYA ===
             if (localStorage.getItem('rememberMe') === 'true') {
                 const savedId = localStorage.getItem('savedIdentifier');
                 if (savedId) {

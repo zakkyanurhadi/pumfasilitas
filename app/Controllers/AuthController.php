@@ -217,4 +217,135 @@ class AuthController extends Controller
 
         return $this->response->setJSON(['success' => true, 'message' => 'Link reset telah dikirim ke ' . $email]);
     }
+    // =========================================================================
+    // 7. PROSES KIRIM EMAIL RESET PASSWORD
+    // =========================================================================
+    public function forgotPasswordProcess()
+    {
+        // 1. Validasi Input
+        $rules = [
+            'email' => [
+                'rules' => 'required|valid_email',
+                'errors' => ['required' => 'Email harus diisi.', 'valid_email' => 'Email tidak valid.']
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            $validation = \Config\Services::validation();
+            return $this->response->setJSON(['success' => false, 'message' => $validation->getError('email')]);
+        }
+
+        $email = $this->request->getPost('email');
+        
+        // 2. Cek User
+        $user = $this->userModel->where('email', $email)->first();
+
+        if (!$user) {
+            // Security: Jangan beritahu user bahwa email tidak terdaftar
+            return $this->response->setJSON([
+                'success' => true, 
+                'message' => 'Jika email terdaftar, link reset password telah dikirim ke email Anda.'
+            ]);
+        }
+
+        // 3. Buat Token Random
+        $token = bin2hex(random_bytes(32));
+        
+        // 4. Update Database dengan token dan expired time (1 jam)
+        $this->userModel->update($user['id'], [
+            'reset_token' => $token,
+            'token_created_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // 5. Buat Reset Link
+        $resetLink = base_url('auth/reset_page?token=' . $token);
+
+        // 6. Kirim Email
+        $emailService = \Config\Services::email();
+        
+        // Render email template
+        $emailBody = view('emails/reset_password_email', [
+            'nama' => $user['nama'],
+            'resetLink' => $resetLink
+        ]);
+
+        $emailService->setTo($email);
+        $emailService->setSubject('🔐 Reset Password - E-Fasilitas Polinela');
+        $emailService->setMessage($emailBody);
+
+        if ($emailService->send()) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => '✅ Link reset password telah dikirim ke email <strong>' . esc($email) . '</strong>. Silakan cek inbox atau folder spam Anda.'
+            ]);
+        } else {
+            // Log error untuk debugging
+            log_message('error', 'Email sending failed: ' . $emailService->printDebugger(['headers']));
+            
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal mengirim email. Silakan coba lagi atau hubungi administrator.'
+            ]);
+        }
+    }
+
+    // =========================================================================
+    // 8. HALAMAN INPUT PASSWORD BARU
+    // =========================================================================
+    public function resetPage()
+    {
+        $token = $this->request->getGet('token');
+        
+        if (empty($token)) {
+            return view('auth/token_expired', ['message' => 'Token tidak ditemukan.']);
+        }
+        
+        // Cek apakah token ada di database
+        $user = $this->userModel->where('reset_token', $token)->first();
+
+        if (!$user) {
+            return view('auth/token_expired', ['message' => 'Token tidak valid atau sudah digunakan.']);
+        }
+        
+        // Cek apakah token sudah expired (1 jam = 3600 detik)
+        $tokenCreatedAt = strtotime($user['token_created_at']);
+        $now = time();
+        $expiryTime = 3600; // 1 jam dalam detik
+        
+        if (($now - $tokenCreatedAt) > $expiryTime) {
+            // Hapus token yang sudah expired
+            $this->userModel->update($user['id'], [
+                'reset_token' => null,
+                'token_created_at' => null
+            ]);
+            return view('auth/token_expired', ['message' => 'Link reset password telah kedaluwarsa. Silakan request ulang.']);
+        }
+        
+        return view('auth/reset_password', ['token' => $token]);
+    }
+
+    // =========================================================================
+    // 9. PROSES SIMPAN PASSWORD BARU
+    // =========================================================================
+    public function changePasswordProcess()
+    {
+        $token = $this->request->getPost('token');
+        $password = $this->request->getPost('password');
+
+        $user = $this->userModel->where('reset_token', $token)->first();
+
+        if ($user) {
+            $this->userModel->update($user['id'], [
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'reset_token' => null, // Hapus token
+                'token_created_at' => null
+            ]);
+            
+            // Redirect ke login dengan pesan
+            session()->setFlashdata('message', 'Password berhasil diubah! Silakan login.');
+            return redirect()->to('/'); // Kembali ke Login
+        } else {
+            return "Gagal mengubah password.";
+        }
+    }
 }
