@@ -311,15 +311,15 @@
             <div class="login-left">
 
                 <div class="slideshow-wrapper">
-                    <img src="<?= base_url('assets/polinelaa.jpeg') ?>" class="slideshow-img active" alt="Slide 1"
+                    <img src="<?= base_url('assets/polinela2.png') ?>" class="slideshow-img active" alt="Slide 1"
                         fetchpriority="high">
-                    <img src="<?= base_url('assets/polinela.jpeg') ?>" class="slideshow-img" alt="Slide 2"
+                    <img src="<?= base_url('assets/polinela1.png') ?>" class="slideshow-img" alt="Slide 2"
                         fetchpriority="high">
-                    <img src="<?= base_url('assets/polinelaaa.jpeg') ?>" class="slideshow-img" alt="Slide 3"
+                    <img src="<?= base_url('assets/polinela3.png') ?>" class="slideshow-img" alt="Slide 3"
                         fetchpriority="high">
-                    <img src="<?= base_url('assets/polinelaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 4"
+                    <img src="<?= base_url('assets/polinela4.png') ?>" class="slideshow-img" alt="Slide 4"
                         fetchpriority="high">
-                    <img src="<?= base_url('assets/polinelaaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 5"
+                    <img src="<?= base_url('assets/polinela5.png') ?>" class="slideshow-img" alt="Slide 5"
                         fetchpriority="high">
                     <img src="<?= base_url('assets/polinela.png') ?>" class="slideshow-img" alt="Slide 6"
                         fetchpriority="high">
