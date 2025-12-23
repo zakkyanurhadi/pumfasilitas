@@ -90,7 +90,12 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 
 <!-- NAVBAR ATAS -->
 <nav class="top-navbar">
-    <div class="page-title">Dashboard</div>
+    <div class="page-title" id="realtimeClock">
+        <i class="fa-regular fa-clock" style="margin-right: 8px;"></i>
+        <span id="clockTime">--:--:--</span>
+        <span id="clockDate" style="font-size: 14px; font-weight: 400; color: #64748b; margin-left: 12px;">-- ---
+            ----</span>
+    </div>
     <div class="top-right">
         <a href="<?= site_url('admin/notifikasi') ?>" class="top-icon"
             style="position: relative; text-decoration: none; color: inherit;" id="adminNotifLink">
@@ -109,3 +114,34 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
         </div>
     </div>
 </nav>
+
+<script>
+    function updateRealtimeClock() {
+        const now = new Date();
+
+        // Format waktu: HH:MM:SS
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+
+        // Format tanggal: Senin, 23 Des 2024
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const dayName = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const dateString = `${dayName}, ${date} ${month} ${year}`;
+
+        // Update DOM
+        document.getElementById('clockTime').textContent = timeString;
+        document.getElementById('clockDate').textContent = dateString;
+    }
+
+    // Update setiap detik
+    setInterval(updateRealtimeClock, 1000);
+
+    // Update langsung saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', updateRealtimeClock);
+</script>

@@ -999,9 +999,8 @@ body.sidebar-closed .main-content {
   }
 
   .main-content {
-    margin-left: 0 !important;
-    width: 100%;
-    padding: 15px;
+    margin-left: 0 !important;   /* reset sidebar offset */
+    padding: 0.15rem !important; /* lebih dekat ke dinding */
     padding-top: 80px !important;
   }
 

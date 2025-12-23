@@ -231,10 +231,19 @@
 ===================================================== */
     @media (max-width: 768px) {
 
+        /* ===== CONTAINER & LAYOUT MOBILE ===== */
+        .container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
+
         /* ===== GRID ===== */
         .grid-container {
             grid-template-columns: 1fr;
             gap: 0.75rem;
+            margin: 0 !important;
+            padding: 0.25rem !important;
         }
 
         /* ===== CARD TABEL ===== */
