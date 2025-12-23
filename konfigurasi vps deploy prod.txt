@@ -1,6 +1,6 @@
 sudo apt update && sudo apt upgrade -y
 
-sudo apt install apache2 php php-mysql php-common php-cli phpjson php-common php-opcache libapache2-mod-php mariadb-server
+sudo apt install apache2 php php-mysql php-common php-cli php-common libapache2-mod-php mariadb-server -y
 
 
 
@@ -9,13 +9,15 @@ sudo apt install apache2 php php-mysql php-common php-cli phpjson php-common php
 sudo apt install php php-mysql php-mbstring php-zip php-gd php-json php-curl -y
 
 sudo apt install php php-cli php-mbstring php-intl php-curl php-zip php-xml php-mysql -y
-   16  sudo apt install composer -y
+   16  composer install --no-dev --optimize-autoloader
+sudo chown -R www-data:www-data /var/www/pm8/vendor
+sudo chmod -R 755 /var/www/pm8/vendor
 
 
 
  18    sudo mysql_secure_installation
    19  sudo apt install phpmyadmin -y
-   20  sudo phpenmod mbstring
+   20  sudo phpenmod mbstring 
    21  sudo systemctl restart apache2
    22  sudo nano /etc/apache2/sites-available/e-fasilitas.online.conf
    23  sudo mkdir -p /var/www/pm8/public
