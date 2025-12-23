@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Animate.css (buat SweetAlert smooth) -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet"
@@ -52,12 +52,38 @@
 
 
     <script>
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             if (window.scrollY > 50) {
                 document.querySelector('.navbar').classList.add('shadow');
             } else {
                 document.querySelector('.navbar').classList.remove('shadow');
             }
+        });
+
+        // Notifikasi Badge - Polling setiap 30 detik
+        function updateNotificationBadge() {
+            fetch('<?= site_url('notifikasi/unread-count') ?>')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notifBadge');
+                    const count = document.getElementById('notifCount');
+                    if (badge && count) {
+                        if (data.count > 0) {
+                            count.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(err => console.log('Notification check failed'));
+        }
+
+        // Initial check
+        document.addEventListener('DOMContentLoaded', function () {
+            updateNotificationBadge();
+            // Poll every 30 seconds
+            setInterval(updateNotificationBadge, 30000);
         });
     </script>
     <!-- Render section 'scripts' dari view yang memanggil layout ini -->
@@ -70,7 +96,7 @@
         }
 
         // Tutup dropdown jika pengguna mengklik di luar area dropdown
-        window.addEventListener('click', function(event) {
+        window.addEventListener('click', function (event) {
             const profileInfo = document.querySelector('.profile-info');
             const dropdown = document.getElementById('profileDropdown');
 
@@ -81,14 +107,14 @@
         });
 
         // Mencegah event klik di dalam dropdown menutup dropdown itu sendiri
-        document.getElementById('profileDropdown').addEventListener('click', function(event) {
+        document.getElementById('profileDropdown').addEventListener('click', function (event) {
             event.stopPropagation();
         });
     </script>
     <!-- SweetAlert SUCCESS -->
-    <?php if ($success = session()->getFlashdata('success')) : ?>
+    <?php if ($success = session()->getFlashdata('success')): ?>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     Swal.fire({
                         icon: 'success',
@@ -111,16 +137,16 @@
     <?php endif; ?>
 
     <!-- SweetAlert ERROR -->
-    <?php if ($errors = session()->getFlashdata('errors')) : ?>
+    <?php if ($errors = session()->getFlashdata('errors')): ?>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     Swal.fire({
                         icon: 'error',
                         title: 'Terjadi Kesalahan',
                         html: `
                             <ul class="text-start mb-0">
-                                <?php foreach ($errors as $error) : ?>
+                                <?php foreach ($errors as $error): ?>
                                     <li><?= esc($error) ?></li>
                                 <?php endforeach ?>
                             </ul>

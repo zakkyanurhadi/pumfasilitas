@@ -102,6 +102,26 @@ $routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], func
 });
 
 // =========================================================================
+// RUTE NOTIFIKASI
+// =========================================================================
+$routes->get('/notifikasi', 'NotifikasiController::index', ['filter' => 'auth']);
+$routes->get('/notifikasi/view/(:num)', 'NotifikasiController::view/$1', ['filter' => 'auth']);
+$routes->get('/notifikasi/mark-read/(:num)', 'NotifikasiController::markAsRead/$1', ['filter' => 'auth']);
+$routes->get('/notifikasi/mark-all-read', 'NotifikasiController::markAllAsRead', ['filter' => 'auth']);
+$routes->get('/notifikasi/delete/(:num)', 'NotifikasiController::delete/$1', ['filter' => 'auth']);
+$routes->get('/notifikasi/delete-all', 'NotifikasiController::deleteAll', ['filter' => 'auth']);
+$routes->get('/notifikasi/unread-count', 'NotifikasiController::getUnreadCount', ['filter' => 'auth']);
+
+// =========================================================================
+// RUTE NOTIFIKASI ADMIN
+// =========================================================================
+$routes->get('/admin/notifikasi', 'AdminNotifikasiController::index', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/view/(:num)', 'AdminNotifikasiController::view/$1', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/unread-count', 'AdminNotifikasiController::getUnreadCount', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/mark-all-read', 'AdminNotifikasiController::markAllAsRead', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/delete/(:num)', 'AdminNotifikasiController::delete/$1', ['filter' => 'admin']);
+
+// =========================================================================
 // RUTE REKTOR
 // =========================================================================
 $routes->group('rektor', ['filter' => 'rektor'], function ($routes) {

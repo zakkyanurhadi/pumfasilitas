@@ -15,13 +15,21 @@
             <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>">Beranda</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#alur">Alur Laporan</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#statistik">Statistik</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#statistik">Statistik</a>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan') ?>">Buat Laporan</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/saya') ?>">Laporan Saya</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/riwayat') ?>">Riwayat Laporan</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/riwayat') ?>">Riwayat Laporan</a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link position-relative me-4" href="<?= site_url('notifikasi') ?>" title="Notifikasi">
+                    <a class="nav-link position-relative me-4" href="<?= site_url('notifikasi') ?>" title="Notifikasi"
+                        id="notifNavLink">
                         <i class="fas fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            id="notifBadge" style="display: none; font-size: 0.65rem; padding: 0.25rem 0.45rem;">
+                            <span id="notifCount">0</span>
+                            <span class="visually-hidden">notifikasi belum dibaca</span>
+                        </span>
                     </a>
                 </li>
 

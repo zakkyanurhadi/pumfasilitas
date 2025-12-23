@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\LaporanModel;
+use App\Models\NotifikasiModel;
 
 class AdminLaporController extends BaseController
 {
@@ -199,6 +200,38 @@ class AdminLaporController extends BaseController
                 $status = $this->request->getPost('status');
                 $dataLog = "Memverifikasi laporan #$id menjadi $status";
                 $logModel->catat($adminId, $dataLog, $id);
+
+                // ==========================================
+                // BUAT NOTIFIKASI UNTUK USER
+                // ==========================================
+                $laporan = $this->laporanModel->find($id);
+                if ($laporan && !empty($laporan['user_id'])) {
+                    $notifikasiModel = new NotifikasiModel();
+
+                    // Buat pesan notifikasi berdasarkan status
+                    $statusLabels = [
+                        'pending' => 'menunggu verifikasi',
+                        'diproses' => 'sedang diproses',
+                        'selesai' => 'telah selesai dikerjakan',
+                        'ditolak' => 'ditolak'
+                    ];
+                    $statusLabel = $statusLabels[$status] ?? $status;
+
+                    $pesanNotif = "Laporan Anda di " . ($laporan['lokasi_kerusakan'] ?? 'lokasi tersebut');
+                    $pesanNotif .= " {$statusLabel}.";
+
+                    if (!empty($dataUpdate['keterangan_verifikasi'])) {
+                        $pesanNotif .= " Keterangan: " . $dataUpdate['keterangan_verifikasi'];
+                    }
+
+                    $notifikasiModel->createNotifikasi(
+                        $laporan['user_id'],
+                        $id,
+                        $pesanNotif
+                    );
+
+                    log_message('info', 'Notifikasi dibuat untuk user #' . $laporan['user_id']);
+                }
 
                 return redirect()->back()->with('success', 'Verifikasi berhasil disimpan');
             } else {
