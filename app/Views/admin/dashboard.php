@@ -41,6 +41,8 @@
     max-width: 100%;
     overflow-x: hidden;
     width: 100%;
+    padding: 0;
+    /* Remove padding - main-content already handles it */
   }
 
   /* ================= KPI ================= */
@@ -143,11 +145,12 @@
     grid-template-columns: 2.4fr 1.4fr;
     gap: 15px;
     margin-bottom: 15px;
+    border-radius: 25px;
   }
 
   .card {
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 25px;
     padding: 20px;
     box-shadow: var(--shadow-xs);
     position: relative;
@@ -428,7 +431,8 @@
   @media (max-width: 992px) {
 
     .wrapper {
-      padding: 0 12px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     /* KPI jadi 2 kolom */
@@ -448,6 +452,7 @@
 
     .card {
       padding: 24px;
+      border-radius: 25px;
     }
 
     canvas {
@@ -464,7 +469,8 @@
   @media (max-width: 576px) {
 
     .wrapper {
-      padding: 0 8px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     /* KPI 1 kolom */
@@ -491,7 +497,7 @@
     /* Card spacing */
     .card {
       padding: 16px;
-      border-radius: 14px;
+      border-radius: 25px;
       max-width: 100%;
       overflow: hidden;
     }
@@ -589,7 +595,8 @@
   /* SMALL MOBILE (≤ 480px) */
   @media (max-width: 480px) {
     .wrapper {
-      padding: 0 6px;
+      padding: 0;
+      /* No padding - alignment handled by main-content */
     }
 
     .card {

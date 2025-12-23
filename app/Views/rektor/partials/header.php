@@ -64,19 +64,22 @@ $uri = service('uri')->getSegment(2) ?: 'dashboard';
 
     <!-- TOGGLE BUTTON -->
     <div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
-        <div class="tooltip-wrap">
-            <span class="toggle-icon">❮</span>
-            <span class="tooltip-text">Geser</span>
-        </div>
+        <i class="fa-solid fa-bars toggle-icon"></i>
     </div>
 
 
     <!-- NAVBAR ATAS -->
     <nav class="top-navbar">
+        <div class="page-title" id="realtimeClock"
+            style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+            <span id="clockTime" style="font-size: 18px; font-weight: 600; color: #1e293b;">--:--:--</span>
+            <span id="clockDate" style="font-size: 12px; font-weight: 400; color: #64748b;">-- --- ----</span>
+        </div>
         <div class="top-left"></div>
 
+
         <div class="top-right">
-            <div class="top-icon"><i class="fa-solid fa-bell"></i></div>
+
 
             <?php
             $imgSession = session('img');
@@ -94,3 +97,33 @@ $uri = service('uri')->getSegment(2) ?: 'dashboard';
 
         </div>
     </nav>
+    <script>
+        function updateRealtimeClock() {
+            const now = new Date();
+
+            // Format waktu: HH:MM:SS
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+
+            // Format tanggal: Senin, 23 Des 2024
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const dayName = days[now.getDay()];
+            const date = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const dateString = `${dayName}, ${date} ${month} ${year}`;
+
+            // Update DOM
+            document.getElementById('clockTime').textContent = timeString;
+            document.getElementById('clockDate').textContent = dateString;
+        }
+
+        // Update setiap detik
+        setInterval(updateRealtimeClock, 1000);
+
+        // Update langsung saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', updateRealtimeClock);
+    </script>

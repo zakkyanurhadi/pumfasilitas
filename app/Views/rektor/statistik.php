@@ -18,7 +18,7 @@
 
     </div>
 
-    <div class="dashboard-card" style="margin-top: 25px;">
+    <div class="dashboard-card">
         <h3 class="card-header-title">Tren Kerusakan (Waktu)</h3>
         <canvas id="chartTrend" height="100"></canvas>
     </div>

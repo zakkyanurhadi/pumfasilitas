@@ -31,12 +31,12 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             </a>
             <ul class="sidebar-submenu"
                 style="<?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'max-height:500px' : '' ?>">
-                <li data-tooltip="Laporan Pending"><a href="<?= site_url('laporanadminpending') ?>"><i
-                            class="fa-solid fa-clock"></i></a></li>
-                <li data-tooltip="Laporan Diproses"><a href="<?= site_url('laporanadmindiproses') ?>"><i
-                            class="fa-solid fa-spinner"></i></a></li>
-                <li data-tooltip="Laporan Selesai"><a href="<?= site_url('riwayatadmin') ?>"><i
-                            class="fa-solid fa-check-circle"></i></a></li>
+                <li><a href="<?= site_url('laporanadminpending') ?>"><i class="fa-solid fa-clock"></i> Laporan
+                        Pending</a></li>
+                <li><a href="<?= site_url('laporanadmindiproses') ?>"><i class="fa-solid fa-spinner"></i> Laporan
+                        Diproses</a></li>
+                <li><a href="<?= site_url('riwayatadmin') ?>"><i class="fa-solid fa-check-circle"></i> Laporan
+                        Selesai</a></li>
             </ul>
         </li>
 
@@ -49,11 +49,9 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             <ul class="sidebar-submenu"
                 style="<?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'max-height:500px' : '' ?>">
                 <?php if (session()->get('role') === 'superadmin'): ?>
-                    <li data-tooltip="Akun Admin"><a href="<?= site_url('akunadmin') ?>"><i
-                                class="fa-solid fa-user-shield"></i></a></li>
+                    <li><a href="<?= site_url('akunadmin') ?>"><i class="fa-solid fa-user-shield"></i> Akun Admin</a></li>
                 <?php endif; ?>
-                <li data-tooltip="Akun User"><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i></a>
-                </li>
+                <li><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i> Akun User</a></li>
             </ul>
         </li>
 
@@ -87,12 +85,16 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 
 <!-- TOGGLE BUTTON -->
 <div class="sidebar-toggle" id="sidebarToggle">
-    <i class="toggle-icon">❮</i>
+    <i class="fa-solid fa-bars toggle-icon"></i>
 </div>
 
 <!-- NAVBAR ATAS -->
 <nav class="top-navbar">
-    <div class="page-title">Dashboard</div>
+    <div class="page-title" id="realtimeClock"
+        style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+        <span id="clockTime" style="font-size: 18px; font-weight: 600; color: #1e293b;">--:--:--</span>
+        <span id="clockDate" style="font-size: 12px; font-weight: 400; color: #64748b;">-- --- ----</span>
+    </div>
     <div class="top-right">
         <a href="<?= site_url('admin/notifikasi') ?>" class="top-icon"
             style="position: relative; text-decoration: none; color: inherit;" id="adminNotifLink">
@@ -100,7 +102,7 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             <span id="adminNotifBadge"
                 style="display: none; position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;"></span>
         </a>
-        <div class="top-icon"><i class="fa-solid fa-gear"></i></div>
+
         <?php
         $imgSession = session('img');
         $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.png';
@@ -111,3 +113,34 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
         </div>
     </div>
 </nav>
+
+<script>
+    function updateRealtimeClock() {
+        const now = new Date();
+
+        // Format waktu: HH:MM:SS
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+
+        // Format tanggal: Senin, 23 Des 2024
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const dayName = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const dateString = `${dayName}, ${date} ${month} ${year}`;
+
+        // Update DOM
+        document.getElementById('clockTime').textContent = timeString;
+        document.getElementById('clockDate').textContent = dateString;
+    }
+
+    // Update setiap detik
+    setInterval(updateRealtimeClock, 1000);
+
+    // Update langsung saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', updateRealtimeClock);
+</script>

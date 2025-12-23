@@ -9,7 +9,8 @@
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
         max-width: 800px;
-        margin: 2rem auto;
+        margin: 0 auto;
+        /* Horizontal center only */
     }
 </style>
 

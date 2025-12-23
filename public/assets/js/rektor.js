@@ -123,19 +123,21 @@ function toggleSidebar() {
         }
         overlay.classList.toggle("active");
         
-        // Update Icon
+        // Update Icon - toggle between bars and X
         const isActive = sidebar.classList.contains("mobile-active");
-        icon.textContent = isActive ? "✕" : "☰"; // X (close) or hamburger (open)
+        if (isActive) {
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
+        } else {
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+        }
         
     } else {
         // DESKTOP LOGIC: Toggle 'sidebar-closed' (Collapse/Expand)
         sidebar.classList.toggle("sidebar-closed");
         toggle.classList.toggle("closed");
 
-        // ubah icon sesuai kondisi
-        icon.textContent = sidebar.classList.contains("sidebar-closed")
-            ? "❯"
-            : "❮";
 
         // Tambahan: atur body agar main-content ikut menyesuaikan
         if (sidebar.classList.contains("sidebar-closed")) {

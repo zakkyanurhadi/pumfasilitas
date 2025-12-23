@@ -7,6 +7,11 @@
         flex-direction: column;
         gap: 1.5rem;
         width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+        /* Remove margin - main-content handles gap */
+        box-sizing: border-box;
     }
 
     .search-group {
@@ -22,7 +27,8 @@
 
     .report-table-container {
         background: var(--white);
-        padding: 2rem;
+        padding: 1.5rem;
+        /* Reduced from 2rem to prevent overflow */
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
         width: 100%;
@@ -59,6 +65,23 @@
 
     .report-table td {
         font-size: 0.9rem;
+    }
+
+    /* Column width control - wrap long text */
+    .report-table td:nth-child(2) {
+        /* Lokasi */
+        max-width: 200px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    .report-table td:nth-child(3) {
+        /* Kategori */
+        max-width: 150px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     /* ======================
@@ -231,10 +254,17 @@
 ===================================================== */
     @media (max-width: 768px) {
 
-        /* ===== GRID ===== */
+        /* ===== CONTAINER & LAYOUT MOBILE ===== */
+        .container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
+
         .grid-container {
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
+            padding: 0 !important;
+            margin: 0 !important;
+            gap: 1rem;
         }
 
         /* ===== CARD TABEL ===== */
@@ -395,7 +425,8 @@
     @media (max-width: 480px) {
 
         .grid-container {
-            margin: 0.5rem;
+            margin: 0;
+            /* No margin - main-content handles gap */
         }
 
         .report-table-container {
@@ -414,101 +445,99 @@
 
 <div class="container">
     <div class="grid-container">
-        <div>
-            <div class="report-table-container">
+        <div class="report-table-container">
 
-                <h2 class="text-center">Status Semua Laporan</h2>
+            <h2 class="text-center">Status Semua Laporan</h2>
 
-                <!-- FILTER -->
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+            <!-- FILTER -->
+            <div style="display:flex; justify-content:space-between; align-items:center;">
 
-                    <!-- Search -->
-                    <form method="get">
-                        <div class="search-group">
-                            <input type="text" name="keyword" class="form-control" placeholder="Cari Laporan..."
-                                value="<?= esc($keyword ?? '') ?>">
-                            <div class="tooltip-wrap">
-                                <button class="btn-search">Cari</button>
-                                <span class="tooltip-text">Cari Data laporan</span>
-                            </div>
+                <!-- Search -->
+                <form method="get">
+                    <div class="search-group">
+                        <input type="text" name="keyword" class="form-control" placeholder="Cari Laporan..."
+                            value="<?= esc($keyword ?? '') ?>">
+                        <div class="tooltip-wrap">
+                            <button class="btn-search">Cari</button>
+                            <span class="tooltip-text">Cari Data laporan</span>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
+            </div>
 
-                <!-- TABEL -->
-                <div class="table-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table class="report-table">
-                        <thead>
+            <!-- TABEL -->
+            <div class="table-wrapper" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Lokasi</th>
+                            <th>Kategori</th>
+                            <th>Tanggal Lapor</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php if (empty($laporan)): ?>
                             <tr>
-                                <th>No.</th>
-                                <th>Lokasi</th>
-                                <th>Kategori</th>
-                                <th>Tanggal Lapor</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
+                                <td colspan="6" class="text-center">Tidak ada laporan.</td>
                             </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php if (empty($laporan)): ?>
+                        <?php else: ?>
+                            <?php $start = ($currentPage - 1) * $perPage; ?>
+                            <?php foreach ($laporan as $i => $item): ?>
+                                <?php
+                                $status = strtolower($item['status']);
+                                $statusClass = "status-" . $status;
+                                ?>
                                 <tr>
-                                    <td colspan="6" class="text-center">Tidak ada laporan.</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php $start = ($currentPage - 1) * $perPage; ?>
-                                <?php foreach ($laporan as $i => $item): ?>
-                                    <?php
-                                    $status = strtolower($item['status']);
-                                    $statusClass = "status-" . $status;
-                                    ?>
-                                    <tr>
-                                        <td><?= $start + $i + 1 ?></td>
-                                        <td><?= esc($item['lokasi_kerusakan']) ?><?= !empty($item['lokasi_spesifik']) ? ' - ' . esc($item['lokasi_spesifik']) : '' ?>
-                                        </td>
-                                        <td><?= esc($item['kategori']) ?></td>
-                                        <td><?= date('d M Y, H:i', strtotime($item['created_at'])) ?></td>
+                                    <td><?= $start + $i + 1 ?></td>
+                                    <td><?= esc($item['lokasi_kerusakan']) ?><?= !empty($item['lokasi_spesifik']) ? ' - ' . esc($item['lokasi_spesifik']) : '' ?>
+                                    </td>
+                                    <td><?= esc($item['kategori']) ?></td>
+                                    <td><?= date('d M Y, H:i', strtotime($item['created_at'])) ?></td>
 
-                                        <td>
-                                            <span class="status-badge <?= $statusClass ?>">
-                                                <?= ucfirst($status) ?>
-                                            </span>
-                                        </td>
+                                    <td>
+                                        <span class="status-badge <?= $statusClass ?>">
+                                            <?= ucfirst($status) ?>
+                                        </span>
+                                    </td>
 
-                                        <td>
-                                            <div style="display:flex; gap:0.5rem;">
+                                    <td>
+                                        <div style="display:flex; gap:0.5rem;">
 
-                                                <!-- DETAIL -->
-                                                <div class="tooltip-wrap">
-                                                    <a href="?detail=<?= $item['id'] ?>&keyword=<?= esc($keyword ?? '') ?>&status_filter=<?= esc($statusFilter ?? '') ?>&page=<?= esc($currentPage) ?>"
-                                                        class="btn btn-sm btn-info text-white">
-                                                        Detail
-                                                    </a>
-                                                    <span class="tooltip-text">Lihat detail laporan</span>
-                                                </div>
-
-                                                <!-- VERIFIKASI -->
-                                                <div class="tooltip-wrap">
-                                                    <a onclick="openReportModalAdmin(<?= $item['id'] ?>)"
-                                                        class="btn btn-sm btn-warning" style="cursor:pointer;">
-                                                        Verifikasi
-                                                    </a>
-                                                    <span class="tooltip-text">Verifikasi laporan ini</span>
-                                                </div>
-
+                                            <!-- DETAIL -->
+                                            <div class="tooltip-wrap">
+                                                <a href="?detail=<?= $item['id'] ?>&keyword=<?= esc($keyword ?? '') ?>&status_filter=<?= esc($statusFilter ?? '') ?>&page=<?= esc($currentPage) ?>"
+                                                    class="btn btn-sm btn-info text-white">
+                                                    Detail
+                                                </a>
+                                                <span class="tooltip-text">Lihat detail laporan</span>
                                             </div>
 
+                                            <!-- VERIFIKASI -->
+                                            <div class="tooltip-wrap">
+                                                <a onclick="openReportModalAdmin(<?= $item['id'] ?>)"
+                                                    class="btn btn-sm btn-warning" style="cursor:pointer;">
+                                                    Verifikasi
+                                                </a>
+                                                <span class="tooltip-text">Verifikasi laporan ini</span>
+                                            </div>
 
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                                        </div>
 
-                <div class="pagination-container">
-                    <?= $pager_links ?>
-                </div>
+
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <?= $pager_links ?>
             </div>
         </div>
 
