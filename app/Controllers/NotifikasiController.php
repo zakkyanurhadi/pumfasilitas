@@ -71,11 +71,11 @@ class NotifikasiController extends BaseController
             ->get()
             ->getResultArray();
 
-        // Statistik
+        // Statistik - use fresh model instances to avoid query builder state issues
         $stats = [
-            'total' => $this->notifikasiModel->where('user_id', $userId)->countAllResults(false),
-            'belum_dibaca' => $this->notifikasiModel->where('user_id', $userId)->where('terbaca', 0)->countAllResults(false),
-            'sudah_dibaca' => $this->notifikasiModel->where('user_id', $userId)->where('terbaca', 1)->countAllResults(),
+            'total' => (new NotifikasiModel())->where('user_id', $userId)->countAllResults(),
+            'belum_dibaca' => (new NotifikasiModel())->where('user_id', $userId)->where('terbaca', 0)->countAllResults(),
+            'sudah_dibaca' => (new NotifikasiModel())->where('user_id', $userId)->where('terbaca', 1)->countAllResults(),
         ];
 
         $data = [

@@ -31,12 +31,12 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             </a>
             <ul class="sidebar-submenu"
                 style="<?= ($uri == 'laporanadmin' || $uri == 'laporanadminpending' || $uri == 'laporanadmindiproses' || $uri == 'riwayatadmin') ? 'max-height:500px' : '' ?>">
-                <li><a href="<?= site_url('laporanadminpending') ?>"><i class="fa-solid fa-clock"></i> Laporan
-                        Pending</a></li>
-                <li><a href="<?= site_url('laporanadmindiproses') ?>"><i class="fa-solid fa-spinner"></i> Laporan
-                        Diproses</a></li>
-                <li><a href="<?= site_url('riwayatadmin') ?>"><i class="fa-solid fa-check-circle"></i> Laporan
-                        Selesai</a></li>
+                <li data-tooltip="Laporan Pending"><a href="<?= site_url('laporanadminpending') ?>"><i
+                            class="fa-solid fa-clock"></i></a></li>
+                <li data-tooltip="Laporan Diproses"><a href="<?= site_url('laporanadmindiproses') ?>"><i
+                            class="fa-solid fa-spinner"></i></a></li>
+                <li data-tooltip="Laporan Selesai"><a href="<?= site_url('riwayatadmin') ?>"><i
+                            class="fa-solid fa-check-circle"></i></a></li>
             </ul>
         </li>
 
@@ -49,9 +49,11 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             <ul class="sidebar-submenu"
                 style="<?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'max-height:500px' : '' ?>">
                 <?php if (session()->get('role') === 'superadmin'): ?>
-                    <li><a href="<?= site_url('akunadmin') ?>"><i class="fa-solid fa-user-shield"></i> Akun Admin</a></li>
+                    <li data-tooltip="Akun Admin"><a href="<?= site_url('akunadmin') ?>"><i
+                                class="fa-solid fa-user-shield"></i></a></li>
                 <?php endif; ?>
-                <li><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i> Akun User</a></li>
+                <li data-tooltip="Akun User"><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i></a>
+                </li>
             </ul>
         </li>
 

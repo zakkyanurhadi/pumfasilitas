@@ -46,15 +46,19 @@
   /* ================= KPI ================= */
   .kpis {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(5, 1fr);
+    /* 5 card sejajar */
+    gap: 16px;
+    margin-bottom: 28px;
   }
 
   .kpi {
     background: linear-gradient(180deg, #ffffff, #fdfefe);
-    border-radius: 18px;
-    padding: 16px 16px 24px;
+    border-radius: 22px;
+
+    /* 🔑 hanya memendekkan kiri–kanan */
+    padding: 20px 30px 22px;
+
     box-shadow: var(--shadow-xs);
     position: relative;
     transition: .25s ease;
@@ -74,8 +78,9 @@
     pointer-events: none;
   }
 
+  /* Text */
   .kpi small {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: .35px;
     color: var(--muted);
@@ -83,27 +88,32 @@
   }
 
   .kpi h2 {
-    margin-top: 10px;
-    font-size: 28px;
+    margin-top: 8px;
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: -.5px;
+    letter-spacing: -.4px;
   }
 
   .kpi .unit {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--muted);
-    margin-left: 4px;
+    margin-left: 3px;
   }
 
-  /* ===== ALERT KPI ===== */
+  /* Alert */
   .kpi.alert {
-    background: linear-gradient(180deg, #fff1f2, #ffffff);
-    border: 1px solid #fecaca;
+    background: linear-gradient(180deg, #fff7ed, #ffedd5);
   }
 
-  .kpi.alert h2 {
-    color: var(--red);
+  .kpi .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-weight: 600;
   }
 
   /* ================= BADGE ================= */
