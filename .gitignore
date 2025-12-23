@@ -8,6 +8,9 @@ node_modules
 .AppleDouble
 .LSOverride
 .env.production
+.env.production.example
+
+.env
 
 # OS X Thumbnails
 ._*
