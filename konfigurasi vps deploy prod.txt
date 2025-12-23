@@ -13,7 +13,7 @@ sudo apt install php php-cli php-mbstring php-intl php-curl php-zip php-xml php-
 
 
 
- sudo mysql_secure_installation
+ 18    sudo mysql_secure_installation
    19  sudo apt install phpmyadmin -y
    20  sudo phpenmod mbstring
    21  sudo systemctl restart apache2

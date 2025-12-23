@@ -65,33 +65,38 @@
       justify-content: flex-end;
       padding: 3rem;
       color: white;
-      background-color: #2c5ef3; /* Fallback color */
+      background-color: #2c5ef3;
+      /* Fallback color */
       overflow: hidden;
     }
 
     /* Container untuk gambar slideshow */
     .slideshow-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0; /* Paling bawah */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      /* Paling bawah */
     }
 
     .slideshow-img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0; /* Default sembunyi */
-        transition: opacity 1.5s ease-in-out; /* Efek halus */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      /* Default sembunyi */
+      transition: opacity 1.5s ease-in-out;
+      /* Efek halus */
     }
 
     .slideshow-img.active {
-        opacity: 1; /* Munculkan yang aktif */
+      opacity: 1;
+      /* Munculkan yang aktif */
     }
 
     /* === OVERLAY === */
@@ -103,12 +108,14 @@
       right: 0;
       bottom: 0;
       background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.85) 100%);
-      z-index: 1; /* Di atas gambar, di bawah teks */
+      z-index: 1;
+      /* Di atas gambar, di bawah teks */
     }
 
     .left-content {
       position: relative;
-      z-index: 2; /* Paling atas */
+      z-index: 2;
+      /* Paling atas */
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
@@ -232,7 +239,7 @@
         padding: 2rem;
         flex: none;
       }
-      
+
       /* Reset style img untuk mobile jika perlu, tapi object-fit: cover sudah aman */
 
       .register-left::after {
@@ -256,16 +263,17 @@
 
   <div class="register-card">
     <div class="register-left">
-      
+
       <div class="slideshow-wrapper">
-               <img src="<?= base_url('assets/Polinelaa.jpeg') ?>" class="slideshow-img active" alt="Slide 1">
-                    
-                    <img src="<?= base_url('assets/Polinela.jpeg') ?>" class="slideshow-img" alt="Slide 2"> 
-                    
-                    <img src="<?= base_url('assets/Polinelaaa.jpeg') ?>" class="slideshow-img" alt="Slide 3">
-                    <img src="<?= base_url('assets/Polinelaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 4">
-                    <img src="<?= base_url('assets/Polinelaaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 5">
-                    <img src="<?= base_url('assets/Polinela.png') ?>" class="slideshow-img" alt="Slide 6 ">
+        <img src="<?= base_url('assets/Polinelaa.jpeg') ?>" class="slideshow-img active" alt="Slide 1"
+          fetchpriority="high">
+
+        <img src="<?= base_url('assets/Polinela.jpeg') ?>" class="slideshow-img" alt="Slide 2" fetchpriority="high">
+
+        <img src="<?= base_url('assets/Polinelaaa.jpeg') ?>" class="slideshow-img" alt="Slide 3" fetchpriority="high">
+        <img src="<?= base_url('assets/Polinelaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 4" fetchpriority="high">
+        <img src="<?= base_url('assets/Polinelaaaaa.jpeg') ?>" class="slideshow-img" alt="Slide 5" fetchpriority="high">
+        <img src="<?= base_url('assets/Polinela.png') ?>" class="slideshow-img" alt="Slide 6 " fetchpriority="high">
       </div>
 
       <div class="left-content">
@@ -354,21 +362,21 @@
     }
 
     $(document).ready(function () {
-      
+
       // === LOGIKA SLIDESHOW GAMBAR ===
       const images = document.querySelectorAll('.slideshow-img');
       if (images.length > 1) {
-          let currentIndex = 0;
-          setInterval(() => {
-              // Hilangkan class active dari gambar sekarang
-              images[currentIndex].classList.remove('active');
-              
-              // Pindah ke index berikutnya
-              currentIndex = (currentIndex + 1) % images.length;
-              
-              // Tambahkan class active ke gambar baru
-              images[currentIndex].classList.add('active');
-          }, 5000); // Ganti setiap 5 detik
+        let currentIndex = 0;
+        setInterval(() => {
+          // Hilangkan class active dari gambar sekarang
+          images[currentIndex].classList.remove('active');
+
+          // Pindah ke index berikutnya
+          currentIndex = (currentIndex + 1) % images.length;
+
+          // Tambahkan class active ke gambar baru
+          images[currentIndex].classList.add('active');
+        }, 5000); // Ganti setiap 5 detik
       }
       // ================================
 
