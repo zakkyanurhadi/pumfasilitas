@@ -1,0 +1,79 @@
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install apache2 php php-mysql php-common php-cli phpjson php-common php-opcache libapache2-mod-php mariadb-server
+
+
+
+
+
+sudo apt install php php-mysql php-mbstring php-zip php-gd php-json php-curl -y
+
+sudo apt install php php-cli php-mbstring php-intl php-curl php-zip php-xml php-mysql -y
+   16  sudo apt install composer -y
+
+
+
+ sudo mysql_secure_installation
+   19  sudo apt install phpmyadmin -y
+   20  sudo phpenmod mbstring
+   21  sudo systemctl restart apache2
+   22  sudo nano /etc/apache2/sites-available/e-fasilitas.online.conf
+   23  sudo mkdir -p /var/www/pm8/public
+   24  sudo chown -R www-data:www-data /var/www/pm8
+   25  sudo chmod -R 755 /var/www/pm8
+   26  sudo a2ensite e-fasilitas.online.conf
+   27  sudo a2enmod rewrite
+   28  sudo systemctl reload apache2
+   29  sudo a2dissite 000-default.conf
+   30  sudo systemctl reload apache2
+   31  sudo a2enmod headers
+   32  sudo systemctl reload apache2
+   33  sudo apt install certbot python3-certbot-apache
+   34  sudo certbot --apache
+   35  ssh-keygen -t rsa -b 4096
+   36  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+   37  chmod 600 ~/.ssh/authorized_keys
+   38  cat ~/.ssh/id_rsa
+   39  mkdir /var/www/pm8/writable
+
+
+
+cp .env.production .env
+
+
+   54  sudo apachectl configtest
+   55  sudo a2dissite 000-default.conf
+   56  sudo systemctl reload apache2
+   57  sudo a2enmod rewrite
+   58  git branch
+   59  composer install   --no-dev   --optimize-autoloader   --no-interaction
+
+
+<VirtualHost *:80>
+    ServerName e-fasilitas.online
+    ServerAlias www.e-fasilitas.online
+
+    DocumentRoot /var/www/pm8/public
+
+    <Directory /var/www/pm8/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # === FIX CACHE STATIC FILES ===
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(css|js|png|jpg|jpeg|gif|svg)$">
+            Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+            Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+            Header always set Pragma "no-cache"
+            Header always set Expires "0"
+        </FilesMatch>
+    </IfModule>
+
+    ErrorLog ${APACHE_LOG_DIR}/e-fasilitas_error.log
+    CustomLog ${APACHE_LOG_DIR}/e-fasilitas_access.log combined
+</VirtualHost>
+
+
+
+

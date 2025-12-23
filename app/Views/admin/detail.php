@@ -1,91 +1,149 @@
 <style>
- /* ================================
-   DETAIL CARD (RAPI & KONSISTEN)
+    /* ================================
+   DETAIL CARD (OPTIMIZED FOR BOTTOM LAYOUT)
 ================================ */
 
-.detail-card {
-    background: var(--white);
-    padding: 1.6rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    font-size: 0.9rem;
-}
+    .detail-card {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        font-size: 0.9rem;
+        width: 100%;
+    }
 
-/* Header */
-.detail-header h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-}
+    /* Header */
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--gray-200);
+    }
 
-.detail-header .status-badge {
-    font-size: 0.75rem;
-}
+    .detail-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--gray-800);
+    }
 
-/* Section titles */
-.detail-card h4 {
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 0.6rem;
-    color: var(--gray-700);
-}
+    .detail-header .status-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
 
-/* Grid informasi */
-.detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.8fr;
-    gap: 0.3rem 1rem;
-    margin-bottom: 0.8rem;
-}
+    /* Section titles */
+    .detail-card h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        margin-top: 1.5rem;
+        color: var(--primary-color);
+        letter-spacing: 0.5px;
+    }
 
-.detail-grid dt {
-    font-weight: 600;
-    color: var(--gray-600);
-    font-size: 0.85rem;
-}
+    /* Grid informasi - 2 kolom untuk memanfaatkan space */
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 2rem;
+        margin-bottom: 1rem;
+    }
 
-.detail-grid dd {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--gray-700);
-}
+    .detail-grid-item {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 0.5rem;
+        align-items: start;
+    }
 
-/* Deskripsi */
-.detail-card p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--gray-700);
-}
+    .detail-grid dt {
+        font-weight: 600;
+        color: var(--gray-600);
+        font-size: 0.85rem;
+    }
 
-/* Foto */
-.photo-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: 0.4rem;
-}
+    .detail-grid dd {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--gray-800);
+        font-weight: 500;
+    }
 
-.photo-gallery img {
-    width: 115px;
-    height: 115px;
-    object-fit: cover;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--gray-200);
-    cursor: pointer;
-}
+    /* Deskripsi */
+    .detail-card p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--gray-700);
+        margin-bottom: 1rem;
+    }
 
-/* Buttons */
-.detail-card .btn {
-    font-size: 0.85rem !important;
-    padding: 0.45rem 0.75rem;
-    border-radius: 6px;
-}
+    /* Foto - lebih besar untuk layout bawah */
+    .photo-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
 
-.detail-card .btn-warning {
-    color: #fff;
-}
+    .photo-gallery img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: var(--border-radius);
+        border: 2px solid var(--gray-200);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
+    .photo-gallery img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-color: var(--primary-color);
+    }
+
+    /* Buttons */
+    .detail-card .btn {
+        font-size: 0.9rem !important;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .detail-card .btn-warning {
+        color: #fff;
+    }
+
+    /* Responsive untuk detail card */
+    @media (max-width: 768px) {
+        .detail-card {
+            padding: 1.25rem;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .detail-grid-item {
+            grid-template-columns: 120px 1fr;
+        }
+
+        .photo-gallery {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+
+        .photo-gallery img {
+            height: 100px;
+        }
+
+        .detail-header h3 {
+            font-size: 1rem;
+        }
+    }
 </style>
 
 <div class="detail-card">
@@ -93,14 +151,17 @@
         <h3>Detail Laporan #<?= esc($detail['id']) ?></h3>
         <?php
         $statusClass = '';
-        if ($detail['status'] == 'Pending') $statusClass = 'status-pending';
-        if ($detail['status'] == 'Diproses') $statusClass = 'status-diproses';
-        if ($detail['status'] == 'Selesai') $statusClass = 'status-selesai';
+        if ($detail['status'] == 'Pending')
+            $statusClass = 'status-pending';
+        if ($detail['status'] == 'Diproses')
+            $statusClass = 'status-diproses';
+        if ($detail['status'] == 'Selesai')
+            $statusClass = 'status-selesai';
+        if ($detail['status'] == 'Ditolak')
+            $statusClass = 'status-ditolak';
         ?>
         <span class="status-badge <?= $statusClass ?>"><?= esc($detail['status']) ?></span>
     </div>
-
-    <hr>
 
     <h4>Informasi Umum</h4>
     <dl class="detail-grid">
@@ -117,8 +178,6 @@
         <dd><?= date('d F Y, H:i', strtotime($detail['created_at'])) ?> WIB</dd>
     </dl>
 
-    <hr>
-
     <h4>Detail Kerusakan</h4>
     <dl class="detail-grid">
         <dt>Lokasi</dt>
@@ -134,12 +193,10 @@
         <dd><?= esc($detail['tingkat_prioritas'] ?? 'Normal') ?></dd>
     </dl>
 
-    <hr>
-
     <h4>Deskripsi Kerusakan</h4>
     <p><?= nl2br(esc($detail['deskripsi'])) ?></p>
 
-    <?php 
+    <?php
     // Handle both JSON array and single string for foto_kerusakan
     $foto_data = $detail['foto'];
     if (is_string($foto_data)) {
@@ -150,7 +207,7 @@
             $foto = [$foto_data];
         }
     } else {
-        $foto = (array)$foto_data;
+        $foto = (array) $foto_data;
     }
     ?>
 
@@ -158,16 +215,14 @@
         <h4>Foto Kerusakan</h4>
         <div class="photo-gallery">
             <?php foreach (array_filter($foto) as $img): ?>
-                <?php $path = 'uploads/laporan/'.$img; ?>
-                <img src="<?= strpos($img, 'http') === 0 ? esc($img) : base_url($path) ?>" 
-                    alt="Foto Kerusakan" 
+                <?php $path = 'uploads/laporan/' . $img; ?>
+                <img src="<?= strpos($img, 'http') === 0 ? esc($img) : base_url($path) ?>" alt="Foto Kerusakan"
                     title="Klik untuk melihat lebih besar">
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
     <?php if (!empty($detail['keterangan_verifikasi'])): ?>
-        <hr>
         <h4>Informasi Verifikasi</h4>
         <dl class="detail-grid">
             <dt>Status Verifikasi</dt>
@@ -181,10 +236,9 @@
         </dl>
     <?php endif; ?>
 
-    <hr>
-    
-    <div class="d-flex gap-2 mt-3">
-        <a href="<?= current_url() . '?keyword=' . esc($keyword ?? '') . '&status_filter=' . esc($statusFilter ?? '') . '&page=' . esc($currentPage ?? 1) ?>" class="btn btn-secondary flex-grow-1">Tutup</a>
-        <a href="#" onclick="openReportModalAdmin(<?= esc($detail['id']) ?>)" class="btn btn-warning flex-grow-1">Verifikasi</a>
+    <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
+        <a href="<?= current_url() . '?keyword=' . esc($keyword ?? '') . '&status_filter=' . esc($statusFilter ?? '') . '&page=' . esc($currentPage ?? 1) ?>"
+            class="btn btn-secondary">Tutup</a>
+        <a href="#" onclick="openReportModalAdmin(<?= esc($detail['id']) ?>)" class="btn btn-warning">Verifikasi</a>
     </div>
 </div>

@@ -24,12 +24,14 @@
 
         <div class="form-group">
             <label for="nama">Nama Pelapor *</label>
-            <input type="text" id="nama" name="nama" class="form-control" value="<?= esc(session('nama')) ?>" required readonly />
+            <input type="text" id="nama" name="nama" class="form-control" value="<?= esc(session('nama')) ?>" required
+                readonly />
         </div>
 
         <div class="form-group">
             <label for="npm">NPM *</label>
-            <input type="text" id="npm" name="npm" class="form-control" value="<?= esc(session('npm')) ?>" required readonly />
+            <input type="text" id="npm" name="npm" class="form-control" value="<?= esc(session('npm')) ?>" required
+                readonly />
         </div>
 
         <div class="form-group">
@@ -46,18 +48,23 @@
 
         <div class="form-group">
             <label for="lokasiSpesifik">Lokasi Spesifik *</label>
-            <input type="text" id="lokasiSpesifik" name="lokasiSpesifik" class="form-control" placeholder="Contoh: Ruang 101, Lantai 2, dekat jendela" value="<?= old('lokasiSpesifik') ?>" required />
+            <input type="text" id="lokasiSpesifik" name="lokasiSpesifik" class="form-control"
+                placeholder="Contoh: Ruang 101, Lantai 2, dekat jendela" value="<?= old('lokasiSpesifik') ?>"
+                required />
         </div>
 
         <div class="form-group">
             <label for="kategori">Kategori Kerusakan *</label>
             <select id="kategori" name="kategori" class="form-control" required>
                 <option value="">Pilih Kategori</option>
-                <option value="listrik" <?= old('kategori') == 'listrik' ? 'selected' : '' ?>>Kelistrikan (Lampu, Stop Kontak)</option>
+                <option value="listrik" <?= old('kategori') == 'listrik' ? 'selected' : '' ?>>Kelistrikan (Lampu, Stop
+                    Kontak)</option>
                 <option value="air" <?= old('kategori') == 'air' ? 'selected' : '' ?>>Air/Plumbing (Keran, Toilet)</option>
                 <option value="ac" <?= old('kategori') == 'ac' ? 'selected' : '' ?>>AC/Ventilasi</option>
-                <option value="furniture" <?= old('kategori') == 'furniture' ? 'selected' : '' ?>>Furniture (Meja, Kursi)</option>
-                <option value="bangunan" <?= old('kategori') == 'bangunan' ? 'selected' : '' ?>>Struktur Bangunan (Dinding, Atap)</option>
+                <option value="furniture" <?= old('kategori') == 'furniture' ? 'selected' : '' ?>>Furniture (Meja, Kursi)
+                </option>
+                <option value="bangunan" <?= old('kategori') == 'bangunan' ? 'selected' : '' ?>>Struktur Bangunan (Dinding,
+                    Atap)</option>
                 <option value="lainnya" <?= old('kategori') == 'lainnya' ? 'selected' : '' ?>>Lainnya</option>
             </select>
         </div>
@@ -66,15 +73,20 @@
             <label for="prioritas">Tingkat Prioritas *</label>
             <select id="prioritas" name="prioritas" class="form-control" required>
                 <option value="">Pilih Prioritas</option>
-                <option value="Rendah" <?= old('prioritas') == 'Rendah' ? 'selected' : '' ?>>Rendah - Tidak mengganggu</option>
-                <option value="Sedang" <?= old('prioritas') == 'Sedang' ? 'selected' : '' ?>>Sedang - Sedikit mengganggu</option>
-                <option value="Tinggi" <?= old('prioritas') == 'Tinggi' ? 'selected' : '' ?>>Tinggi - Sangat mengganggu/Berbahaya</option>
+                <option value="Rendah" <?= old('prioritas') == 'Rendah' ? 'selected' : '' ?>>Rendah - Tidak mengganggu
+                </option>
+                <option value="Sedang" <?= old('prioritas') == 'Sedang' ? 'selected' : '' ?>>Sedang - Sedikit mengganggu
+                </option>
+                <option value="Tinggi" <?= old('prioritas') == 'Tinggi' ? 'selected' : '' ?>>Tinggi - Sangat
+                    mengganggu/Berbahaya</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="deskripsi">Deskripsi Kerusakan *</label>
-            <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="Jelaskan secara detail kerusakan yang ditemukan..." required rows="5"><?= old('deskripsi') ?></textarea>
+            <textarea id="deskripsi" name="deskripsi" class="form-control"
+                placeholder="Jelaskan secara detail kerusakan yang ditemukan..." required
+                rows="5"><?= old('deskripsi') ?></textarea>
         </div>
 
         <div class="form-group">

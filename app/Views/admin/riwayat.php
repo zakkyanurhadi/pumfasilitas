@@ -9,6 +9,7 @@
         margin-top: 2rem;
         align-items: start;
     }
+
     @media(max-width: 992px) {
         .grid-riwayat {
             grid-template-columns: 1fr;
@@ -22,16 +23,25 @@
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
     }
-    .report-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
-    .report-table th, .report-table td {
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1.5rem;
+    }
+
+    .report-table th,
+    .report-table td {
         padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--gray-200);
         text-align: left;
     }
+
     .report-table th {
         background: var(--gray-100);
         font-weight: 600;
     }
+
     .status-selesai {
         background: var(--success-color);
         padding: .25rem .75rem;
@@ -40,13 +50,13 @@
         font-size: .75rem;
     }
 
-        .btn-sm {
+    .btn-sm {
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
         white-space: nowrap;
     }
 
-        .pagination-container {
+    .pagination-container {
         display: flex;
         justify-content: flex-end;
         margin-top: 1.3rem;
@@ -84,7 +94,6 @@
         color: var(--white);
         font-weight: 600;
     }
-
 </style>
 
 <div class="grid-riwayat">
@@ -98,8 +107,7 @@
 
             <form method="get" class="filter-form mt-3">
                 <div style="flex-grow:1;">
-                    <input type="text" name="keyword" class="form-control"
-                        placeholder="Cari laporan..."
+                    <input type="text" name="keyword" class="form-control" placeholder="Cari laporan..."
                         value="<?= esc($keyword) ?>"><button class="btn btn-sm btn-info text-white">Cari</button>
                 </div>
             </form>
@@ -117,26 +125,28 @@
                 </thead>
 
                 <tbody>
-                <?php if (empty($laporan)): ?>
-                    <tr><td colspan="6" class="text-center">Tidak ada data</td></tr>
-                <?php else: ?>
-                    <?php $start = ($currentPage - 1) * $perPage; ?>
-                    <?php foreach ($laporan as $i => $item): ?>
+                    <?php if (empty($laporan)): ?>
                         <tr>
-                            <td><?= $start + $i + 1 ?></td>
-                            <td><?= esc($item['lokasi_kerusakan']) ?></td>
-                            <td><?= esc($item['kategori']) ?></td>
-                            <td><?= date('d M Y, H:i', strtotime($item['updated_at'])) ?></td>
-                            <td><span class="status-selesai">Selesai</span></td>
-
-                            <td>
-                                <a href="?detail=<?= $item['id'] ?>" class="btn btn-sm btn-info text-white">
-                                    Detail
-                                </a>
-                            </td>
+                            <td colspan="6" class="text-center">Tidak ada data</td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php else: ?>
+                        <?php $start = ($currentPage - 1) * $perPage; ?>
+                        <?php foreach ($laporan as $i => $item): ?>
+                            <tr>
+                                <td><?= $start + $i + 1 ?></td>
+                                <td><?= esc($item['lokasi_kerusakan']) ?></td>
+                                <td><?= esc($item['kategori']) ?></td>
+                                <td><?= date('d M Y, H:i', strtotime($item['updated_at'])) ?></td>
+                                <td><span class="status-selesai">Selesai</span></td>
+
+                                <td>
+                                    <a href="?detail=<?= $item['id'] ?>" class="btn btn-sm btn-info text-white">
+                                        Detail
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
 

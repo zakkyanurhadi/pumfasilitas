@@ -21,12 +21,14 @@ class Filters extends BaseConfig
      * or [filter_name => [class_name1, class_name2, ...]]
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
+        'csrf' => CSRF::class,
+        'toolbar' => DebugToolbar::class,
+        'honeypot' => Honeypot::class,
+        'invalidchars' => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'auth'          => \App\Filters\AuthFilter::class, // <-- TAMBAHKAN BARIS INI
+        'auth' => \App\Filters\AuthFilter::class,
+        'admin' => \App\Filters\AdminFilter::class,
+        'rektor' => \App\Filters\RektorFilter::class,
     ];
 
     // ... sisa file ...

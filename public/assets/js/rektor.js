@@ -106,7 +106,7 @@ function animateCounters() {
 function toggleSidebar() {
     const sidebar = document.querySelector(".sidebar");
     const toggle = document.querySelector(".sidebar-toggle");
-    const icon = toggle.querySelector("i");
+    const icon = document.querySelector(".toggle-icon");
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
@@ -123,20 +123,19 @@ function toggleSidebar() {
         }
         overlay.classList.toggle("active");
         
-        // Update Icon - menggunakan Font Awesome icons untuk mobile
+        // Update Icon
         const isActive = sidebar.classList.contains("mobile-active");
-        icon.textContent = ""; // Kosongkan text content dulu
-        icon.className = isActive ? "toggle-icon fa-solid fa-times" : "toggle-icon fa-solid fa-bars";
+        icon.textContent = isActive ? "✕" : "☰"; // X (close) or hamburger (open)
         
     } else {
         // DESKTOP LOGIC: Toggle 'sidebar-closed' (Collapse/Expand)
         sidebar.classList.toggle("sidebar-closed");
         toggle.classList.toggle("closed");
 
-        // Update icon - menggunakan karakter Unicode untuk desktop
-        const isClosed = sidebar.classList.contains("sidebar-closed");
-        icon.className = "toggle-icon"; // Remove Font Awesome classes
-        icon.textContent = isClosed ? "❯" : "❮"; // Right chevron (expand) or left chevron (collapse)
+        // ubah icon sesuai kondisi
+        icon.textContent = sidebar.classList.contains("sidebar-closed")
+            ? "❯"
+            : "❮";
 
         // Tambahan: atur body agar main-content ikut menyesuaikan
         if (sidebar.classList.contains("sidebar-closed")) {
@@ -175,42 +174,20 @@ document.querySelectorAll('.sidebar-dropdown > a').forEach(drop => {
 });
 
 // ===== AUTO OPEN DROPDOWN JIKA SUBMENU AKTIF =====
-document.addEventListener('DOMContentLoaded', function() {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    
-    // Pasang event listener ke tombol toggle
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', toggleSidebar);
+document.addEventListener("DOMContentLoaded", function () {
+
+    const activeSub = document.querySelector(".active-submenu");
+    if (activeSub) {
+
+        const parentDrop = activeSub.closest(".sidebar-dropdown");
+        const submenu = parentDrop.querySelector(".sidebar-submenu");
+
+        parentDrop.classList.add("active");
+        submenu.style.maxHeight = submenu.scrollHeight + "px";
     }
-
-    // Tutup sidebar mobile jika klik di luar area sidebar
-    document.addEventListener('click', function(event) {
-        const sidebar = document.querySelector('.sidebar');
-        const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
-        const isClickOnToggle = sidebarToggle && sidebarToggle.contains(event.target);
-        const isMobile = window.innerWidth <= 768;
-
-        if (!isClickInsideSidebar && !isClickOnToggle && isMobile && sidebar.classList.contains('mobile-active')) {
-            toggleSidebar();
-        }
-    });
 });
 
 
 // Panggil animasi saat DOM siap
 document.addEventListener("DOMContentLoaded", animateCounters);
-
-// Set icon yang benar saat page load
-document.addEventListener("DOMContentLoaded", function() {
-    const toggle = document.querySelector(".sidebar-toggle");
-    const icon = toggle?.querySelector("i");
-    const isMobile = window.innerWidth <= 768;
-    
-    if (icon && isMobile) {
-        // Di mobile, set ke Font Awesome hamburger icon
-        icon.className = "toggle-icon fa-solid fa-bars";
-        icon.textContent = "";
-    }
-    // Di desktop, biarkan default ❮ dari HTML
-});
 
