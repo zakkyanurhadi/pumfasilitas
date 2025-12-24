@@ -397,6 +397,28 @@
             flex: 1;
         }
 
+        /* Mobile Filter Tabs - Compact */
+        .filter-tabs {
+            gap: 0.5rem;
+            padding-bottom: 0.25rem;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            gap: 0.35rem;
+        }
+
+        .filter-tab i {
+            font-size: 0.8rem;
+        }
+
+        .filter-tab .count {
+            padding: 0.15rem 0.45rem;
+            font-size: 0.7rem;
+            min-width: 20px;
+        }
+
         .notification-item {
             flex-direction: column;
         }
@@ -412,6 +434,24 @@
 
         .notification-actions .btn {
             flex: 1;
+        }
+    }
+
+    /* Extra small mobile */
+    @media (max-width: 480px) {
+        .filter-tab {
+            padding: 0.45rem 0.65rem;
+            font-size: 0.7rem;
+        }
+
+        .filter-tab i {
+            font-size: 0.75rem;
+        }
+
+        .filter-tab .count {
+            padding: 0.1rem 0.4rem;
+            font-size: 0.65rem;
+            min-width: 18px;
         }
     }
 </style>
