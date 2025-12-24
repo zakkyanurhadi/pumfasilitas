@@ -14,7 +14,7 @@
         align-items: center;
         color: white;
         /* Pastikan file Polinela.png ada di folder public/assets/ */
-        background: url('<?= base_url("assets/Polinela.png") ?>') no-repeat center center/cover;
+        background: url('<?= base_url("assets/polinela.webp") ?>') no-repeat center center/cover;
     }
 
     .hero-overlay {
@@ -267,14 +267,14 @@
                         Laporkan kerusakan fasilitas kampus secara online, cepat, dan transparan.
                     </p>
                     <div class="d-flex flex-column flex-md-row gap-2">
-                        <?php if (session()->get('isLoggedIn')) : ?>
+                        <?php if (session()->get('isLoggedIn')): ?>
                             <div class="tooltip-wrap">
                                 <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
                                     <i class="fas fa-plus-circle me-2"></i> Buat Laporan Baru
                                 </a>
                                 <span class="tooltip-text">Mulai membuat laporan</span>
                             </div>
-                        <?php else : ?>
+                        <?php else: ?>
 
                             <div class="tooltip-wrap">
                                 <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
@@ -301,21 +301,24 @@
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-bolt"></i></div>
                     <h5>Respon Cepat</h5>
-                    <p class="text-muted small">Laporan Anda langsung diteruskan ke unit pemeliharaan terkait untuk segera ditindaklanjuti.</p>
+                    <p class="text-muted small">Laporan Anda langsung diteruskan ke unit pemeliharaan terkait untuk
+                        segera ditindaklanjuti.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-search-location"></i></div>
                     <h5>Pelacakan Real-time</h5>
-                    <p class="text-muted small">Pantau status pengerjaan laporan kerusakan Anda secara transparan melalui dashboard.</p>
+                    <p class="text-muted small">Pantau status pengerjaan laporan kerusakan Anda secara transparan
+                        melalui dashboard.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-check-circle"></i></div>
                     <h5>Tuntas & Terukur</h5>
-                    <p class="text-muted small">Setiap perbaikan didokumentasikan. Anda bisa memberikan feedback setelah pengerjaan selesai.</p>
+                    <p class="text-muted small">Setiap perbaikan didokumentasikan. Anda bisa memberikan feedback setelah
+                        pengerjaan selesai.</p>
                 </div>
             </div>
         </div>
@@ -336,7 +339,8 @@
                                 <i class="fas fa-sign-in-alt"></i>
                             </div>
                             <h5 class="step-title">1. Login Akun</h5>
-                            <p class="step-desc">Masuk menggunakan akun mahasiswa atau dosen Polinela Anda untuk memulai.</p>
+                            <p class="step-desc">Masuk menggunakan akun mahasiswa atau dosen Polinela Anda untuk
+                                memulai.</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -363,7 +367,8 @@
                                 <i class="fas fa-check-double"></i>
                             </div>
                             <h5 class="step-title">4. Selesai</h5>
-                            <p class="step-desc">Fasilitas diperbaiki. Anda akan menerima notifikasi status laporan selesai.</p>
+                            <p class="step-desc">Fasilitas diperbaiki. Anda akan menerima notifikasi status laporan
+                                selesai.</p>
                         </div>
                     </div>
                 </div>
@@ -416,7 +421,7 @@
     }
 
     // Inisialisasi efek typewriter saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         initTypewriter();
     });
 </script>
