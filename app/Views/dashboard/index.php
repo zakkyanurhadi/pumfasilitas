@@ -14,7 +14,7 @@
         align-items: center;
         color: white;
         /* Pastikan file Polinela.png ada di folder public/assets/ */
-        background: url('<?= base_url("assets/polinela.webp") ?>') no-repeat center center/cover;
+        background: url('<?= base_url("assets/polinela6.webp") ?>') no-repeat center center/cover;
     }
 
     .hero-overlay {
