@@ -102,44 +102,58 @@
     /* Filter Tabs */
     .filter-tabs {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.75rem;
         margin-bottom: 1.5rem;
         flex-wrap: wrap;
+        align-items: center;
     }
 
     .filter-tab {
-        padding: 0.5rem 1.25rem;
+        padding: 0.65rem 1.25rem;
         border-radius: 25px;
         text-decoration: none;
         color: #64748b;
         background: #f1f5f9;
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         transition: all 0.3s ease;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        white-space: nowrap;
+        border: 2px solid transparent;
     }
 
     .filter-tab:hover {
         background: #e2e8f0;
         color: #475569;
+        transform: translateY(-1px);
     }
 
     .filter-tab.active {
         background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
         color: white;
+        border-color: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     .filter-tab .count {
-        background: rgba(255, 255, 255, 0.25);
-        padding: 0.15rem 0.5rem;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
         font-size: 0.75rem;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
     }
 
     .filter-tab.active .count {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.35);
+        font-weight: 700;
+    }
+
+    .filter-tab i {
+        font-size: 0.9rem;
     }
 
     /* Notification List */
