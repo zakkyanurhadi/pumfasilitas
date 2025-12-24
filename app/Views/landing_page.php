@@ -483,7 +483,7 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="<?= base_url('assets/logo.png') ?>" alt="Logo">
+                <img src="<?= base_url('assets/logo.png') ?>" alt="Logo" priority="high">
                 <div>
                     <span class="d-block fw-bold text-dark" style="font-size: 1rem; line-height: 1;">E-Fasilitas</span>
                     <span class="d-block text-muted small" style="font-size: 0.75rem;">Politeknik Negeri Lampung</span>
