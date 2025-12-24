@@ -104,8 +104,30 @@
         display: flex;
         gap: 0.75rem;
         margin-bottom: 1.5rem;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .filter-tabs::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+    }
+
+    .filter-tabs::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .filter-tabs::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
     }
 
     .filter-tab {
