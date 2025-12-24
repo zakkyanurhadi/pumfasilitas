@@ -578,8 +578,12 @@
         </h2>
         <div class="header-actions">
             <?php if (!empty($laporan)): ?>
-                <a href="<?= site_url('admin/notifikasi/mark-all-read') ?>" class="btn-outline-primary">
+                <a href="<?= site_url('admin/notifikasi/mark-all-read') ?>" class="btn-outline-primary shadow-sm"
+                    style="border-radius: 12px; background: #6366f1; color: white; border: none; padding: 0.6rem 1.25rem;">
                     <i class="fas fa-check-double"></i> Tandai Semua Terbaca
+                </a>
+                <a href="javascript:void(0);" class="btn-outline-danger" onclick="confirmDeleteAll()">
+                    <i class="fas fa-trash-alt"></i> Hapus Semua
                 </a>
             <?php endif; ?>
         </div>
@@ -632,6 +636,11 @@
             <i class="fas fa-spinner"></i> Diproses
             <span class="count"><?= $stats['diproses'] ?? 0 ?></span>
         </a>
+        <a href="<?= site_url('admin/notifikasi?filter=dibaca') ?>"
+            class="filter-tab <?= $filter === 'dibaca' ? 'active' : '' ?>">
+            <i class="fas fa-history"></i> Sudah Dibaca
+            <span class="count"><?= $stats['dibaca'] ?? 0 ?></span>
+        </a>
     </div>
 
     <!-- Notification List -->
@@ -648,10 +657,14 @@
                     <div class="notification-item priority-<?= $item['prioritas'] ?? 'medium' ?>"
                         onclick="toggleDetail(<?= $index ?>)">
                         <div class="notification-icon <?= $item['status'] ?>">
-                            <?php if ($item['status'] === 'pending'): ?>
+                            <?php if (isset($item['terbaca']) && $item['terbaca'] == 1): ?>
+                                <i class="fas fa-check-double" style="color: #10b981;"></i>
+                            <?php elseif ($item['status'] === 'pending'): ?>
                                 <i class="fas fa-clock"></i>
                             <?php elseif ($item['status'] === 'diproses'): ?>
                                 <i class="fas fa-spinner"></i>
+                            <?php elseif ($item['status'] === 'selesai'): ?>
+                                <i class="fas fa-check-circle"></i>
                             <?php else: ?>
                                 <i class="fas fa-file-alt"></i>
                             <?php endif; ?>
@@ -675,10 +688,17 @@
                                 onclick="event.stopPropagation(); toggleDetail(<?= $index ?>)">
                                 <i class="fas fa-eye" id="icon-<?= $index ?>"></i>
                             </button>
-                            <a href="<?= site_url('adminverif/' . $item['id']) ?>" class="btn btn-delete"
-                                style="background: #10b981; border-color: #10b981; color: white;"
-                                onclick="event.stopPropagation();">
-                                <i class="fas fa-check"></i>
+                            <?php if (isset($item['terbaca']) && $item['terbaca'] == 0): ?>
+                                <a href="<?= site_url('admin/notifikasi/mark-read/' . $item['notif_id']) ?>" class="btn btn-delete"
+                                    style="background: #10b981; border-color: #10b981; color: white;" title="Tandai Sudah Dibaca"
+                                    onclick="event.stopPropagation();">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                            <?php endif; ?>
+                            <a href="javascript:void(0);" class="btn btn-delete"
+                                style="background: #ef4444; border-color: #ef4444; color: white;" title="Hapus Notifikasi"
+                                onclick="event.stopPropagation(); confirmDelete(<?= $item['notif_id'] ?>);">
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -907,6 +927,77 @@
             icon.classList.remove('fa-eye-slash');
             icon.classList.add('fa-eye');
         }
+    }
+
+    function confirmMarkAllRead(url) {
+        Swal.fire({
+            title: 'Tandai Semua Terbaca?',
+            text: "Semua laporan akan dianggap sudah dilihat.",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Tandai!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+
+    function confirmVerifikasi(url) {
+        Swal.fire({
+            title: 'Verifikasi Laporan?',
+            text: "Anda akan memverifikasi laporan ini.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Verifikasi!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Hapus Notifikasi?',
+            text: "Notifikasi ini akan dihapus permanen.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '<?= site_url('admin/notifikasi/delete/') ?>' + id;
+            }
+        });
+    }
+
+    function confirmDeleteAll() {
+        Swal.fire({
+            title: 'Hapus Semua Notifikasi?',
+            text: "Semua notifikasi akan dihapus permanen. Tindakan ini tidak dapat dibatalkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus Semua!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '<?= site_url('admin/notifikasi/delete-all') ?>';
+            }
+        });
     }
 
     // Lightbox functions for photo enlargement

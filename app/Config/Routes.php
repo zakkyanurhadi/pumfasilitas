@@ -133,7 +133,9 @@ $routes->get('/admin/notifikasi', 'AdminNotifikasiController::index', ['filter' 
 $routes->get('/admin/notifikasi/view/(:num)', 'AdminNotifikasiController::view/$1', ['filter' => 'admin']);
 $routes->get('/admin/notifikasi/unread-count', 'AdminNotifikasiController::getUnreadCount', ['filter' => 'admin']);
 $routes->get('/admin/notifikasi/mark-all-read', 'AdminNotifikasiController::markAllAsRead', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/mark-read/(:num)', 'AdminNotifikasiController::markRead/$1', ['filter' => 'admin']);
 $routes->get('/admin/notifikasi/delete/(:num)', 'AdminNotifikasiController::delete/$1', ['filter' => 'admin']);
+$routes->get('/admin/notifikasi/delete-all', 'AdminNotifikasiController::deleteAll', ['filter' => 'admin']);
 
 // =========================================================================
 // RUTE REKTOR

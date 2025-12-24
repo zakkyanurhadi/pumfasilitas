@@ -8,7 +8,8 @@
     <title>Sistem Pengaduan Fasilitas - Polinela</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -74,7 +75,7 @@
             align-items: center;
             color: white;
             /* Pastikan file Polinela.png ada di folder public/assets/ */
-            background: url('<?= base_url("assets/Polinela.png") ?>') no-repeat center center/cover;
+            background: url('<?= base_url("assets/polinela6.png") ?>') no-repeat center center/cover;
         }
 
         .hero-overlay {
@@ -262,80 +263,81 @@
         }
 
         /* === FOOTER === */
-/* === FOOTER === */
-/* =========================
+        /* === FOOTER === */
+        /* =========================
    PURE CUSTOM FOOTER
 ========================= */
 
-.site-footer {
-    background: #1a202c;
-    color: #fff;
-    padding: 60px 0 20px;
-}
+        .site-footer {
+            background: #1a202c;
+            color: #fff;
+            padding: 60px 0 20px;
+        }
 
-/* wrapper */
-.footer-inner {
-    max-width: 1140px;
-    margin: auto;
-    padding: 0 20px;
-}
+        /* wrapper */
+        .footer-inner {
+            max-width: 1140px;
+            margin: auto;
+            padding: 0 20px;
+        }
 
-/* row utama */
-.footer-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* TENGAH VERTIKAL */
-    gap: 40px;
-}
+        /* row utama */
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* TENGAH VERTIKAL */
+            gap: 40px;
+        }
 
-/* kolom */
-.footer-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+        /* kolom */
+        .footer-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-/* judul */
-.site-footer h5,
-.site-footer h6 {
-    font-weight: 600;
-    margin-bottom: 12px;
-}
+        /* judul */
+        .site-footer h5,
+        .site-footer h6 {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
 
-/* teks */
-.site-footer p {
-    font-size: 13px;
-    line-height: 1.6;
-    color: #cbd5e0;
-    margin: 0;
-}
+        /* teks */
+        .site-footer p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #cbd5e0;
+            margin: 0;
+        }
 
-/* link */
-.footer-links a {
-    font-size: 13px;
-    color: #a0aec0;
-    text-decoration: none;
-    margin-bottom: 6px;
-}
+        /* link */
+        .footer-links a {
+            font-size: 13px;
+            color: #a0aec0;
+            text-decoration: none;
+            margin-bottom: 6px;
+        }
 
-.footer-links a:hover {
-    color: #fff;
-}
+        .footer-links a:hover {
+            color: #fff;
+        }
 
-/* garis */
-.site-footer hr {
-    border: none;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    margin: 30px 0 15px;
-}
+        /* garis */
+        .site-footer hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 30px 0 15px;
+        }
 
-/* copyright */
-.footer-bottom {
-    text-align: center;
-    font-size: 12px;
-    color: #a0aec0;
-}
+        /* copyright */
+        .footer-bottom {
+            text-align: center;
+            font-size: 12px;
+            color: #a0aec0;
+        }
 
         .tooltip-wrap {
             position: relative;
@@ -384,93 +386,95 @@
             /* Tambah jarak vertikal */
         }
 
-     /* =========================
+        /* =========================
    TABLET & HP
    (≤768px)
 ========================= */
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
 
-    .site-footer {
-        padding: 40px 0 20px;
-    }
+            .site-footer {
+                padding: 40px 0 20px;
+            }
 
-    .footer-inner {
-        padding: 0 16px;
-    }
+            .footer-inner {
+                padding: 0 16px;
+            }
 
-    .footer-row {
-        flex-direction: column;
-        gap: 22px;
-    }
+            .footer-row {
+                flex-direction: column;
+                gap: 22px;
+            }
 
-    .footer-col {
-        align-items: flex-start; /* RATA KIRI */
-        text-align: left;        /* RATA KIRI */
-        width: 100%;
-    }
+            .footer-col {
+                align-items: flex-start;
+                /* RATA KIRI */
+                text-align: left;
+                /* RATA KIRI */
+                width: 100%;
+            }
 
-    .site-footer h5 {
-        font-size: 15px;
-        margin-bottom: 8px;
-    }
+            .site-footer h5 {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
 
-    .site-footer h6 {
-        font-size: 14px;
-        margin-bottom: 6px;
-    }
+            .site-footer h6 {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
 
-    .site-footer p {
-        font-size: 13px;
-        line-height: 1.45;
-    }
+            .site-footer p {
+                font-size: 13px;
+                line-height: 1.45;
+            }
 
-    .footer-links a {
-        font-size: 13px;
-        margin-bottom: 5px;
-    }
+            .footer-links a {
+                font-size: 13px;
+                margin-bottom: 5px;
+            }
 
-    .site-footer hr {
-        margin: 22px 0 14px;
-    }
+            .site-footer hr {
+                margin: 22px 0 14px;
+            }
 
-    .footer-bottom {
-        text-align: center; /* copyright tetap tengah */
-        font-size: 12px;
-    }
-}
+            .footer-bottom {
+                text-align: center;
+                /* copyright tetap tengah */
+                font-size: 12px;
+            }
+        }
 
-/* =========================
+        /* =========================
    HP KECIL
    (≤480px)
 ========================= */
-@media (max-width: 480px) {
+        @media (max-width: 480px) {
 
-    .site-footer {
-        padding: 32px 0 15px;
-    }
+            .site-footer {
+                padding: 32px 0 15px;
+            }
 
-    .footer-row {
-        gap: 18px;
-    }
+            .footer-row {
+                gap: 18px;
+            }
 
-    .site-footer h5 {
-        font-size: 14px;
-    }
+            .site-footer h5 {
+                font-size: 14px;
+            }
 
-    .site-footer h6 {
-        font-size: 13px;
-    }
+            .site-footer h6 {
+                font-size: 13px;
+            }
 
-    .site-footer p,
-    .footer-links a {
-        font-size: 12px;
-    }
+            .site-footer p,
+            .footer-links a {
+                font-size: 12px;
+            }
 
-    .footer-bottom {
-        font-size: 11px;
-    }
-}
-
+            .footer-bottom {
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 
@@ -495,11 +499,11 @@
                     <li class="nav-item"><a class="nav-link" href="#statistik">Statistik</a></li>
 
                     <li class="nav-item ms-3">
-                        <?php if (session()->get('isLoggedIn')) : ?>
+                        <?php if (session()->get('isLoggedIn')): ?>
                             <a href="<?= site_url('dashboard') ?>" class="btn btn-nav-login shadow-sm">
                                 <i class="fas fa-user-circle me-1"></i> Dashboard
                             </a>
-                        <?php else : ?>
+                        <?php else: ?>
                             <a href="<?= site_url('login') ?>" class="btn btn-nav-login shadow-sm">Masuk / Daftar</a>
                         <?php endif; ?>
                     </li>
@@ -519,7 +523,7 @@
                         Laporkan kerusakan fasilitas kampus secara online, cepat, dan transparan.
                     </p>
                     <div class="d-flex flex-column flex-md-row gap-2">
-                        <?php if (session()->get('isLoggedIn')) : ?>
+                        <?php if (session()->get('isLoggedIn')): ?>
 
                             <div class="tooltip-wrap">
                                 <a href="<?= site_url('laporan') ?>" class="btn btn-hero btn-primary-custom shadow">
@@ -527,7 +531,7 @@
                                 </a>
                                 <span class="tooltip-text">Mulai membuat laporan</span>
                             </div>
-                        <?php else : ?>
+                        <?php else: ?>
 
                             <div class="tooltip-wrap">
                                 <a href="<?= site_url('login') ?>" class="btn btn-hero btn-primary-custom shadow">
@@ -556,21 +560,24 @@
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-bolt"></i></div>
                     <h5>Respon Cepat</h5>
-                    <p class="text-muted small">Laporan Anda langsung diteruskan ke unit pemeliharaan terkait untuk segera ditindaklanjuti.</p>
+                    <p class="text-muted small">Laporan Anda langsung diteruskan ke unit pemeliharaan terkait untuk
+                        segera ditindaklanjuti.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-search-location"></i></div>
                     <h5>Pelacakan Real-time</h5>
-                    <p class="text-muted small">Pantau status pengerjaan laporan kerusakan Anda secara transparan melalui dashboard.</p>
+                    <p class="text-muted small">Pantau status pengerjaan laporan kerusakan Anda secara transparan
+                        melalui dashboard.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="icon-box"><i class="fas fa-check-circle"></i></div>
                     <h5>Tuntas & Terukur</h5>
-                    <p class="text-muted small">Setiap perbaikan didokumentasikan. Anda bisa memberikan feedback setelah pengerjaan selesai.</p>
+                    <p class="text-muted small">Setiap perbaikan didokumentasikan. Anda bisa memberikan feedback setelah
+                        pengerjaan selesai.</p>
                 </div>
             </div>
         </div>
@@ -591,7 +598,8 @@
                                 <i class="fas fa-sign-in-alt"></i>
                             </div>
                             <h5 class="step-title">1. Login Akun</h5>
-                            <p class="step-desc">Masuk menggunakan akun mahasiswa atau dosen Polinela Anda untuk memulai.</p>
+                            <p class="step-desc">Masuk menggunakan akun mahasiswa atau dosen Polinela Anda untuk
+                                memulai.</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -618,7 +626,8 @@
                                 <i class="fas fa-check-double"></i>
                             </div>
                             <h5 class="step-title">4. Selesai</h5>
-                            <p class="step-desc">Fasilitas diperbaiki. Anda akan menerima notifikasi status laporan selesai.</p>
+                            <p class="step-desc">Fasilitas diperbaiki. Anda akan menerima notifikasi status laporan
+                                selesai.</p>
                         </div>
                     </div>
                 </div>
@@ -646,44 +655,44 @@
     </section>
 
     <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-row">
+        <div class="footer-inner">
+            <div class="footer-row">
 
-            <div class="footer-col footer-about">
-                <h5>E-Fasilitas</h5>
-                <p>
-                    Sistem Informasi Pelaporan Kerusakan Fasilitas Kampus
-                    Politeknik Negeri Lampung. Dibuat sebagai proyek
-                    pembelajaran TI.
-                </p>
+                <div class="footer-col footer-about">
+                    <h5>E-Fasilitas</h5>
+                    <p>
+                        Sistem Informasi Pelaporan Kerusakan Fasilitas Kampus
+                        Politeknik Negeri Lampung. Dibuat sebagai proyek
+                        pembelajaran TI.
+                    </p>
+                </div>
+
+                <div class="footer-col footer-links">
+                    <h6>Tautan</h6>
+                    <a href="#">Website Polinela</a>
+                    <a href="#">Sistem Akademik</a>
+                </div>
+
+                <div class="footer-col footer-contact">
+                    <h6>Kontak</h6>
+                    <p>Jl. Soekarno Hatta No.10, Rajabasa</p>
+                    <p>humas@polinela.ac.id</p>
+                </div>
+
             </div>
 
-            <div class="footer-col footer-links">
-                <h6>Tautan</h6>
-                <a href="#">Website Polinela</a>
-                <a href="#">Sistem Akademik</a>
-            </div>
+            <hr>
 
-            <div class="footer-col footer-contact">
-                <h6>Kontak</h6>
-                <p>Jl. Soekarno Hatta No.10, Rajabasa</p>
-                <p>humas@polinela.ac.id</p>
+            <div class="footer-bottom">
+                &copy; 2024 Politeknik Negeri Lampung. All rights reserved.
             </div>
-
         </div>
-
-        <hr>
-
-        <div class="footer-bottom">
-            &copy; 2024 Politeknik Negeri Lampung. All rights reserved.
-        </div>
-    </div>
-</footer>
+    </footer>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             if (window.scrollY > 50) {
                 document.querySelector('.navbar').classList.add('shadow');
             } else {

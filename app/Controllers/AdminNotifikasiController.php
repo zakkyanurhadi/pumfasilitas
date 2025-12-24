@@ -26,26 +26,38 @@ class AdminNotifikasiController extends BaseController
     {
         $filter = $this->request->getGet('filter') ?? 'semua';
 
-        // Untuk admin, notifikasi adalah laporan dengan data lengkap untuk detail inline
-        $query = $this->db->table('laporan l')
-            ->select('l.id, l.nama_pelapor, l.lokasi_kerusakan, l.lokasi_spesifik, l.deskripsi, l.foto, l.kategori, l.status, l.prioritas, l.created_at, u.nama as user_nama, g.nama as gedung_nama')
+        // Untuk admin, gunakan tabel notifikasi yang sudah ada
+        $query = $this->db->table('notifikasi n')
+            ->select('n.id as notif_id, n.terbaca, l.id, l.nama_pelapor, l.lokasi_kerusakan, l.lokasi_spesifik, l.deskripsi, l.foto, l.kategori, l.status, l.prioritas, l.created_at, u.nama as user_nama, g.nama as gedung_nama')
+            ->join('laporan l', 'l.id = n.laporan_id', 'left')
             ->join('users u', 'u.id = l.user_id', 'left')
             ->join('gedung g', 'g.id = l.gedung_id', 'left')
-            ->orderBy('l.created_at', 'DESC');
+            ->orderBy('n.created_at', 'DESC');
 
         if ($filter === 'pending') {
-            $query->where('l.status', 'pending');
+            $query->where('l.status', 'pending')->where('n.terbaca', 0);
         } elseif ($filter === 'diproses') {
-            $query->where('l.status', 'diproses');
+            $query->where('l.status', 'diproses')->where('n.terbaca', 0);
+        } elseif ($filter === 'selesai') {
+            $query->where('l.status', 'selesai')->where('n.terbaca', 0);
+        } elseif ($filter === 'dibaca') {
+            $query->where('n.terbaca', 1);
+        } else {
+            // Default: tampilkan yang belum dibaca
+            if ($filter === 'semua') {
+                $query->where('n.terbaca', 0);
+            }
         }
 
         $laporan = $query->limit(50)->get()->getResultArray();
 
-        // Stats
+        // Stats menggunakan tabel notifikasi
         $stats = [
-            'total' => $this->db->table('laporan')->countAllResults(false),
-            'pending' => $this->db->table('laporan')->where('status', 'pending')->countAllResults(false),
-            'diproses' => $this->db->table('laporan')->where('status', 'diproses')->countAllResults(),
+            'total' => $this->db->table('notifikasi')->where('terbaca', 0)->countAllResults(false),
+            'pending' => $this->db->table('notifikasi n')->join('laporan l', 'l.id = n.laporan_id')->where('l.status', 'pending')->where('n.terbaca', 0)->countAllResults(false),
+            'diproses' => $this->db->table('notifikasi n')->join('laporan l', 'l.id = n.laporan_id')->where('l.status', 'diproses')->where('n.terbaca', 0)->countAllResults(false),
+            'selesai' => $this->db->table('notifikasi n')->join('laporan l', 'l.id = n.laporan_id')->where('l.status', 'selesai')->where('n.terbaca', 0)->countAllResults(false),
+            'dibaca' => $this->db->table('notifikasi')->where('terbaca', 1)->countAllResults(),
         ];
 
         return view('admin/notifikasi/index', [
@@ -61,9 +73,9 @@ class AdminNotifikasiController extends BaseController
      */
     public function getUnreadCount()
     {
-        // Untuk admin, "unread" adalah jumlah laporan pending
-        $count = $this->db->table('laporan')
-            ->where('status', 'pending')
+        // Untuk admin, "unread" adalah jumlah notifikasi yang belum dibaca
+        $count = $this->db->table('notifikasi')
+            ->where('terbaca', 0)
             ->countAllResults();
 
         return $this->response->setJSON(['count' => $count]);
@@ -83,9 +95,21 @@ class AdminNotifikasiController extends BaseController
      */
     public function markAllAsRead()
     {
-        // Untuk admin, "mark all as read" bisa berarti redirect ke halaman laporan pending
-        // Atau bisa juga update status - tergantung kebutuhan bisnis
-        return redirect()->to('/laporanadminpending')->with('success', 'Silakan proses laporan pending');
+        // Tandai semua notifikasi yang belum dibaca menjadi terbaca
+        $this->db->table('notifikasi')->where('terbaca', 0)->update(['terbaca' => 1]);
+        return redirect()->to('/admin/notifikasi');
+    }
+
+    /**
+     * Tandai satu notifikasi sebagai 'dibaca'
+     */
+    public function markRead($id)
+    {
+        // Update kolom terbaca di tabel notifikasi berdasarkan ID notifikasi
+        $this->db->table('notifikasi')->where('id', $id)->update(['terbaca' => 1]);
+
+        // Redirect kembali ke halaman notifikasi
+        return redirect()->to('/admin/notifikasi');
     }
 
     /**
@@ -93,8 +117,18 @@ class AdminNotifikasiController extends BaseController
      */
     public function delete($id)
     {
-        // Dalam konteks admin, "delete" notifikasi berarti mengarahkan ke detail untuk diproses
-        // Karena admin tidak bisa menghapus laporan dari notifikasi, hanya bisa memprosesnya
-        return redirect()->to('/admindetail/' . $id);
+        // Hapus notifikasi berdasarkan ID notifikasi
+        $this->db->table('notifikasi')->where('id', $id)->delete();
+        return redirect()->to('/admin/notifikasi');
+    }
+
+    /**
+     * Hapus semua notifikasi
+     */
+    public function deleteAll()
+    {
+        // Hapus semua notifikasi
+        $this->db->table('notifikasi')->truncate();
+        return redirect()->to('/admin/notifikasi');
     }
 }
