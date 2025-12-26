@@ -300,7 +300,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label">Username / NPM</label>
-            <input type="text" class="form-control" name="username" placeholder="Contoh: 20753028" required>
+            <input type="text" class="form-control" name="username" placeholder="Contoh: 20753028, budi" required>
             <span class="error-message" id="error-username"></span>
           </div>
         </div>

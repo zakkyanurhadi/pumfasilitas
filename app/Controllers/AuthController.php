@@ -51,10 +51,12 @@ class AuthController extends Controller
         $identifier = $this->request->getPost('login_identifier');
         $password = $this->request->getPost('password');
 
-        // Cari user berdasarkan NPM atau Email
+        // Cari user berdasarkan NPM atau Email (dengan grouping yang benar)
         $user = $this->userModel
+            ->groupStart()
             ->where('npm', $identifier)
             ->orWhere('email', $identifier)
+            ->groupEnd()
             ->first();
 
         if (!$user || !password_verify($password, $user['password'])) {
