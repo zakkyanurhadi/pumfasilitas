@@ -76,116 +76,238 @@ sequenceDiagram
 
     actor Mahasiswa
     actor Admin
+    participant Browser
+    participant AuthFilter
+    participant AuthController
+    participant LaporController
+    participant AdminLaporController
+    participant LaporanModel
+    participant UserModel
+    participant GedungModel
+    participant RuanganModel
+    participant LogAktivitasModel
+    participant NotifikasiModel
+    participant Database
 
-    participant Browser as Browser (Web)
-    participant AF as AuthFilter
-    participant AC as AuthController
-    participant LC as LaporController
-    participant ALC as AdminLaporController
-    participant LM as LaporanModel
-    participant UM as UserModel
-    participant GM as GedungModel
-    participant RM as RuanganModel
-    participant LOG as LogAktivitasModel
-    participant NM as NotifikasiModel
-    participant DB as Database
+    Mahasiswa->>Browser: Input email & password
+    Browser->>AuthController: POST /login
+    AuthController->>UserModel: Cari user (email/npm)
+    UserModel->>Database: SELECT users
+    Database-->>UserModel: Data user
+    UserModel-->>AuthController: Validasi password
+    AuthController->>AuthController: Set session
+    AuthController-->>Browser: Redirect /dashboard
 
-    %% ================= LOGIN MAHASISWA =================
-    Note over Mahasiswa,DB: 1. LOGIN MAHASISWA
-    Mahasiswa ->> Browser: Input email & password
-    Browser ->> AC: POST /login
-    AC ->> UM: findByEmail(email)
-    UM ->> DB: SELECT * FROM users WHERE email
-    DB -->> UM: user row
-    UM -->> AC: validate password & status=active
-    AC ->> AC: set session(user_id, role=user, isLoggedIn=true)
-    AC -->> Browser: redirect to /dashboard
+    Mahasiswa->>Browser: Akses /laporan
+    Browser->>AuthFilter: Cek session
+    AuthFilter-->>Browser: Allowed
+    Browser->>LaporController: GET /laporan
+    LaporController->>GedungModel: findAll()
+    GedungModel->>Database: SELECT gedung
+    Database-->>GedungModel: Data gedung
+    LaporController->>RuanganModel: findAll()
+    RuanganModel->>Database: SELECT ruangan
+    Database-->>RuanganModel: Data ruangan
+    LaporController-->>Browser: Render form
 
-    %% ================= FORM LAPORAN =================
-    Note over Mahasiswa,DB: 2. BUKA FORM LAPORAN
-    Mahasiswa ->> Browser: Akses /laporan
-    Browser ->> AF: before() - cek session
-    AF ->> AF: check isLoggedIn & role=user
-    AF -->> Browser: allowed
-    Browser ->> LC: GET /laporan
-    LC ->> GM: findAll()
-    GM ->> DB: SELECT * FROM gedung
-    DB -->> GM: gedung list
-    LC ->> RM: findAll()
-    RM ->> DB: SELECT * FROM ruangan
-    DB -->> RM: ruangan list
-    LC -->> Browser: render form laporan
+    Mahasiswa->>Browser: Submit laporan
+    Browser->>LaporController: POST /laporan/store
+    LaporController->>LaporController: Validasi & upload foto
+    LaporController->>LaporanModel: insert()
+    LaporanModel->>Database: INSERT laporan (status=pending)
+    Database-->>LaporanModel: ID laporan
+    LaporanModel-->>LaporController: Success
+    LaporController-->>Browser: Redirect /laporan/saya
 
-    %% ================= SUBMIT LAPORAN =================
-    Note over Mahasiswa,DB: 3. SUBMIT LAPORAN
-    Mahasiswa ->> Browser: Submit form laporan
-    Browser ->> LC: POST /laporan/store
-    LC ->> LC: validate input & upload foto
-    LC ->> LM: insert(data)
-    LM ->> DB: INSERT INTO laporan
-    Note right of DB: status = 'pending'<br/>user_id<br/>gedung_id<br/>ruangan_id<br/>prioritas<br/>kategori
-    DB -->> LM: laporan_id
-    LM -->> LC: success
-    LC -->> Browser: redirect /laporan/saya + flash success
+    Admin->>Browser: Login
+    Browser->>AuthController: POST /login
+    AuthController->>UserModel: Cari user
+    UserModel->>Database: SELECT users
+    Database-->>UserModel: Data admin
+    UserModel-->>AuthController: Validasi
+    AuthController->>AuthController: Set session
+    AuthController-->>Browser: Redirect /dashboardadmin
 
-    %% ================= LOGIN ADMIN =================
-    Note over Admin,DB: 4. LOGIN ADMIN
-    Admin ->> Browser: Login dengan role admin/superadmin
-    Browser ->> AC: POST /login
-    AC ->> UM: findByEmail(email)
-    UM ->> DB: SELECT * FROM users WHERE email
-    DB -->> UM: user row
-    UM -->> AC: validate password & role IN (admin,superadmin)
-    AC ->> AC: set session(user_id, role, isLoggedIn=true)
-    AC -->> Browser: redirect to /dashboardadmin
+    Admin->>Browser: Akses /laporanadminpending
+    Browser->>AdminLaporController: GET /laporanadminpending
+    AdminLaporController->>Database: SELECT laporan (status=pending)
+    Database-->>AdminLaporController: Data laporan
+    AdminLaporController-->>Browser: Render tabel
 
-    %% ================= LIST LAPORAN =================
-    Note over Admin,DB: 5. LIHAT DAFTAR LAPORAN
-    Admin ->> Browser: Akses /laporanadminpending
-    Browser ->> ALC: GET /laporanadminpending
-    ALC ->> ALC: statusMapper[uri] = 'pending'
-    ALC ->> DB: SELECT * FROM laporan WHERE status='pending'
-    DB -->> ALC: laporan list
-    ALC -->> Browser: render tabel laporan pending
+    Admin->>Browser: Update status laporan
+    Browser->>AdminLaporController: POST /admin/laporan/verifikasi
+    AdminLaporController->>AdminLaporController: Validasi
+    AdminLaporController->>LaporanModel: update()
+    LaporanModel->>Database: UPDATE laporan
+    Database-->>LaporanModel: Success
+    AdminLaporController->>LogAktivitasModel: catat()
+    LogAktivitasModel->>Database: INSERT log_aktivitas
+    Database-->>LogAktivitasModel: Success
+    AdminLaporController->>LaporanModel: find()
+    LaporanModel->>Database: SELECT laporan
+    Database-->>LaporanModel: Data laporan
+    AdminLaporController->>NotifikasiModel: createNotifikasi()
+    NotifikasiModel->>Database: INSERT notifikasi
+    Database-->>NotifikasiModel: Success
+    AdminLaporController-->>Browser: Redirect back
 
-    %% ================= VERIFIKASI LAPORAN =================
-    Note over Admin,DB: 6. VERIFIKASI LAPORAN
-    Admin ->> Browser: Update status laporan via form
-    Browser ->> ALC: POST /admin/laporan/verifikasi
-    ALC ->> ALC: validate status & keterangan
-    ALC ->> LM: update(id, data)
-    LM ->> DB: UPDATE laporan SET status, tanggal_verifikasi, verifikator, keterangan_verifikasi
-    DB -->> LM: success
-    LM -->> ALC: success
-
-    %% ================= LOG AKTIVITAS =================
-    Note over Admin,DB: 7. CATAT LOG AKTIVITAS
-    ALC ->> LOG: catat(admin_id, aktivitas, laporan_id)
-    LOG ->> DB: INSERT INTO log_aktivitas
-    Note right of DB: admin_id<br/>aktivitas = "Memverifikasi laporan #ID menjadi STATUS"<br/>laporan_id
-    DB -->> LOG: success
-
-    %% ================= NOTIFIKASI USER =================
-    Note over Admin,DB: 8. KIRIM NOTIFIKASI KE USER
-    ALC ->> LM: find(id)
-    LM ->> DB: SELECT * FROM laporan WHERE id
-    DB -->> LM: laporan data
-    LM -->> ALC: laporan with user_id
-    ALC ->> NM: createNotifikasi(user_id, laporan_id, pesan)
-    NM ->> DB: INSERT INTO notifikasi
-    Note right of DB: user_id<br/>laporan_id<br/>pesan sesuai status<br/>terbaca = 0
-    DB -->> NM: success
-    NM -->> ALC: success
-    ALC -->> Browser: redirect back + flash success
-
-    %% ================= CEK NOTIFIKASI =================
-    Note over Mahasiswa,DB: 9. MAHASISWA CEK NOTIFIKASI
-    Mahasiswa ->> Browser: Akses /notifikasi
-    Browser ->> NM: getByUserId(user_id)
-    NM ->> DB: SELECT * FROM notifikasi WHERE user_id ORDER BY created_at DESC
-    DB -->> NM: notifikasi list
-    NM -->> Browser: render notifikasi
+    Mahasiswa->>Browser: Akses /notifikasi
+    Browser->>NotifikasiModel: getByUserId()
+    NotifikasiModel->>Database: SELECT notifikasi
+    Database-->>NotifikasiModel: Data notifikasi
+    NotifikasiModel-->>Browser: Render notifikasi
 ```
+
+## 📊 Data Flow Diagram (DFD)
+
+### DFD Level 0 - Context Diagram
+
+```mermaid
+flowchart TB
+    subgraph External["External Entities"]
+        M[👤 Mahasiswa]
+        A[👨‍💼 Admin]
+        R[👔 Rektor]
+    end
+
+    subgraph System["Sistem Pelaporan Fasilitas"]
+        S((Sistem<br/>E-Fasilitas))
+    end
+
+    M -->|Data Registrasi| S
+    M -->|Data Laporan| S
+    S -->|Konfirmasi & Notifikasi| M
+    S -->|Status Laporan| M
+
+    A -->|Data Login| S
+    A -->|Verifikasi Laporan| S
+    A -->|Data Gedung/Ruangan| S
+    S -->|Data Laporan| A
+    S -->|Notifikasi Laporan Baru| A
+
+    R -->|Data Login| S
+    S -->|Statistik & Laporan| R
+    S -->|Audit Log| R
+```
+
+### DFD Level 1 - Detail Processes
+
+```plantuml
+@startuml DFD_Level_1
+
+!define ENTITY_COLOR #E8F5E9
+!define PROCESS_COLOR #E3F2FD
+!define DATASTORE_COLOR #FFF9C4
+
+skinparam rectangle {
+    BackgroundColor PROCESS_COLOR
+    BorderColor #1976D2
+    FontSize 11
+}
+
+skinparam database {
+    BackgroundColor DATASTORE_COLOR
+    BorderColor #F57C00
+    FontSize 10
+}
+
+skinparam actor {
+    BackgroundColor ENTITY_COLOR
+    BorderColor #388E3C
+    FontSize 11
+}
+
+left to right direction
+
+' External Entities
+actor "👤\nMahasiswa" as M
+actor "👨‍💼\nAdmin" as A
+actor "👔\nRektor" as R
+
+' Processes
+rectangle "1.0\nAutentikasi" as P1
+rectangle "2.0\nKelola\nLaporan" as P2
+rectangle "3.0\nVerifikasi\nLaporan" as P3
+rectangle "4.0\nKelola\nNotifikasi" as P4
+rectangle "5.0\nKelola\nMaster Data" as P5
+rectangle "6.0\nGenerate\nStatistik" as P6
+
+' Data Stores
+database "D1\nusers" as D1
+database "D2\nlaporan" as D2
+database "D3\nnotifikasi" as D3
+database "D4\ngedung" as D4
+database "D5\nruangan" as D5
+database "D6\nlog_aktivitas" as D6
+
+' Data Flows - Mahasiswa
+M --> P1 : Data Registrasi/Login
+P1 --> M : Session Data
+M --> P2 : Data Laporan Baru
+P2 --> M : Konfirmasi
+
+' Data Flows - Admin
+A --> P1 : Data Login
+P1 --> A : Session Admin
+A --> P3 : Data Verifikasi
+P3 --> A : Konfirmasi
+A --> P5 : Data Gedung/Ruangan
+
+' Data Flows - Rektor
+R --> P6 : Request Statistik
+P6 --> R : Laporan & Grafik
+
+' Process to Data Store
+P1 --> D1 : Validasi
+P2 --> D2 : Simpan
+P2 --> D4 : Baca
+P2 --> D5 : Baca
+P3 --> D2 : Update Status
+P3 --> D6 : Catat Log
+P4 --> D3 : Simpan
+P5 --> D4 : Simpan/Update
+P5 --> D5 : Simpan/Update
+P6 --> D2 : Baca
+P6 --> D6 : Baca
+
+' Data Store to Process
+D2 --> P2 : Data Laporan
+D2 --> P3 : Data Laporan
+D3 --> P4 : Data Notifikasi
+
+' Process to Process
+P3 --> P4 : Buat Notifikasi
+P4 --> M : Kirim Notifikasi
+P4 --> A : Kirim Notifikasi
+
+@enduml
+```
+
+### Penjelasan DFD
+
+#### **External Entities:**
+
+- **Mahasiswa**: User yang membuat laporan kerusakan
+- **Admin**: Mengelola dan memverifikasi laporan
+- **Rektor**: Melihat statistik dan audit log
+
+#### **Processes:**
+
+1. **Autentikasi (1.0)**: Login, registrasi, forgot password
+2. **Kelola Laporan (2.0)**: CRUD laporan oleh mahasiswa
+3. **Verifikasi Laporan (3.0)**: Admin memverifikasi dan mengubah status
+4. **Kelola Notifikasi (4.0)**: Sistem notifikasi untuk user dan admin
+5. **Kelola Master Data (5.0)**: Manajemen gedung dan ruangan
+6. **Generate Statistik (6.0)**: Dashboard KPI dan laporan untuk rektor
+
+#### **Data Stores:**
+
+- **D1: users** - Data pengguna (mahasiswa, admin, rektor)
+- **D2: laporan** - Data laporan kerusakan
+- **D3: notifikasi** - Data notifikasi
+- **D4: gedung** - Master data gedung
+- **D5: ruangan** - Master data ruangan
+- **D6: log_aktivitas** - Audit trail aktivitas admin
 
 ## 🏗️ Struktur Aplikasi
 
