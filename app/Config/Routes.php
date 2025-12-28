@@ -54,10 +54,7 @@ $routes->post('/profile/update', 'ProfileController::update', ['filter' => 'auth
 
 
 
-// --- TAMBAHKAN RUTE PROFIL DI SINI ---
-$routes->get('/profileadmin', 'ProfileAdminController::index', ['filter' => 'auth']);
-$routes->post('/profileadmin/update', 'ProfileAdminController::update', ['filter' => 'auth']);
-// ------------------------------------
+
 
 
 $routes->get('/laporanadminpending', 'AdminLaporController::index', ['filter' => 'admin']);

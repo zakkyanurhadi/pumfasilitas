@@ -639,12 +639,12 @@
         <div class="container">
             <div class="row text-center">
                 <div class="col-md-4 mb-4 mb-md-0">
-                    <div class="stat-number">1,250+</div>
+                    <div class="stat-number"><?= esc($stats['total']) ?></div>
                     <div class="stat-label">Laporan Masuk</div>
                 </div>
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Tingkat Penyelesaian</div>
+                <div class="col-md-4">
+                    <div class="stat-number"><?= esc($stats['selesai']) ?></div>
+                    <div class="stat-label">Selesai</div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-number">24 Jam</div>
