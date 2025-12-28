@@ -67,9 +67,6 @@
                             <li>
                                 <a href="<?= site_url('notifikasi') ?>">Notifikasi</a>
                             </li>
-                            <li>
-                                <a href="<?= site_url('password') ?>">Ubah Password</a>
-                            </li>
                             <hr class="dropdown-divider">
                             <li>
                                 <a href="<?= site_url('logout') ?>" class="text-danger">Logout</a>

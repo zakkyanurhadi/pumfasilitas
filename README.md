@@ -309,6 +309,94 @@ P4 --> A : Kirim Notifikasi
 - **D5: ruangan** - Master data ruangan
 - **D6: log_aktivitas** - Audit trail aktivitas admin
 
+## 🔐 Authentication Flowcharts
+
+### Flowchart Login
+
+```plantuml
+@startuml Flowchart_Login
+!define PROCESS_COLOR #E3F2FD
+!define DECISION_COLOR #FFF9C4
+!define TERMINATOR_COLOR #E8F5E9
+
+skinparam activity {
+    BackgroundColor PROCESS_COLOR
+    BorderColor #1976D2
+    FontSize 12
+    ArrowColor #1976D2
+}
+
+skinparam activityDiamond {
+    BackgroundColor DECISION_COLOR
+    BorderColor #F57C00
+    FontSize 11
+}
+
+start
+:User Mengisi Form Login;
+:Validasi Input;
+if (Input Valid?) then (Ya)
+    :Cari User di Database;
+    if (User Ditemukan & Password Cocok?) then (Ya)
+        :Set Session Data;
+        if (Role User?) then (Admin/Superadmin)
+            :Redirect ke Dashboard Admin;
+        elseif (Role User?) then (Rektor)
+            :Redirect ke Dashboard Rektor;
+        else (Mahasiswa)
+            :Redirect ke Dashboard User;
+        endif
+    else (Tidak)
+        :Tampilkan Error "Kredensial Salah";
+    endif
+else (Tidak)
+    :Tampilkan Error Validasi;
+endif
+stop
+@enduml
+```
+
+### Flowchart Register
+
+```plantuml
+@startuml Flowchart_Register
+!define PROCESS_COLOR #E3F2FD
+!define DECISION_COLOR #FFF9C4
+!define TERMINATOR_COLOR #E8F5E9
+
+skinparam activity {
+    BackgroundColor PROCESS_COLOR
+    BorderColor #1976D2
+    FontSize 12
+    ArrowColor #1976D2
+}
+
+skinparam activityDiamond {
+    BackgroundColor DECISION_COLOR
+    BorderColor #F57C00
+    FontSize 11
+}
+
+start
+:Mahasiswa Mengisi Form Register;
+:Validasi Kelengkapan Data;
+if (Data Lengkap?) then (Ya)
+    :Cek Duplikasi Email/NPM;
+    if (Email/NPM Sudah Ada?) then (Ya)
+        :Tampilkan Error "Sudah Terdaftar";
+    else (Tidak)
+        :Hash Password;
+        :Simpan User ke Database;
+        :Tampilkan Pesan Sukses;
+        :Redirect ke Halaman Login;
+    endif
+else (Tidak)
+    :Tampilkan Error Validasi;
+endif
+stop
+@enduml
+```
+
 ## 🏗️ Struktur Aplikasi
 
 ### Controllers
