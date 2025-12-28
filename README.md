@@ -165,144 +165,119 @@ sequenceDiagram
 ```mermaid
 flowchart TB
     subgraph External["External Entities"]
-        M[👤 Mahasiswa]
-        A[👨‍💼 Admin]
-        R[👔 Rektor]
+        CA[Civitas Akademik]
+        A[Admin]
+        R[Rektor]
     end
 
     subgraph System["Sistem Pelaporan Fasilitas"]
-        S((Sistem<br/>E-Fasilitas))
+        S((SISTEM<br/>E-Fasilitas))
     end
 
-    M -->|Data Registrasi| S
-    M -->|Data Laporan| S
-    S -->|Konfirmasi & Notifikasi| M
-    S -->|Status Laporan| M
+    CA -->|Data Registrasi| S
+    CA -->|Data Login| S
+    CA -->|Data Laporan Fasilitas| S
+    S -->|Status Laporan| CA
+    S -->|Konfirmasi & Notifikasi| CA
 
     A -->|Data Login| S
-    A -->|Verifikasi Laporan| S
-    A -->|Data Gedung/Ruangan| S
+    A -->|Data Verifikasi| S
+    A -->|Data Gedung / Ruangan| S
+    A -->|Data Users| S
     S -->|Data Laporan| A
     S -->|Notifikasi Laporan Baru| A
 
     R -->|Data Login| S
-    S -->|Statistik & Laporan| R
-    S -->|Audit Log| R
+    S -->|Statistik & Rekap Laporan| R
+    S -->|Audit Log Aktivitas| R
 ```
 
 ### DFD Level 1 - Detail Processes
 
-```plantuml
-@startuml DFD_Level_1
+```mermaid
+flowchart TB
+    %% Entities
+    CA[Civitas Akademik]
+    A[Admin]
+    R[Rektor]
 
-!define ENTITY_COLOR #E8F5E9
-!define PROCESS_COLOR #E3F2FD
-!define DATASTORE_COLOR #FFF9C4
+    %% Processes
+    P1(1.0 Autentikasi)
+    P2(2.0 Kelola Laporan)
+    P3(3.0 Verifikasi Laporan)
+    P4(4.0 Kelola Notifikasi)
+    P5(5.0 Kelola Master Data)
+    P6(6.0 Generate Statistik)
 
-skinparam rectangle {
-    BackgroundColor PROCESS_COLOR
-    BorderColor #1976D2
-    FontSize 11
-}
+    %% Data Stores
+    D1[(D1 Users)]
+    D2[(D2 Laporan)]
+    D3[(D3 Notifikasi)]
+    D4[(D4 Gedung)]
+    D5[(D5 Ruangan)]
+    D6[(D6 Log Aktivitas)]
 
-skinparam database {
-    BackgroundColor DATASTORE_COLOR
-    BorderColor #F57C00
-    FontSize 10
-}
+    %% Flow: Autentikasi
+    CA -->|Data Registrasi / Login| P1
+    A -->|Data Login| P1
+    R -->|Data Login| P1
+    P1 <-->|Validasi Check| D1
+    P1 -->|Session / Token| CA
+    P1 -->|Session / Token| A
+    P1 -->|Session / Token| R
 
-skinparam actor {
-    BackgroundColor ENTITY_COLOR
-    BorderColor #388E3C
-    FontSize 11
-}
+    %% Flow: Kelola Laporan (Civitas Akademik)
+    CA -->|Input Laporan| P2
+    D4 -.->|Info Gedung| P2
+    D5 -.->|Info Ruangan| P2
+    P2 -->|Simpan Laporan| D2
+    P2 -->|Status Laporan| CA
 
-left to right direction
+    %% Flow: Verifikasi (Admin)
+    A -->|Verifikasi & Validasi| P3
+    D2 <-->|Read / Update Laporan| P3
+    P3 -->|Catat Log| D6
 
-' External Entities
-actor "👤\nMahasiswa" as M
-actor "👨‍💼\nAdmin" as A
-actor "👔\nRektor" as R
+    %% Flow: Notifikasi System
+    P3 -->|Trigger Notifikasi| P4
+    P4 -->|Simpan Notifikasi| D3
+    D3 -.->|Load Notifikasi| P4
+    P4 -->|Kirim Notifikasi| CA
+    P4 -->|Kirim Notifikasi| A
 
-' Processes
-rectangle "1.0\nAutentikasi" as P1
-rectangle "2.0\nKelola\nLaporan" as P2
-rectangle "3.0\nVerifikasi\nLaporan" as P3
-rectangle "4.0\nKelola\nNotifikasi" as P4
-rectangle "5.0\nKelola\nMaster Data" as P5
-rectangle "6.0\nGenerate\nStatistik" as P6
+    %% Flow: Master Data (Admin Managing Resources & Users)
+    A -->|Manage Gedung / Ruangan / Users| P5
+    P5 -->|CRUD Users| D1
+    P5 -->|CRUD Gedung| D4
+    P5 -->|CRUD Ruangan| D5
 
-' Data Stores
-database "D1\nusers" as D1
-database "D2\nlaporan" as D2
-database "D3\nnotifikasi" as D3
-database "D4\ngedung" as D4
-database "D5\nruangan" as D5
-database "D6\nlog_aktivitas" as D6
-
-' Data Flows - Mahasiswa
-M --> P1 : Data Registrasi/Login
-P1 --> M : Session Data
-M --> P2 : Data Laporan Baru
-P2 --> M : Konfirmasi
-
-' Data Flows - Admin
-A --> P1 : Data Login
-P1 --> A : Session Admin
-A --> P3 : Data Verifikasi
-P3 --> A : Konfirmasi
-A --> P5 : Data Gedung/Ruangan
-
-' Data Flows - Rektor
-R --> P6 : Request Statistik
-P6 --> R : Laporan & Grafik
-
-' Process to Data Store
-P1 --> D1 : Validasi
-P2 --> D2 : Simpan
-P2 --> D4 : Baca
-P2 --> D5 : Baca
-P3 --> D2 : Update Status
-P3 --> D6 : Catat Log
-P4 --> D3 : Simpan
-P5 --> D4 : Simpan/Update
-P5 --> D5 : Simpan/Update
-P6 --> D2 : Baca
-P6 --> D6 : Baca
-
-' Data Store to Process
-D2 --> P2 : Data Laporan
-D2 --> P3 : Data Laporan
-D3 --> P4 : Data Notifikasi
-
-' Process to Process
-P3 --> P4 : Buat Notifikasi
-P4 --> M : Kirim Notifikasi
-P4 --> A : Kirim Notifikasi
-
-@enduml
+    %% Flow: Statistik (Rektor)
+    R -->|Req Statistik| P6
+    D2 -.->|Data Laporan| P6
+    D6 -.->|Log Aktivitas| P6
+    P6 -->|Laporan & Audit Log| R
 ```
 
 ### Penjelasan DFD
 
 #### **External Entities:**
 
-- **Mahasiswa**: User yang membuat laporan kerusakan
+- **Civitas Akademik**: User yang membuat laporan kerusakan
 - **Admin**: Mengelola dan memverifikasi laporan
 - **Rektor**: Melihat statistik dan audit log
 
 #### **Processes:**
 
 1. **Autentikasi (1.0)**: Login, registrasi, forgot password
-2. **Kelola Laporan (2.0)**: CRUD laporan oleh mahasiswa
+2. **Kelola Laporan (2.0)**: CRUD laporan oleh Civitas Akademik
 3. **Verifikasi Laporan (3.0)**: Admin memverifikasi dan mengubah status
 4. **Kelola Notifikasi (4.0)**: Sistem notifikasi untuk user dan admin
-5. **Kelola Master Data (5.0)**: Manajemen gedung dan ruangan
+5. **Kelola Master Data (5.0)**: Manajemen gedung, ruangan, dan data users
 6. **Generate Statistik (6.0)**: Dashboard KPI dan laporan untuk rektor
 
 #### **Data Stores:**
 
-- **D1: users** - Data pengguna (mahasiswa, admin, rektor)
+- **D1: users** - Data pengguna (Civitas Akademik, Admin, Rektor)
 - **D2: laporan** - Data laporan kerusakan
 - **D3: notifikasi** - Data notifikasi
 - **D4: gedung** - Master data gedung
