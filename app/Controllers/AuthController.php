@@ -28,7 +28,14 @@ class AuthController extends Controller
             if ($role === 'rektor') {
                 return redirect()->to('rektor/dashboard');
             }
-            return redirect()->to('dashboard');
+            // Pastikan role === 'user' sebelum ke dashboard user
+            if ($role === 'user') {
+                return redirect()->to('dashboard');
+            }
+
+            // Jika role tidak dikenali, logout paksa untuk mencegah redirect loop
+            $this->session->destroy();
+            return redirect()->to('login');
         }
         // Ganti 'auth/login' menjadi nama view Anda, misalnya 'login_view'
         return view('auth/login_view');
@@ -80,8 +87,15 @@ class AuthController extends Controller
             $redirectUrl = base_url('/dashboardadmin');
         } elseif ($user['role'] === 'rektor') {
             $redirectUrl = base_url('/rektor/dashboard');
-        } else {
+        } elseif ($user['role'] === 'user') {
             $redirectUrl = base_url('/dashboard');
+        } else {
+            // Role tidak dikenali, jangan login
+            $this->session->destroy();
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Login gagal: Role akun tidak valid (' . $user['role'] . '). Hubungi admin.'
+            ]);
         }
 
         return $this->response->setJSON([
