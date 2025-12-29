@@ -358,6 +358,21 @@
 <div class="table-container">
     <h2 class="text-center mb-3">Kelola Gedung</h2>
 
+    <!-- Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success"
+            style="padding: 12px 16px; border-radius: 8px; margin-bottom: 1rem; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
+            <i class="fa-solid fa-check-circle me-2"></i><?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger"
+            style="padding: 12px 16px; border-radius: 8px; margin-bottom: 1rem; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;">
+            <i class="fa-solid fa-exclamation-circle me-2"></i><?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
+
     <!-- Filter + Tambah -->
     <div style="display:flex; justify-content:space-between; align-items:center;">
 

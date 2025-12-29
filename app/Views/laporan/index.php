@@ -21,11 +21,11 @@
             </div>
 
             <!-- ERROR -->
-            <?php if (session()->getFlashdata('errors')) : ?>
+            <?php if (session()->getFlashdata('errors')): ?>
                 <div class="alert alert-danger small shadow-sm">
                     <strong>Terjadi kesalahan:</strong>
                     <ul class="mb-0 ps-3 mt-2">
-                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                        <?php foreach (session()->getFlashdata('errors') as $error): ?>
                             <li><?= esc($error) ?></li>
                         <?php endforeach ?>
                     </ul>
@@ -54,32 +54,22 @@
 
                             <label class="form-label">Lokasi Umum <span>*</span></label>
                             <input type="text" name="lokasi_kerusakan" class="form-control"
-                                value="<?= old('lokasi_kerusakan') ?>" required>
+                                value="<?= old('lokasi_kerusakan') ?>" placeholder="Contoh: Lantai 2, Koridor Timur"
+                                required>
 
-                            <label class="form-label mt-3">Lokasi Spesifik <span>*</span></label>
+                            <label class="form-label mt-3">Lokasi Spesifik (Opsional)</label>
                             <input type="text" name="lokasi_spesifik" class="form-control"
-                                value="<?= old('lokasi_spesifik') ?>" required>
+                                value="<?= old('lokasi_spesifik') ?>"
+                                placeholder="Contoh: Dekat pintu masuk, sebelah toilet">
 
                             <div class="row g-3 mt-1">
-                                <div class="col-md-6">
+                                <div class="col-12">
                                     <label class="form-label">Gedung <span>*</span></label>
                                     <select name="gedung_id" class="form-select" required>
                                         <option value="">Pilih Gedung</option>
-                                        <?php foreach ($gedung as $g) : ?>
+                                        <?php foreach ($gedung as $g): ?>
                                             <option value="<?= $g['id'] ?>" <?= old('gedung_id') == $g['id'] ? 'selected' : '' ?>>
-                                                <?= esc($g['nama']) ?>
-                                            </option>
-                                        <?php endforeach ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">Ruangan <span>*</span></label>
-                                    <select name="ruangan_id" class="form-select" required>
-                                        <option value="">Pilih Ruangan</option>
-                                        <?php foreach ($ruangan as $r) : ?>
-                                            <option value="<?= $r['id'] ?>" <?= old('ruangan_id') == $r['id'] ? 'selected' : '' ?>>
-                                                <?= esc($r['nama_ruangan']) ?>
+                                                <?= esc($g['kode']) ?> - <?= esc($g['nama']) ?>
                                             </option>
                                         <?php endforeach ?>
                                     </select>
@@ -92,7 +82,8 @@
                             <h6 class="form-title">Detail Kerusakan</h6>
 
                             <label class="form-label">Deskripsi <span>*</span></label>
-                            <textarea name="deskripsi" rows="4" class="form-control" required><?= old('deskripsi') ?></textarea>
+                            <textarea name="deskripsi" rows="4" class="form-control"
+                                required><?= old('deskripsi') ?></textarea>
 
                             <div class="row g-3 mt-2">
                                 <div class="col-md-6">
@@ -105,9 +96,12 @@
                                     <label class="form-label">Prioritas <span>*</span></label>
                                     <select name="prioritas" class="form-select" required>
                                         <option value="">Pilih Prioritas</option>
-                                        <option value="low" <?= old('prioritas') == 'low' ? 'selected' : '' ?>>🟢 Low</option>
-                                        <option value="medium" <?= old('prioritas') == 'medium' ? 'selected' : '' ?>>🟡 Medium</option>
-                                        <option value="high" <?= old('prioritas') == 'high' ? 'selected' : '' ?>>🔴 High</option>
+                                        <option value="low" <?= old('prioritas') == 'low' ? 'selected' : '' ?>>🟢 Low
+                                        </option>
+                                        <option value="medium" <?= old('prioritas') == 'medium' ? 'selected' : '' ?>>🟡
+                                            Medium</option>
+                                        <option value="high" <?= old('prioritas') == 'high' ? 'selected' : '' ?>>🔴 High
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -216,7 +210,7 @@
 
     .form-control:focus,
     .form-select:focus {
-        box-shadow: 0 0 0 .15rem rgba(13,110,253,.2);
+        box-shadow: 0 0 0 .15rem rgba(13, 110, 253, .2);
     }
 </style>
 

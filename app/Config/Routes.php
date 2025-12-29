@@ -90,26 +90,23 @@ $routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter
 $routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], function ($routes) {
 
     // ===========================
-    // AKUN
+    // AKUN USER (Admin & Superadmin)
     // ===========================
     $routes->get('akun/admin', 'AkunController::indexAdmin');
     $routes->get('akun/user', 'AkunController::indexUser');
     $routes->post('akun/create', 'AkunController::store');
     $routes->post('akun/update', 'AkunController::update');
     $routes->get('akun/delete/(:num)', 'AkunController::delete/$1');
+});
 
-    // ===========================
-    // GEDUNG
-    // ===========================
+// ===========================
+// GEDUNG (Superadmin Only)
+// ===========================
+$routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'superadmin'], function ($routes) {
     $routes->get('gedung', 'AdminGedungController::index');
     $routes->post('gedung/create', 'AdminGedungController::store');
     $routes->post('gedung/update', 'AdminGedungController::update');
     $routes->get('gedung/delete/(:num)', 'AdminGedungController::delete/$1');
-});
-
-// Group Khusus Superadmin (Tambahan)
-$routes->group('superadmin', ['namespace' => 'App\Controllers', 'filter' => 'superadmin'], function ($routes) {
-    // Tambahkan rute khusus superadmin di sini jika ada
 });
 
 // =========================================================================

@@ -55,8 +55,8 @@
                         <td style="font-weight: 500;"><?= esc($l['nama_pelapor']) ?></td>
                         <td>
                             <?= esc($l['nama_gedung']) ?> <br>
-                            <small style="color: #94a3b8;"><?= esc($l['nama_ruangan']) ?> -
-                                <?= esc($l['lokasi_spesifik']) ?></small>
+                            <small style="color: #94a3b8;"><?= esc($l['lokasi_kerusakan']) ?>
+                                <?= !empty($l['lokasi_spesifik']) ? ' - ' . esc($l['lokasi_spesifik']) : '' ?></small>
                         </td>
                         <td><?= esc(substr($l['deskripsi'], 0, 50)) ?>...</td>
                         <td>

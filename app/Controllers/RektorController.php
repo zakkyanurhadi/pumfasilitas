@@ -46,9 +46,8 @@ class RektorController extends BaseController
         $currentPage = $this->request->getGet('page') ?? 1;
 
         $builder = $this->laporanModel->builder();
-        $builder->select('laporan.*, gedung.nama as nama_gedung, ruangan.nama_ruangan');
+        $builder->select('laporan.*, gedung.nama as nama_gedung');
         $builder->join('gedung', 'gedung.id = laporan.gedung_id', 'left');
-        $builder->join('ruangan', 'ruangan.id = laporan.ruangan_id', 'left');
 
         // Filter
         if ($keyword) {

@@ -109,10 +109,10 @@
 
         <?php
         $statusClass = match (strtolower($laporan['status'])) {
-            'pending'   => 'status-pending',
-            'diproses'  => 'status-diproses',
-            'selesai'   => 'status-selesai',
-            default     => 'status-pending',
+            'pending' => 'status-pending',
+            'diproses' => 'status-diproses',
+            'selesai' => 'status-selesai',
+            default => 'status-pending',
         };
         ?>
         <span class="status-badge <?= $statusClass ?>">
@@ -130,11 +130,6 @@
         <div class="meta-item">
             <div class="meta-label">Gedung</div>
             <div class="meta-value"><?= esc($laporan['nama_gedung'] ?? '-') ?></div>
-        </div>
-
-        <div class="meta-item">
-            <div class="meta-label">Ruangan</div>
-            <div class="meta-value"><?= esc($laporan['nama_ruangan'] ?? '-') ?></div>
         </div>
 
         <div class="meta-item">

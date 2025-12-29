@@ -5,27 +5,23 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\GedungModel;
-use App\Models\RuanganModel;
 
 class LaporController extends BaseController
 {
     protected $laporanModel;
     protected $gedungModel;
-    protected $ruanganModel;
 
     public function __construct()
     {
         $this->laporanModel = new LaporanModel();
         $this->gedungModel = new GedungModel();
-        $this->ruanganModel = new RuanganModel();
     }
 
     public function index()
     {
         $data = [
             'title' => 'Buat Laporan Kerusakan',
-            'gedung' => $this->gedungModel->findAll(),
-            'ruangan' => $this->ruanganModel->findAll()
+            'gedung' => $this->gedungModel->findAll()
         ];
 
         return view('laporan/index', $data);
@@ -41,9 +37,8 @@ class LaporController extends BaseController
         $rules = [
             'nama_pelapor' => 'required|min_length[3]',
             'lokasi_kerusakan' => 'required',
-            'lokasi_spesifik' => 'required',
+            'lokasi_spesifik' => 'permit_empty',
             'gedung_id' => 'required|is_not_unique[gedung.id]',
-            'ruangan_id' => 'required|is_not_unique[ruangan.id]',
             'kategori' => 'required',
             'prioritas' => 'required|in_list[low,medium,high]',
             'deskripsi' => 'required|min_length[5]',
@@ -94,7 +89,6 @@ class LaporController extends BaseController
             'status' => 'pending',
             'user_id' => $userId,
             'gedung_id' => $this->request->getPost('gedung_id'),
-            'ruangan_id' => $this->request->getPost('ruangan_id'),
             'prioritas' => $this->request->getPost('prioritas'),
             'kategori' => $this->request->getPost('kategori'),
         ];
@@ -220,8 +214,7 @@ class LaporController extends BaseController
         $data = [
             'title' => 'Edit Laporan',
             'laporan' => $laporan,
-            'gedung' => $this->gedungModel->findAll(),
-            'ruangan' => $this->ruanganModel->findAll()
+            'gedung' => $this->gedungModel->findAll()
         ];
 
         return view('laporan/edit', $data);
@@ -254,9 +247,8 @@ class LaporController extends BaseController
         $rules = [
             'nama_pelapor' => 'required|min_length[3]',
             'lokasi_kerusakan' => 'required',
-            'lokasi_spesifik' => 'required',
+            'lokasi_spesifik' => 'permit_empty',
             'gedung_id' => 'required|is_not_unique[gedung.id]',
-            'ruangan_id' => 'required|is_not_unique[ruangan.id]',
             'kategori' => 'required',
             'prioritas' => 'required|in_list[low,medium,high]',
             'deskripsi' => 'required|min_length[5]',
@@ -294,7 +286,6 @@ class LaporController extends BaseController
             'deskripsi' => $this->request->getPost('deskripsi'),
             'foto' => $fotoName,
             'gedung_id' => $this->request->getPost('gedung_id'),
-            'ruangan_id' => $this->request->getPost('ruangan_id'),
             'prioritas' => $this->request->getPost('prioritas'),
             'kategori' => $this->request->getPost('kategori'),
         ];
@@ -370,15 +361,13 @@ class LaporController extends BaseController
             return redirect()->to('/login');
         }
 
-        // 📌 Ambil laporan + join gedung & ruangan
+        // 📌 Ambil laporan + join gedung
         $laporan = $db->table('laporan l')
             ->select('
             l.*,
-            g.nama AS nama_gedung,
-            r.nama_ruangan
+            g.nama AS nama_gedung
         ')
             ->join('gedung g', 'g.id = l.gedung_id', 'left')
-            ->join('ruangan r', 'r.id = l.ruangan_id', 'left')
             ->where('l.id', $id)
             ->get()
             ->getRowArray();

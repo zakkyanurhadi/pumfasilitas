@@ -181,8 +181,8 @@
         <dt>Gedung</dt>
         <dd><?= esc($detail['nama_gedung'] ?? 'N/A') ?></dd>
 
-        <dt>Ruangan</dt>
-        <dd><?= esc($detail['nama_ruangan'] ?? 'N/A') ?></dd>
+        <dt>Lokasi Kerusakan</dt>
+        <dd><?= esc($detail['lokasi_kerusakan'] ?? 'N/A') ?></dd>
 
         <dt>Lokasi Spesifik</dt>
         <dd><?= esc($detail['lokasi_spesifik'] ?? 'N/A') ?></dd>

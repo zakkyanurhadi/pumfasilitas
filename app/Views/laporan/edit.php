@@ -17,12 +17,12 @@
             </div>
 
             <!-- Flash Messages -->
-            <?php if (session()->getFlashdata('errors')) : ?>
+            <?php if (session()->getFlashdata('errors')): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-x-circle-fill me-2"></i>
                     <strong>Terjadi Kesalahan!</strong>
                     <ul class="mb-0 mt-2">
-                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                        <?php foreach (session()->getFlashdata('errors') as $error): ?>
                             <li><?= esc($error) ?></li>
                         <?php endforeach ?>
                     </ul>
@@ -33,7 +33,8 @@
             <!-- Form Card -->
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
-                    <form action="<?= site_url('laporan/update/' . $laporan['id']) ?>" method="post" enctype="multipart/form-data">
+                    <form action="<?= site_url('laporan/update/' . $laporan['id']) ?>" method="post"
+                        enctype="multipart/form-data">
                         <?= csrf_field() ?>
 
                         <!-- Nama Pelapor -->
@@ -62,11 +63,11 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-pin-map-fill text-primary me-2"></i>
-                                Lokasi Spesifik <span class="text-danger">*</span>
+                                Lokasi Spesifik (Opsional)
                             </label>
                             <input type="text" name="lokasi_spesifik" class="form-control"
                                 value="<?= old('lokasi_spesifik', $laporan['lokasi_spesifik']) ?>"
-                                placeholder="Contoh: Pojok kiri dekat jendela" required>
+                                placeholder="Contoh: Pojok kiri dekat jendela">
                         </div>
 
                         <!-- Deskripsi -->
@@ -89,8 +90,8 @@
 
                             <?php if ($laporan['foto']): ?>
                                 <div class="mb-2">
-                                    <img src="<?= base_url('uploads/laporan/' . $laporan['foto']) ?>"
-                                        class="img-thumbnail" style="max-height: 200px;">
+                                    <img src="<?= base_url('uploads/laporan/' . $laporan['foto']) ?>" class="img-thumbnail"
+                                        style="max-height: 200px;">
                                     <p class="small text-muted mb-0">Foto saat ini</p>
                                 </div>
                             <?php endif; ?>
@@ -114,27 +115,9 @@
                             </label>
                             <select name="gedung_id" class="form-select" required>
                                 <option value="">-- Pilih Gedung --</option>
-                                <?php foreach ($gedung as $g) : ?>
-                                    <option value="<?= $g['id'] ?>"
-                                        <?= old('gedung_id', $laporan['gedung_id']) == $g['id'] ? 'selected' : '' ?>>
-                                        <?= esc($g['nama']) ?>
-                                    </option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-
-                        <!-- Ruangan -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="bi bi-door-closed text-primary me-2"></i>
-                                Ruangan <span class="text-danger">*</span>
-                            </label>
-                            <select name="ruangan_id" class="form-select" required>
-                                <option value="">-- Pilih Ruangan --</option>
-                                <?php foreach ($ruangan as $r) : ?>
-                                    <option value="<?= $r['id'] ?>"
-                                        <?= old('ruangan_id', $laporan['ruangan_id']) == $r['id'] ? 'selected' : '' ?>>
-                                        <?= esc($r['nama_ruangan']) ?>
+                                <?php foreach ($gedung as $g): ?>
+                                    <option value="<?= $g['id'] ?>" <?= old('gedung_id', $laporan['gedung_id']) == $g['id'] ? 'selected' : '' ?>>
+                                        <?= esc($g['kode']) ?> - <?= esc($g['nama']) ?>
                                     </option>
                                 <?php endforeach ?>
                             </select>
@@ -188,7 +171,7 @@
 </div>
 
 <script>
-    document.getElementById('fotoInput').addEventListener('change', function(e) {
+    document.getElementById('fotoInput').addEventListener('change', function (e) {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 2 * 1024 * 1024) {
@@ -198,7 +181,7 @@
             }
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 document.getElementById('preview').src = e.target.result;
                 document.getElementById('imagePreview').style.display = 'block';
             }

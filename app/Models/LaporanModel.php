@@ -19,7 +19,6 @@ class LaporanModel extends Model
         'status',
         'user_id',
         'gedung_id',
-        'ruangan_id',
         'prioritas',
         'kategori',
         'admin_verifikator',
