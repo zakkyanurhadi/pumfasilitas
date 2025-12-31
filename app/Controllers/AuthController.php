@@ -137,8 +137,8 @@ class AuthController extends Controller
             'username' => [
                 'rules' => 'required|is_unique[users.npm]', // Cek unik di tabel users kolom npm
                 'errors' => [
-                    'required' => 'NPM wajib diisi.',
-                    'is_unique' => 'NPM ini sudah terdaftar.'
+                    'required' => 'NPM / Username wajib diisi.',
+                    'is_unique' => 'NPM / Username ini sudah terdaftar.'
                 ]
             ],
             'email' => [

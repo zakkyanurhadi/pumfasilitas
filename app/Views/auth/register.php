@@ -300,7 +300,8 @@
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label">Username / NPM</label>
-            <input type="text" class="form-control" name="username" placeholder="Contoh: 20753028, budi" required>
+            <input type="text" class="form-control" name="username" placeholder="Contoh: 20753028, budi" required
+              maxlength="20" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')">
             <span class="error-message" id="error-username"></span>
           </div>
         </div>

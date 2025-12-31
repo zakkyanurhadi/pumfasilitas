@@ -345,7 +345,9 @@
                     <div class="mb-3">
                         <label for="login_identifier" class="form-label">Username atau Email</label>
                         <input type="text" class="form-control" id="login_identifier" name="login_identifier"
-                            placeholder="Contoh: 20753028" value="<?= old('login_identifier') ?>" required autofocus />
+                            placeholder="Contoh: 20753028, contoh@gmail.com, budi"
+                            value="<?= old('login_identifier') ?>" required autofocus
+                            oninput="if(!this.value.includes('@')){ this.value = this.value.replace(/[^a-zA-Z0-9]/g, ''); if(this.value.length>20) this.value=this.value.slice(0,20); } else { this.value = this.value.replace(/[^a-zA-Z0-9@._-]/g, ''); }" />
                         <span class="error-message" id="error-identifier"></span>
                     </div>
 
