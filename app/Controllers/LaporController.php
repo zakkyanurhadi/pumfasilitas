@@ -5,16 +5,22 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\GedungModel;
+use App\Models\NotifikasiModel;
+use App\Models\UserModel;
 
 class LaporController extends BaseController
 {
     protected $laporanModel;
     protected $gedungModel;
+    protected $notifikasiModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->laporanModel = new LaporanModel();
         $this->gedungModel = new GedungModel();
+        $this->notifikasiModel = new NotifikasiModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -95,6 +101,22 @@ class LaporController extends BaseController
 
         try {
             if ($this->laporanModel->insert($data)) {
+
+                // === KIRIM NOTIFIKASI KE ADMIN/STAFF ===
+                $newReportId = $this->laporanModel->getInsertID();
+                $admins = $this->userModel->whereIn('role', ['admin', 'staff', 'superadmin'])->findAll();
+
+                foreach ($admins as $admin) {
+                    // Hindari mengirim notifikasi ke diri sendiri jika pelapor juga admin
+                    if ($admin['id'] == $userId) {
+                        continue;
+                    }
+
+                    $pesan = "Laporan baru dari " . $data['nama_pelapor'] . ": " . $data['kategori'] . " di " . $data['lokasi_kerusakan'];
+                    $this->notifikasiModel->createNotifikasi($admin['id'], $newReportId, $pesan);
+                }
+                // ========================================
+
                 return redirect()->to('/laporan/saya')->with('success', 'Laporan berhasil dikirim');
             } else {
                 $errors = $this->laporanModel->errors();
@@ -335,6 +357,9 @@ class LaporController extends BaseController
         if ($laporan['foto'] && file_exists(FCPATH . 'uploads/laporan/' . $laporan['foto'])) {
             unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
         }
+
+        // Hapus notifikasi terkait terlebih dahulu (Anti Foreign Key Error)
+        $this->notifikasiModel->where('laporan_id', $id)->delete();
 
         // Hapus laporan
         if ($this->laporanModel->delete($id)) {
