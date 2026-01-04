@@ -2,7 +2,64 @@
 
 <?= $this->section('content') ?>
 
+<style>
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-diproses {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-selesai {
+        background: #dcfce7;
+        color: #14532d;
+    }
+
+    .status-ditolak {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .priority-badge {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 8px;
+    }
+
+    .priority-high {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .priority-medium {
+        background: #ffedd5;
+        color: #f97316;
+    }
+
+    .priority-low {
+        background: #dcfce7;
+        color: #10b981;
+    }
+</style>
+
 <div class="dashboard-card">
+    <h3 class="card-header-title" style="margin-bottom: 24px;">
+        Daftar Laporan Pengaduan
+    </h3>
 
     <!-- FILTER -->
     <form method="get" action="" class="filter-container">
@@ -32,7 +89,9 @@
             <option value="low" <?= $filters['prioritas'] == 'low' ? 'selected' : '' ?>>Low</option>
         </select>
 
-        <button type="submit" class="filter-btn">Filter</button>
+        <button type="submit" class="filter-btn">
+            <i class="fas fa-search" style="margin-right: 6px;"></i>Filter
+        </button>
     </form>
 
     <!-- TABLE -->
@@ -49,31 +108,39 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($laporan as $l): ?>
+                <?php if (empty($laporan)): ?>
                     <tr>
-                        <td style="color: #64748b;"><?= date('d M Y', strtotime($l['created_at'])) ?></td>
-                        <td style="font-weight: 500;"><?= esc($l['nama_pelapor']) ?></td>
-                        <td>
-                            <?= esc($l['nama_gedung']) ?> <br>
-                            <small style="color: #94a3b8;"><?= esc($l['lokasi_kerusakan']) ?>
-                                <?= !empty($l['lokasi_spesifik']) ? ' - ' . esc($l['lokasi_spesifik']) : '' ?></small>
-                        </td>
-                        <td><?= esc(substr($l['deskripsi'], 0, 50)) ?>...</td>
-                        <td>
-                            <?php
-                            $pColor = match ($l['prioritas']) { 'high' => '#ef4444', 'medium' => '#f97316', 'low' => '#10b981', default => '#64748b'};
-                            ?>
-                            <span
-                                style="color: <?= $pColor ?>; font-weight: 700; text-transform: uppercase; font-size: 12px;"><?= esc($l['prioritas']) ?></span>
-                        </td>
-                        <td>
-                            <span
-                                style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #e2e8f0; color: #475569;">
-                                <?= strtoupper($l['status']) ?>
-                            </span>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                            Tidak ada data laporan
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($laporan as $l): ?>
+                        <tr>
+                            <td style="color: #64748b;"><?= date('d M Y', strtotime($l['created_at'])) ?></td>
+                            <td style="font-weight: 500;"><?= esc($l['nama_pelapor']) ?></td>
+                            <td>
+                                <strong><?= esc($l['nama_gedung']) ?></strong><br>
+                                <small style="color: #94a3b8;"><?= esc($l['lokasi_kerusakan']) ?>
+                                    <?= !empty($l['lokasi_spesifik']) ? ' - ' . esc($l['lokasi_spesifik']) : '' ?></small>
+                            </td>
+                            <td style="max-width: 200px;">
+                                <?= esc(strlen($l['deskripsi']) > 50 ? substr($l['deskripsi'], 0, 50) . '...' : $l['deskripsi']) ?>
+                            </td>
+                            <td>
+                                <span class="priority-badge priority-<?= esc($l['prioritas']) ?>">
+                                    <?= strtoupper($l['prioritas']) ?>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-<?= esc($l['status']) ?>">
+                                    <?= strtoupper($l['status']) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

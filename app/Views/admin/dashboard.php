@@ -264,6 +264,43 @@
     color: #14532d;
   }
 
+  /* ================= FILTER TAHUN ================= */
+  .filter-year {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .filter-year label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .filter-year select {
+    padding: 8px 16px;
+    border: 2px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-year select:hover {
+    border-color: #6366f1;
+  }
+
+  .filter-year select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
   .priority.high {
     color: var(--red);
     font-weight: 900;
@@ -727,7 +764,16 @@
   <!-- ================= GRAFIK ================= -->
   <div class="grid">
     <div class="card">
-      <h3>Tren Laporan per Bulan</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin-bottom: 0;">Tren Laporan per Bulan</h3>
+        <div class="filter-year">
+          <label for="yearFilter">Tahun:</label>
+          <select id="yearFilter" onchange="updateTrendChart()">
+            <option value="<?= $currentYear - 1 ?>"><?= $currentYear - 1 ?></option>
+            <option value="<?= $currentYear ?>" selected><?= $currentYear ?></option>
+          </select>
+        </div>
+      </div>
       <div class="chart-container">
         <canvas id="trend"></canvas>
       </div>
@@ -810,19 +856,89 @@
   </div>
 </div>
 
+<?php
+// Helper function untuk mengkonversi data trend ke format chart
+function formatTrendData($data)
+{
+  $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  $result = array_fill(0, 12, 0); // Initialize with 0 for all 12 months
+
+  foreach ($data as $item) {
+    $monthIndex = (int) $item['bulan'] - 1;
+    if ($monthIndex >= 0 && $monthIndex < 12) {
+      $result[$monthIndex] = (int) $item['total'];
+    }
+  }
+
+  return $result;
+}
+?>
+
 <script>
-  new Chart(document.getElementById('trend'), {
+  // Nama bulan dalam Bahasa Indonesia
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  // Data dari PHP untuk tahun ini dan tahun sebelumnya
+  const trendData = {
+    <?= $currentYear - 1 ?>: {
+      labels: monthLabels,
+      data: [<?= implode(',', formatTrendData($trendBulanan[$currentYear - 1])) ?>]
+    },
+    <?= $currentYear ?>: {
+      labels: monthLabels,
+      data: [<?= implode(',', formatTrendData($trendBulanan[$currentYear])) ?>]
+    }
+  };
+
+  const currentYear = <?= $currentYear ?>;
+
+  let trendChart = new Chart(document.getElementById('trend'), {
     type: 'line',
     data: {
-      labels: [<?= implode(',', array_map(fn($t) => "'" . $t['bulan'] . "'", $trendBulanan)) ?>],
+      labels: trendData[currentYear].labels,
       datasets: [{
-        data: [<?= implode(',', array_column($trendBulanan, 'total')) ?>],
+        label: 'Jumlah Laporan',
+        data: trendData[currentYear].data,
         borderColor: '#1d4ed8',
-        tension: .4
+        backgroundColor: 'rgba(29, 78, 216, 0.1)',
+        tension: .4,
+        fill: true,
+        pointRadius: 4,
+        pointHoverRadius: 6
       }]
     },
-    options: { plugins: { legend: { display: false } } }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          padding: 12,
+          titleFont: { size: 13, weight: '600' },
+          bodyFont: { size: 12 },
+          cornerRadius: 8
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          }
+        }
+      }
+    }
   });
+
+  function updateTrendChart() {
+    const year = document.getElementById('yearFilter').value;
+    const data = trendData[year];
+
+    trendChart.data.labels = data.labels;
+    trendChart.data.datasets[0].data = data.data;
+    trendChart.update();
+  }
 
   new Chart(document.getElementById('prioritas'), {
     type: 'doughnut',

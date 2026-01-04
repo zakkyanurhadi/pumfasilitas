@@ -137,9 +137,14 @@ class LaporanModel extends Model
     // ... method lainnya tetap sama
     /* ================= GRAFIK ================= */
 
-    public function getTrendBulanan()
+    public function getTrendBulanan($year = null)
     {
+        if ($year === null) {
+            $year = date('Y');
+        }
+
         return $this->select("MONTH(created_at) bulan, COUNT(*) total")
+            ->where('YEAR(created_at)', $year)
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->findAll();

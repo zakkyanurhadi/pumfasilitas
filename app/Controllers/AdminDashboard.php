@@ -29,7 +29,14 @@ class AdminDashboard extends BaseController
             $data['bulanIni'] = $this->laporanModel->getLaporanBulanIni();
 
             // ================= GRAFIK =================
-            $data['trendBulanan'] = $this->laporanModel->getTrendBulanan();
+            // Ambil data trend untuk tahun ini dan tahun sebelumnya
+            $currentYear = (int) date('Y');
+            $data['trendBulanan'] = [
+                $currentYear => $this->laporanModel->getTrendBulanan($currentYear),
+                $currentYear - 1 => $this->laporanModel->getTrendBulanan($currentYear - 1),
+            ];
+            $data['currentYear'] = $currentYear;
+
             $data['prioritas'] = $this->laporanModel->getDistribusiPrioritas();
             $data['gedung'] = $this->laporanModel->getLaporanPerGedung();
 

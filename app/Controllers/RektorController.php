@@ -24,11 +24,17 @@ class RektorController extends BaseController
         $cacheKey = 'rektor_dashboard_data';
 
         if (!$data = $cache->get($cacheKey)) {
+            $currentYear = (int) date('Y');
+
             $data = [
                 'title' => 'Dashboard Rektor',
                 'stats' => $this->laporanModel->getStatistikHomepage(),
                 'chartPrioritas' => $this->laporanModel->getDistribusiPrioritas(),
-                'chartBulanan' => $this->laporanModel->getTrendBulanan(),
+                'chartBulanan' => [
+                    $currentYear => $this->laporanModel->getTrendBulanan($currentYear),
+                    $currentYear - 1 => $this->laporanModel->getTrendBulanan($currentYear - 1),
+                ],
+                'currentYear' => $currentYear,
             ];
             $cache->save($cacheKey, $data, 600);
         }
@@ -91,10 +97,16 @@ class RektorController extends BaseController
     {
         $bulanIni = $this->laporanModel->getLaporanBulanIni();
         $total = $this->laporanModel->getTotalLaporan();
+        $currentYear = (int) date('Y');
 
         $chartGedung = $this->laporanModel->getLaporanPerGedung();
         $chartKategori = $this->laporanModel->select('kategori, count(*) as total')->groupBy('kategori')->findAll();
-        $trendTahunan = $this->laporanModel->getTrendBulanan(); // Reuse
+
+        // Ambil data trend untuk tahun ini dan tahun sebelumnya
+        $trendTahunan = [
+            $currentYear => $this->laporanModel->getTrendBulanan($currentYear),
+            $currentYear - 1 => $this->laporanModel->getTrendBulanan($currentYear - 1),
+        ];
 
         return view('rektor/statistik', [
             'title' => 'Statistik Pengaduan',
@@ -102,7 +114,8 @@ class RektorController extends BaseController
             'bulanIni' => $bulanIni,
             'chartGedung' => $chartGedung,
             'chartKategori' => $chartKategori,
-            'trendTahunan' => $trendTahunan
+            'trendTahunan' => $trendTahunan,
+            'currentYear' => $currentYear,
         ]);
     }
 

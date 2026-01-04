@@ -43,7 +43,7 @@
     <div class="footer-bottom py-3">
         <div class="container text-center">
             <small class="text-white-50">
-                &copy; 2024 Politeknik Negeri Lampung. All rights reserved.
+                &copy; 2025 Politeknik Negeri Lampung. All rights reserved.
             </small>
         </div>
     </div>
