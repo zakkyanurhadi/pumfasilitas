@@ -60,7 +60,7 @@ class ProfileAdminController extends BaseController
         // Jika ada file baru yang diupload dan valid
         if ($avatarFile && $avatarFile->isValid() && !$avatarFile->hasMoved()) {
             // Hapus avatar lama jika bukan default.jpg
-            if ($namaAvatar && !in_array($namaAvatar, ['default.jpg', 'default.png'])) {
+            if ($namaAvatar && !in_array($namaAvatar, ['default.jpg', 'default.png', 'default.webp'])) {
                 $oldAvatarPath = FCPATH . 'uploads/avatars/' . $namaAvatar;
                 if (file_exists($oldAvatarPath)) {
                     unlink($oldAvatarPath);

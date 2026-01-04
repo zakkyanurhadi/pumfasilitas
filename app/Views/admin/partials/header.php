@@ -105,7 +105,7 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
 
         <?php
         $imgSession = session('img');
-        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.png';
+        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.webp';
         $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
         ?>
         <div class="user-dropdown-wrapper" style="position: relative;">

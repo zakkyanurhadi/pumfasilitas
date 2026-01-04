@@ -39,7 +39,7 @@
 
                         $imgSession = session('img');
 
-                        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.png';
+                        $namaFileGambar = ($imgSession && !empty($imgSession)) ? $imgSession : 'default.webp';
 
                         $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
                         ?>

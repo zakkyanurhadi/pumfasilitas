@@ -52,22 +52,19 @@
                         <!-- Avatar -->
                         <div class="profile-avatar text-center mb-4">
                             <img id="avatarPreview"
-                                src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>"
+                                src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.webp')) ?>"
                                 alt="Avatar">
 
                             <div class="mt-3">
                                 <label for="avatar" class="btn btn-outline-primary btn-sm">
                                     Ubah Foto Profil
                                 </label>
-                                <input type="file"
-                                    id="avatar"
-                                    name="avatar"
-                                    class="d-none"
-                                    accept="image/png, image/jpeg, image/gif">
+                                <input type="file" id="avatar" name="avatar" class="d-none"
+                                    accept="image/png, image/jpeg, image/gif, image/webp">
                             </div>
 
                             <small class="text-muted d-block mt-2">
-                                JPG / PNG / GIF — Maks 2MB
+                                JPG / PNG / GIF / WEBP — Maks 2MB
                             </small>
                         </div>
 
@@ -127,13 +124,13 @@
     const avatarInput = document.getElementById('avatar');
     const avatarPreview = document.getElementById('avatarPreview');
 
-    avatarInput.addEventListener('change', function() {
+    avatarInput.addEventListener('change', function () {
         const file = this.files[0];
 
         if (!file) return;
 
         // Validasi tipe file
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             alert('Format gambar tidak didukung!');
             this.value = '';
@@ -149,7 +146,7 @@
 
         // Preview image
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             avatarPreview.src = e.target.result;
         };
         reader.readAsDataURL(file);

@@ -85,7 +85,7 @@ $uri = service('uri')->getSegment(2) ?: 'dashboard';
 
             $namaFileGambar = ($imgSession && !empty($imgSession))
                 ? $imgSession
-                : 'default.png';
+                : 'default.webp';
 
             $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
             ?>

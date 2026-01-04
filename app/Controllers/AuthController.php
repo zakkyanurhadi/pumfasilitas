@@ -181,7 +181,7 @@ class AuthController extends Controller
             'email' => $this->request->getPost('email'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role' => 'user',     // Default role otomatis
-            'img' => 'default.jpg',   // Default foto profil
+            'img' => 'default.webp',   // Default foto profil
             'created_at' => date('Y-m-d H:i:s')
         ];
 

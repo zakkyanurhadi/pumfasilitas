@@ -91,12 +91,12 @@
 
             <div class="accordion-body">
                 <div class="profile-avatar">
-                    <img src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.jpg')) ?>" alt="Avatar">
+                    <img src="<?= base_url('uploads/avatars/' . esc($user['img'] ?? 'default.webp')) ?>" alt="Avatar">
                     <label for="avatar">Ubah Foto Profil</label>
                     <input type="file" id="avatar" name="avatar" class="form-control mt-2"
-                        accept="image/png, image/jpeg, image/gif">
+                        accept="image/png, image/jpeg, image/gif, image/webp">
                     <small class="text-secondary mt-2">
-                        Kosongkan jika tidak ingin mengubah foto (JPG, PNG, GIF | Max 2MB)
+                        Kosongkan jika tidak ingin mengubah foto (JPG, PNG, GIF, WEBP | Max 2MB)
                     </small>
                 </div>
 
