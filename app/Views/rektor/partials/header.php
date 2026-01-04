@@ -8,7 +8,7 @@ $uri = service('uri')->getSegment(2) ?: 'dashboard';
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <div class="sidebar-logo">
-                <img src="/assets/img/logopolinela.png" alt="Logo">
+                <img src="<?= base_url('assets/img/logopolinela.webp') ?>" alt="Logo">
             </div>
             <span class="sidebar-title-up">E-Fasilitas</span>
         </div>
