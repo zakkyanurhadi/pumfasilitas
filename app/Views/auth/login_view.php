@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Masuk - FasilitasKampusKu</title>
+    <title>Masuk - E-Fasilitas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link
@@ -326,7 +326,7 @@
                 </div>
 
                 <div class="left-content">
-                    <h3 class="fw-bold">Sistem Pelaporan</h3>
+                    <h3 class="fw-bold">Sistem Pelaporan E-Fasilitas</h3>
                     <p class="mb-0">Kelola fasilitas kampus Politeknik Negeri Lampung dengan mudah dan cepat.</p>
                 </div>
             </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="<?= base_url('favicon.ico') ?>">
-    <title><?= isset($title) ? esc($title) . ' - ' : '' ?>Sistem Pengaduan Fasilitas - Polinela</title>
+    <title><?= isset($title) ? esc($title) . ' - ' : '' ?>E-Fasilitas - Polinela</title>
 
     <!-- CSS Core -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

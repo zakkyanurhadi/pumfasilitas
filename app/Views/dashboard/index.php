@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 
 
-<title>Sistem Pengaduan Fasilitas - Polinela</title>
+<title>E-Fasilitas - Polinela</title>
 
 <?= $this->section('styles') ?>
 <style>
