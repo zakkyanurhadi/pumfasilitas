@@ -13,9 +13,19 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#alur">Alur Laporan</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= site_url('dashboard') ?>#statistik">Statistik</a>
+                <?php
+                $current_uri = service('uri')->getPath();
+                $is_dashboard = ($current_uri == 'dashboard' || $current_uri == '' || $current_uri == '/');
+                $dash_url = $is_dashboard ? '' : site_url('dashboard');
+                ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $dash_url ?>#beranda">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $dash_url ?>#alur">Alur Laporan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $dash_url ?>#statistik">Statistik</a>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan') ?>">Buat Laporan</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('laporan/saya') ?>">Laporan Saya</a></li>
