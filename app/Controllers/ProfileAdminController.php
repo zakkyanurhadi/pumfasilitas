@@ -15,7 +15,7 @@ class ProfileAdminController extends BaseController
 
         $data = [
             'title' => 'Edit Profil',
-            'user'  => $user,
+            'user' => $user,
         ];
 
         return view('admin/profile/index.php', $data);
@@ -33,11 +33,11 @@ class ProfileAdminController extends BaseController
             // Pastikan email unik, tapi abaikan untuk user saat ini
             'email' => "required|valid_email|is_unique[users.email,id,{$userId}]",
             'avatar' => [
-                'rules' => 'max_size[avatar,2048]|is_image[avatar]|mime_in[avatar,image/jpg,image/jpeg,image/png,image/gif]',
+                'rules' => 'max_size[avatar,2048]|is_image[avatar]|mime_in[avatar,image/jpg,image/jpeg,image/png,image/gif,image/webp]',
                 'errors' => [
                     'max_size' => 'Ukuran file paling besar 2MB.',
                     'is_image' => 'File yang diupload harus berupa gambar.',
-                    'mime_in'  => 'Format file yang diizinkan adalah JPG, GIF, atau PNG.',
+                    'mime_in' => 'Format file yang diizinkan adalah JPG, JPEG, PNG, GIF, atau WEBP.',
                 ],
             ],
         ];
@@ -58,24 +58,23 @@ class ProfileAdminController extends BaseController
         $namaAvatar = $user['img']; // Gunakan nama avatar lama sebagai default
 
         // Jika ada file baru yang diupload dan valid
-        if ($avatarFile->isValid() && !$avatarFile->hasMoved()) {
+        if ($avatarFile && $avatarFile->isValid() && !$avatarFile->hasMoved()) {
             // Hapus avatar lama jika bukan default.jpg
-            if ($namaAvatar && $namaAvatar !== 'default.jpg') {
+            if ($namaAvatar && !in_array($namaAvatar, ['default.jpg', 'default.png'])) {
                 $oldAvatarPath = FCPATH . 'uploads/avatars/' . $namaAvatar;
                 if (file_exists($oldAvatarPath)) {
                     unlink($oldAvatarPath);
                 }
             }
-            // Pindahkan file baru ke folder public/uploads/avatars
-            $namaAvatar = $avatarFile->getRandomName();
-            $avatarFile->move(FCPATH . 'uploads/avatars', $namaAvatar);
+            // Konversi ke WebP dan simpan
+            $namaAvatar = $this->convertImageToWebP($avatarFile, FCPATH . 'uploads/avatars', 70);
         }
 
         // Siapkan data untuk diupdate ke database
         $dataToUpdate = [
-            'nama'  => $this->request->getPost('nama'),
+            'nama' => $this->request->getPost('nama'),
             'email' => $this->request->getPost('email'),
-            'img'   => $namaAvatar,
+            'img' => $namaAvatar,
         ];
 
         // Jika password diisi, hash dan tambahkan ke data update

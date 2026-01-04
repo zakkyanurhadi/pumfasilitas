@@ -11,9 +11,6 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>">
-
-    <!-- SweetAlert2 CSS (LOKAL) -->
-    <link rel="stylesheet" href="<?= base_url('assets/css/sweetalert2.css') ?>">
 </head>
 
 <body>
@@ -32,8 +29,8 @@
     <!-- Panggil Footer -->
     <?= $this->include('admin/partials/footer') ?>
 
-    <!-- SweetAlert2 JS (LOKAL) -->
-    <script src="<?= base_url('assets/js/sweetalert2.all.js') ?>"></script>
+    <!-- SweetAlert2 JS (Bundled & Minified) -->
+    <script src="<?= base_url('assets/js/sweetalert2.all.min.js') ?>"></script>
 
     <!-- Flash Messages dengan SweetAlert2 -->
     <script>

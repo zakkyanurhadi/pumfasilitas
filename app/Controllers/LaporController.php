@@ -48,7 +48,14 @@ class LaporController extends BaseController
             'kategori' => 'required',
             'prioritas' => 'required|in_list[low,medium,high]',
             'deskripsi' => 'required|min_length[5]',
-            'foto' => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+            'foto' => [
+                'rules' => 'permit_empty|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/gif,image/webp]',
+                'errors' => [
+                    'max_size' => 'Ukuran foto maksimal 2MB.',
+                    'is_image' => 'File harus berupa gambar.',
+                    'mime_in' => 'Format yang didukung: JPG, JPEG, PNG, GIF, WEBP.'
+                ]
+            ],
         ];
 
         if (!$this->validate($rules)) {
@@ -60,14 +67,8 @@ class LaporController extends BaseController
         $foto = $this->request->getFile('foto');
 
         if ($foto && $foto->isValid() && !$foto->hasMoved()) {
-            // Buat folder jika belum ada
-            $uploadPath = FCPATH . 'uploads/laporan';
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-
-            $fotoName = $foto->getRandomName();
-            $foto->move($uploadPath, $fotoName);
+            // Konversi ke WebP dan simpan
+            $fotoName = $this->convertImageToWebP($foto, FCPATH . 'uploads/laporan', 75);
         }
 
         // Ambil user_id dari session
@@ -274,7 +275,14 @@ class LaporController extends BaseController
             'kategori' => 'required',
             'prioritas' => 'required|in_list[low,medium,high]',
             'deskripsi' => 'required|min_length[5]',
-            'foto' => 'permit_empty|max_size[foto,2048]|is_image[foto]',
+            'foto' => [
+                'rules' => 'permit_empty|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png,image/gif,image/webp]',
+                'errors' => [
+                    'max_size' => 'Ukuran foto maksimal 2MB.',
+                    'is_image' => 'File harus berupa gambar.',
+                    'mime_in' => 'Format yang didukung: JPG, JPEG, PNG, GIF, WEBP.'
+                ]
+            ],
         ];
 
         if (!$this->validate($rules)) {
@@ -291,13 +299,8 @@ class LaporController extends BaseController
                 unlink(FCPATH . 'uploads/laporan/' . $laporan['foto']);
             }
 
-            // Upload foto baru
-            $uploadPath = FCPATH . 'uploads/laporan';
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-            $fotoName = $foto->getRandomName();
-            $foto->move($uploadPath, $fotoName);
+            // Konversi ke WebP dan simpan
+            $fotoName = $this->convertImageToWebP($foto, FCPATH . 'uploads/laporan', 75);
         }
 
         // Update data
