@@ -110,71 +110,67 @@
 
         function updateAdminNotificationBadge() {
             fetch('<?= site_url('admin/notifikasi/unread-count') ?>')
-                .then(response => response.json())
-                .then(data => {
-                    const badge = document.getElementById('adminNotifBadge');
-                    const currentCount = parseInt(data.count) || 0;
-
-                    if (badge) {
-                        if (currentCount > 0) {
-                            badge.textContent = currentCount > 99 ? '99+' : currentCount;
-                            badge.style.display = 'block';
-                            // Tambahkan animasi pulse saat ada notif
-                            badge.style.animation = 'pulse 1s infinite';
-                        } else {
-                            badge.style.display = 'none';
-                            badge.style.animation = 'none';
-                        }
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-
-                    // Logika Deteksi Notifikasi Baru
-                    if (lastUnreadCount !== -1 && currentCount > lastUnreadCount) {
-                        const selisih = currentCount - lastUnreadCount;
-
-                        // 1. MAINKAN SUARA
-                        notifSound.currentTime = 0;
-                        notifSound.play().catch(error => {
-                            console.log("Audio autoplay restricted");
-                        });
-
-                        // 2. DESKTOP NOTIFICATION
-                        if ("Notification" in window && Notification.permission === "granted") {
-                            const notification = new Notification("Laporan Baru Masuk!", {
-                                body: `Ada ${selisih} laporan baru yang perlu ditinjau.`,
-                                icon: '<?= base_url("favicon.ico") ?>',
-                                tag: 'laporan-baru'
-                            });
-
-                            notification.onclick = function () {
-                                window.focus();
-                                window.location.href = '<?= site_url("admin/notifikasi") ?>';
-                                this.close();
-                            };
-                        }
-
-                        // 3. TOAST IN-APP
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Laporan Baru Masuk!',
-                            text: `Ada ${selisih} laporan baru yang perlu ditinjau.`,
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 5000,
-                            timerProgressBar: true,
-                            background: '#ffffff',
-                            iconColor: '#3b82f6',
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer);
-                                toast.addEventListener('mouseleave', Swal.resumeTimer);
-                                toast.addEventListener('click', () => { window.location.href = '<?= site_url("admin/notifikasi") ?>'; });
-                            }
-                        });
-                    }
-
-                    lastUnreadCount = currentCount;
+                    return response.text();
                 })
-                .catch(err => console.log('Check failed', err));
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        const currentCount = parseInt(data.count) || 0;
+                        const badge = document.getElementById('adminNotifBadge');
+
+                        if (badge) {
+                            if (currentCount > 0) {
+                                badge.textContent = currentCount > 99 ? '99+' : currentCount;
+                                badge.style.display = 'block';
+                                badge.style.animation = 'pulse 1s infinite';
+                            } else {
+                                badge.style.display = 'none';
+                                badge.style.animation = 'none';
+                            }
+                        }
+
+                        // Logika Deteksi Notifikasi Baru
+                        if (lastUnreadCount !== -1 && currentCount > lastUnreadCount) {
+                            const selisih = currentCount - lastUnreadCount;
+
+                            notifSound.currentTime = 0;
+                            notifSound.play().catch(e => console.log("Audio limited"));
+
+                            if ("Notification" in window && Notification.permission === "granted") {
+                                const notification = new Notification("Laporan Baru!", {
+                                    body: `Ada ${selisih} laporan baru.`,
+                                    icon: '<?= base_url("favicon.ico") ?>'
+                                });
+                                notification.onclick = () => { window.focus(); window.location.href = '<?= site_url("admin/notifikasi") ?>'; };
+                            }
+
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Laporan Baru!',
+                                text: `Ada ${selisih} laporan baru yang perlu ditinjau.`,
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('click', () => { window.location.href = '<?= site_url("admin/notifikasi") ?>'; });
+                                }
+                            });
+                        }
+
+                        lastUnreadCount = currentCount;
+                    } catch (e) {
+                        console.error("Check failed (Invalid JSON)", e, "Text:", text.substring(0, 100));
+                    }
+                })
+                .catch(error => {
+                    console.error('Check failed (Network/Other)', error);
+                });
         }
     </script>
 
