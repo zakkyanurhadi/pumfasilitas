@@ -16,35 +16,32 @@ class AdminDashboard extends BaseController
 
     public function index()
     {
-        // ================= KPI =================
-        $total            = $this->laporanModel->getTotalLaporan();
-        $completionRate   = $this->laporanModel->getCompletionRate();
-        $avgSelesai       = $this->laporanModel->getAvgWaktuSelesai();
-        $highRisk         = $this->laporanModel->getHighRiskAktif();
-        $bulanIni         = $this->laporanModel->getLaporanBulanIni();
+        // Cache dashboard data for 10 minutes (600 seconds)
+        $cache = \Config\Services::cache();
+        $cacheKey = 'admin_dashboard_data';
 
-        // ================= GRAFIK =================
-        $trendBulanan     = $this->laporanModel->getTrendBulanan();
-        $prioritas        = $this->laporanModel->getDistribusiPrioritas();
-        $gedung           = $this->laporanModel->getLaporanPerGedung();
+        if (!$data = $cache->get($cacheKey)) {
+            // ================= KPI =================
+            $data['total'] = $this->laporanModel->getTotalLaporan();
+            $data['completionRate'] = $this->laporanModel->getCompletionRate();
+            $data['avgSelesai'] = $this->laporanModel->getAvgWaktuSelesai();
+            $data['highRisk'] = $this->laporanModel->getHighRiskAktif();
+            $data['bulanIni'] = $this->laporanModel->getLaporanBulanIni();
 
-        // ================= OPERASIONAL =================
-        $laporanTerbaru   = $this->laporanModel->getLaporanTerbaru();
-        $adminPerformance = $this->laporanModel->getKinerjaAdmin();
-        $notifikasi       = $this->laporanModel->getNotifikasiAktif();
+            // ================= GRAFIK =================
+            $data['trendBulanan'] = $this->laporanModel->getTrendBulanan();
+            $data['prioritas'] = $this->laporanModel->getDistribusiPrioritas();
+            $data['gedung'] = $this->laporanModel->getLaporanPerGedung();
 
-        return view('admin/dashboard', compact(
-            'total',
-            'completionRate',
-            'avgSelesai',
-            'highRisk',
-            'bulanIni',
-            'trendBulanan',
-            'prioritas',
-            'gedung',
-            'laporanTerbaru',
-            'adminPerformance',
-            'notifikasi'
-        ));
+            // ================= OPERASIONAL =================
+            $data['laporanTerbaru'] = $this->laporanModel->getLaporanTerbaru();
+            $data['adminPerformance'] = $this->laporanModel->getKinerjaAdmin();
+            $data['notifikasi'] = $this->laporanModel->getNotifikasiAktif();
+
+            // Store in cache
+            $cache->save($cacheKey, $data, 600);
+        }
+
+        return view('admin/dashboard', $data);
     }
 }

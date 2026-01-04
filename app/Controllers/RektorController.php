@@ -20,17 +20,20 @@ class RektorController extends BaseController
     // 1. DASHBOARD REKTOR
     public function index()
     {
-        // Gunakan statistik yang sudah ada di LaporanModel
-        $stats = $this->laporanModel->getStatistikHomepage();
-        $chartPrioritas = $this->laporanModel->getDistribusiPrioritas();
-        $chartBulanan = $this->laporanModel->getTrendBulanan();
+        $cache = \Config\Services::cache();
+        $cacheKey = 'rektor_dashboard_data';
 
-        return view('rektor/dashboard', [
-            'title' => 'Dashboard Rektor',
-            'stats' => $stats,
-            'chartPrioritas' => $chartPrioritas,
-            'chartBulanan' => $chartBulanan,
-        ]);
+        if (!$data = $cache->get($cacheKey)) {
+            $data = [
+                'title' => 'Dashboard Rektor',
+                'stats' => $this->laporanModel->getStatistikHomepage(),
+                'chartPrioritas' => $this->laporanModel->getDistribusiPrioritas(),
+                'chartBulanan' => $this->laporanModel->getTrendBulanan(),
+            ];
+            $cache->save($cacheKey, $data, 600);
+        }
+
+        return view('rektor/dashboard', $data);
     }
 
     // 2. DAFTAR LAPORAN (READ-ONLY)
