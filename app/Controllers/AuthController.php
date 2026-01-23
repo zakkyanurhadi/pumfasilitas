@@ -22,11 +22,11 @@ class AuthController extends Controller
         // Jika sudah login, redirect ke dashboard sesuai role
         if ($this->session->get('isLoggedIn')) {
             $role = $this->session->get('role');
-            if ($role === 'admin' || $role === 'superadmin') {
+            if ($role === 'admin' || $role === 'admin1') {
                 return redirect()->to('dashboardadmin');
             }
-            if ($role === 'rektor') {
-                return redirect()->to('rektor/dashboard');
+            if ($role === 'direktur') {
+                return redirect()->to('direktur/dashboard');
             }
             // Pastikan role === 'user' sebelum ke dashboard user
             if ($role === 'user') {
@@ -83,10 +83,10 @@ class AuthController extends Controller
         $this->session->set($sessionData);
 
         // Redirect URL sesuai role
-        if ($user['role'] === 'admin' || $user['role'] === 'superadmin') {
+        if ($user['role'] === 'admin' || $user['role'] === 'admin1') {
             $redirectUrl = base_url('/dashboardadmin');
-        } elseif ($user['role'] === 'rektor') {
-            $redirectUrl = base_url('/rektor/dashboard');
+        } elseif ($user['role'] === 'direktur') {
+            $redirectUrl = base_url('/direktur/dashboard');
         } elseif ($user['role'] === 'user') {
             $redirectUrl = base_url('/dashboard');
         } else {

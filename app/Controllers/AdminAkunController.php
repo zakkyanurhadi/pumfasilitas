@@ -24,7 +24,7 @@ class AdminAkunController extends BaseController
         $uri = service('uri')->getSegment(1);
 
         // 🔒 Proteksi: Hanya Superadmin yang boleh akses menu 'akunadmin'
-        if ($uri === 'akunadmin' && session()->get('role') !== 'superadmin') {
+        if ($uri === 'akunadmin' && session()->get('role') !== 'admin') {
             return redirect()->to('/dashboardadmin');
         }
 

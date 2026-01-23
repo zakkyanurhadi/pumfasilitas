@@ -48,14 +48,14 @@ $uri = service('uri')->getSegment(1) ? service('uri')->getSegment(1) : '';
             </a>
             <ul class="sidebar-submenu"
                 style="<?= ($uri == 'akunadmin' || $uri == 'akunuser') ? 'max-height:500px' : '' ?>">
-                <?php if (session()->get('role') === 'superadmin'): ?>
+                <?php if (session()->get('role') === 'admin'): ?>
                     <li><a href="<?= site_url('akunadmin') ?>"><i class="fa-solid fa-user-shield"></i> Akun Admin</a></li>
                 <?php endif; ?>
                 <li><a href="<?= site_url('akunuser') ?>"><i class="fa-solid fa-users"></i> Akun User</a></li>
             </ul>
         </li>
 
-        <?php if (session()->get('role') === 'superadmin'): ?>
+        <?php if (session()->get('role') === 'admin'): ?>
             <li>
                 <a href="<?= site_url('gedung') ?>" class="sidebar-item <?= $uri == 'gedung' ? 'active' : '' ?>">
                     <div class="icon-box"><i class="fa-solid fa-building"></i></div>

@@ -1,4 +1,4 @@
-<?= $this->extend('rektor/layouts/main') ?>
+<?= $this->extend('direktur/layouts/main') ?>
 
 <?= $this->section('content') ?>
 

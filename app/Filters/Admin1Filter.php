@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class SuperadminFilter implements FilterInterface
+class Admin1Filter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
@@ -15,16 +15,14 @@ class SuperadminFilter implements FilterInterface
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        // Cek apakah user memiliki role superadmin
+        // Cek apakah user memiliki role admin1 atau admin (superadmin lama)
         $role = session()->get('role');
-        if ($role !== 'superadmin') {
+        if ($role !== 'admin1' && $role !== 'admin') {
             // Redirect sesuai role masing-masing
-            if ($role === 'admin') {
-                return redirect()->to('/dashboardadmin')->with('error', 'Akses ditolak! Halaman ini hanya untuk Superadmin.');
-            } elseif ($role === 'rektor') {
-                return redirect()->to('/rektor/dashboard')->with('error', 'Akses ditolak! Halaman ini hanya untuk Superadmin.');
+            if ($role === 'direktur') {
+                return redirect()->to('/direktur/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk Admin.');
             } else {
-                return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Halaman ini hanya untuk Superadmin.');
+                return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk Admin.');
             }
         }
     }

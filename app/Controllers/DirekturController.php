@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\GedungModel;
 
-class RektorController extends BaseController
+class DirekturController extends BaseController
 {
     protected $laporanModel;
     protected $gedungModel;
@@ -17,17 +17,17 @@ class RektorController extends BaseController
         $this->gedungModel = new GedungModel();
     }
 
-    // 1. DASHBOARD REKTOR
+    // 1. DASHBOARD DIREKTUR
     public function index()
     {
         $cache = \Config\Services::cache();
-        $cacheKey = 'rektor_dashboard_data';
+        $cacheKey = 'direktur_dashboard_data';
 
         if (!$data = $cache->get($cacheKey)) {
             $currentYear = (int) date('Y');
 
             $data = [
-                'title' => 'Dashboard Rektor',
+                'title' => 'Dashboard Direktur',
                 'stats' => $this->laporanModel->getStatistikHomepage(),
                 'chartPrioritas' => $this->laporanModel->getDistribusiPrioritas(),
                 'chartBulanan' => [
@@ -39,7 +39,7 @@ class RektorController extends BaseController
             $cache->save($cacheKey, $data, 600);
         }
 
-        return view('rektor/dashboard', $data);
+        return view('direktur/dashboard', $data);
     }
 
     // 2. DAFTAR LAPORAN (READ-ONLY)
@@ -83,7 +83,7 @@ class RektorController extends BaseController
         // Data untuk dropdown filter
         $listGedung = $this->gedungModel->findAll();
 
-        return view('rektor/laporan', [
+        return view('direktur/laporan', [
             'title' => 'Daftar Laporan',
             'laporan' => $laporan,
             'pager_links' => $pager_links,
@@ -108,7 +108,7 @@ class RektorController extends BaseController
             $currentYear - 1 => $this->laporanModel->getTrendBulanan($currentYear - 1),
         ];
 
-        return view('rektor/statistik', [
+        return view('direktur/statistik', [
             'title' => 'Statistik Pengaduan',
             'total' => $total,
             'bulanIni' => $bulanIni,
@@ -137,7 +137,7 @@ class RektorController extends BaseController
 
         $pager_links = $pager->makeLinks($currentPage, $perPage, $total, 'default_full');
 
-        return view('rektor/audit_log', [
+        return view('direktur/audit_log', [
             'title' => 'Audit Log',
             'logs' => $logs,
             'pager_links' => $pager_links

@@ -1,4 +1,4 @@
-<?= $this->extend('rektor/layouts/main') ?>
+<?= $this->extend('direktur/layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -81,7 +81,7 @@
 
 <?php
 // Helper function untuk mengkonversi data trend ke format chart
-function formatTrendDataRektor($data)
+function formatTrendDataDirektur($data)
 {
     $result = array_fill(0, 12, 0); // Initialize with 0 for all 12 months
 
@@ -105,11 +105,11 @@ function formatTrendDataRektor($data)
     const trendData = {
         <?= $currentYear - 1 ?>: {
             labels: monthLabels,
-            data: [<?= implode(',', formatTrendDataRektor($chartBulanan[$currentYear - 1])) ?>]
+            data: [<?= implode(',', formatTrendDataDirektur($chartBulanan[$currentYear - 1])) ?>]
         },
         <?= $currentYear ?>: {
             labels: monthLabels,
-            data: [<?= implode(',', formatTrendDataRektor($chartBulanan[$currentYear])) ?>]
+            data: [<?= implode(',', formatTrendDataDirektur($chartBulanan[$currentYear])) ?>]
         }
     };
 

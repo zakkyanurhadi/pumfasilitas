@@ -4,6 +4,12 @@ sudo apt install apache2 php php-mysql php-common php-cli php-common libapache2-
 
 
 
+mysql_secure_installation / mariadb-secure-installation
+
+@Kipweb123
+ALTER USER 'root'@'localhost'
+IDENTIFIED WITH mysql_native_password
+BY '@Kipweb123';
 
 
 sudo apt install php php-mysql php-mbstring php-zip php-gd php-json php-curl -y

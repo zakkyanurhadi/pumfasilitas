@@ -27,9 +27,9 @@ class Filters extends BaseConfig
         'invalidchars' => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'auth' => \App\Filters\AuthFilter::class,
+        'admin1' => \App\Filters\Admin1Filter::class,
+        'direktur' => \App\Filters\DirekturFilter::class,
         'admin' => \App\Filters\AdminFilter::class,
-        'rektor' => \App\Filters\RektorFilter::class,
-        'superadmin' => \App\Filters\SuperadminFilter::class,
     ];
 
     // ... sisa file ...

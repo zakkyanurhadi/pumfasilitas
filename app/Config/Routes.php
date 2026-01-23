@@ -57,57 +57,63 @@ $routes->post('profile/update', 'ProfileController::update', ['filter' => 'auth'
 
 
 
-$routes->get('laporanadminpending', 'AdminLaporController::index', ['filter' => 'admin']);
-$routes->get('laporanadmindiproses', 'AdminLaporController::index', ['filter' => 'admin']);
-$routes->get('riwayatadmin', 'AdminLaporController::index', ['filter' => 'admin']);
+// =========================================================================
+// RUTE ADMIN (EX SUPERADMIN) + ADMIN1 (EX ADMIN)
+// =========================================================================
 
-$routes->post('admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin']);
+// Shared Dashboard (Bisa diakses Admin & Admin1)
+// Menggunakan filter 'admin1' karena admin1 = level bawah, level atas (admin) juga bisa akses jika filter mengizinkan
+$routes->get('dashboardadmin', 'AdminDashboard::index', ['filter' => 'admin1']);
 
-// Manajemen Akun (Superadmin)
-$routes->get('akunadmin', 'AdminAkunController::index', ['filter' => 'superadmin']);
+// Laporan (Admin & Admin1)
+$routes->get('laporanadmin', 'AdminLaporController::index', ['filter' => 'admin1']);
+$routes->post('laporanadmin', 'AdminLaporController::index', ['filter' => 'admin1']);
 
-// Manajemen Akun (Admin)
-$routes->get('akunuser', 'AdminAkunController::index', ['filter' => 'admin']);
+$routes->get('laporanadminpending', 'AdminLaporController::index', ['filter' => 'admin1']);
+$routes->get('laporanadmindiproses', 'AdminLaporController::index', ['filter' => 'admin1']);
+$routes->get('riwayatadmin', 'AdminLaporController::riwayat', ['filter' => 'admin1']);
 
-// Edit & delete
-$routes->post('/akun/store', 'AdminAkunController::store', ['filter' => 'admin']);
-$routes->post('akun/update', 'AdminAkunController::update', ['filter' => 'admin']);
-$routes->get('akun/delete/(:num)', 'AdminAkunController::delete/$1', ['filter' => 'admin']);
+$routes->post('admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin1']);
+$routes->get('admindetail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin1']);
+$routes->get('admin/laporan/detail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin1']);
 
-// Halaman detail (opsional)
-$routes->get('admin/laporan/detail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin']);
 
-$routes->get('dashboardadmin', 'AdminDashboard::index', ['filter' => 'admin']);
-$routes->get('laporanadmin', 'AdminLaporController::index', ['filter' => 'admin']);
-$routes->post('laporanadmin', 'AdminLaporController::index', ['filter' => 'admin']);
-$routes->get('riwayatadmin', 'AdminLaporController::riwayat', ['filter' => 'admin']);
-$routes->post('admin/laporan/verifikasi', 'AdminLaporController::verifikasi', ['filter' => 'admin']);
-$routes->get('admindetail/(:num)', 'AdminLaporController::detail/$1', ['filter' => 'admin']);
+// Profile Admin (Admin & Admin1)
+$routes->get('profileadmin', 'ProfileAdminController::index', ['filter' => 'admin1']);
+$routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter' => 'admin1']);
 
-$routes->get('profileadmin', 'ProfileAdminController::index', ['filter' => 'admin']);
-$routes->post('admin/profile/update', 'ProfileAdminController::update', ['filter' => 'admin']);
 
+// ===========================
+// KHUSUS ADMIN (EX SUPERADMIN)
+// ===========================
+
+// Manajemen Akun Admin/User (Hanya Admin)
+$routes->get('akunadmin', 'AdminAkunController::index', ['filter' => 'admin']);
+$routes->get('akunuser', 'AdminAkunController::index', ['filter' => 'admin1']); // Admin1 bisa lihat user? Asumsi ya.
+
+// CRUD Akun
 $routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], function ($routes) {
+    // Hanya Admin yang bisa create/delete admin lain
+    $routes->post('/akun/store', 'AdminAkunController::store');
+    $routes->post('akun/update', 'AdminAkunController::update');
+    $routes->get('akun/delete/(:num)', 'AdminAkunController::delete/$1');
 
-    // ===========================
-    // AKUN USER (Admin & Superadmin)
-    // ===========================
+    // Route lama untuk kompatibilitas jika ada
     $routes->get('akun/admin', 'AkunController::indexAdmin');
-    $routes->get('akun/user', 'AkunController::indexUser');
+    //$routes->get('akun/user', 'AkunController::indexUser'); // Dipindah ke admin1 filter jika perlu
     $routes->post('akun/create', 'AkunController::store');
-    $routes->post('akun/update', 'AkunController::update');
-    $routes->get('akun/delete/(:num)', 'AkunController::delete/$1');
+    //$routes->post('akun/update', 'AkunController::update');
+    //$routes->get('akun/delete/(:num)', 'AkunController::delete/$1');
 });
 
-// ===========================
-// GEDUNG (Superadmin Only)
-// ===========================
-$routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'superadmin'], function ($routes) {
+// CRUD Gedung (Hanya Admin)
+$routes->group('', ['namespace' => 'App\Controllers', 'filter' => 'admin'], function ($routes) {
     $routes->get('gedung', 'AdminGedungController::index');
     $routes->post('gedung/create', 'AdminGedungController::store');
     $routes->post('gedung/update', 'AdminGedungController::update');
     $routes->get('gedung/delete/(:num)', 'AdminGedungController::delete/$1');
 });
+
 
 // =========================================================================
 // RUTE NOTIFIKASI
@@ -121,22 +127,26 @@ $routes->get('notifikasi/delete-all', 'NotifikasiController::deleteAll', ['filte
 $routes->get('notifikasi/unread-count', 'NotifikasiController::getUnreadCount', ['filter' => 'auth']);
 
 // =========================================================================
-// RUTE NOTIFIKASI ADMIN
+// RUTE NOTIFIKASI ADMIN (Admin & Admin1)
 // =========================================================================
-$routes->get('admin/notifikasi', 'AdminNotifikasiController::index', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/view/(:num)', 'AdminNotifikasiController::view/$1', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/unread-count', 'AdminNotifikasiController::getUnreadCount', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/mark-all-read', 'AdminNotifikasiController::markAllAsRead', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/mark-read/(:num)', 'AdminNotifikasiController::markRead/$1', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/delete/(:num)', 'AdminNotifikasiController::delete/$1', ['filter' => 'admin']);
-$routes->get('admin/notifikasi/delete-all', 'AdminNotifikasiController::deleteAll', ['filter' => 'admin']);
+$routes->get('admin/notifikasi', 'AdminNotifikasiController::index', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/view/(:num)', 'AdminNotifikasiController::view/$1', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/unread-count', 'AdminNotifikasiController::getUnreadCount', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/mark-all-read', 'AdminNotifikasiController::markAllAsRead', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/mark-read/(:num)', 'AdminNotifikasiController::markRead/$1', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/delete/(:num)', 'AdminNotifikasiController::delete/$1', ['filter' => 'admin1']);
+$routes->get('admin/notifikasi/delete-all', 'AdminNotifikasiController::deleteAll', ['filter' => 'admin1']);
 
 // =========================================================================
-// RUTE REKTOR
+// RUTE DIREKTUR (EX REKTOR)
 // =========================================================================
-$routes->group('rektor', ['filter' => 'rektor'], function ($routes) {
-    $routes->get('dashboard', 'RektorController::index');
-    $routes->get('laporan', 'RektorController::laporan');
-    $routes->get('statistik', 'RektorController::statistik');
-    $routes->get('audit-log', 'RektorController::auditLog');
+$routes->group('direktur', ['filter' => 'direktur'], function ($routes) {
+    $routes->get('dashboard', 'DirekturController::index');
+    $routes->get('laporan', 'DirekturController::laporan');
+    $routes->get('statistik', 'DirekturController::statistik');
+    $routes->get('audit-log', 'DirekturController::auditLog');
+
+    // Profile
+    $routes->get('profile', 'ProfileDirekturController::index');
+    $routes->post('profile/update', 'ProfileDirekturController::update');
 });

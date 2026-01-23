@@ -6,7 +6,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class RektorFilter implements FilterInterface
+class DirekturFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
@@ -15,14 +15,14 @@ class RektorFilter implements FilterInterface
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        // Cek apakah user memiliki role rektor
+        // Cek apakah user memiliki role direktur
         $role = session()->get('role');
-        if ($role !== 'rektor') {
+        if ($role !== 'direktur') {
             // Redirect sesuai role masing-masing
-            if ($role === 'admin' || $role === 'superadmin') {
-                return redirect()->to('/dashboardadmin')->with('error', 'Akses ditolak! Halaman ini untuk Rektor.');
+            if ($role === 'admin1' || $role === 'admin') {
+                return redirect()->to('/dashboardadmin1')->with('error', 'Akses ditolak! Halaman ini untuk Direktur.');
             } else {
-                return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk Rektor.');
+                return redirect()->to('/dashboard')->with('error', 'Akses ditolak! Halaman ini untuk Direktur.');
             }
         }
     }
