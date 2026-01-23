@@ -69,32 +69,64 @@ $uri = service('uri')->getSegment(2) ?: 'dashboard';
             </li>
         </ul>
     </aside>
-    <!-- ... (bagian toggle button & navbar atas tetap sama) ... -->
-    <!-- Dropdown Menu -->
-    <div id="userDropdownMenu" class="user-dropdown-menu" style="display: none;">
-        <div class="dropdown-header">
-            <img src="<?= $avatarUrl ?>" alt="Avatar">
-            <div>
-                <div class="dropdown-name"><?= esc(session('nama') ?? 'Direktur') ?></div>
-                <div class="dropdown-role">Direktur</div>
-            </div>
+
+    <!-- TOGGLE BUTTON -->
+    <div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars toggle-icon"></i>
+    </div>
+
+    <!-- NAVBAR ATAS -->
+    <nav class="top-navbar">
+        <div class="page-title" id="realtimeClock"
+            style="display: flex; flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2;">
+            <span id="clockTime" style="font-size: 18px; font-weight: 600; color: #1e293b;"></span>
+            <span id="clockDate" style="font-size: 12px; font-weight: 400; color: #64748b;"></span>
         </div>
-        <div class="dropdown-divider"></div>
+        <div class="top-left"></div>
 
-        <a href="<?= site_url('direktur/profile') ?>" class="dropdown-item">
-            <i class="fa-solid fa-user"></i>
-            <span>Profil Saya</span>
-        </a>
+        <div class="top-right">
 
-        <div class="dropdown-divider"></div>
-        <a href="<?= site_url('logout') ?>" class="dropdown-item logout-item">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Keluar</span>
-        </a>
-    </div>
-    </div>
+            <?php
+            $imgSession = session('img');
 
-    </div>
+            $namaFileGambar = ($imgSession && !empty($imgSession))
+                ? $imgSession
+                : 'default.webp';
+
+            $avatarUrl = base_url('uploads/avatars/' . $namaFileGambar);
+            ?>
+
+            <div class="user-dropdown-wrapper" style="position: relative;">
+                <div class="user-box" onclick="toggleUserDropdown()" style="cursor: pointer;">
+                    <img src="<?= $avatarUrl ?>" alt="User">
+                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: #64748b; margin-left: 4px;"></i>
+                </div>
+
+                <!-- Dropdown Menu -->
+                <div id="userDropdownMenu" class="user-dropdown-menu" style="display: none;">
+                    <div class="dropdown-header">
+                        <img src="<?= $avatarUrl ?>" alt="Avatar">
+                        <div>
+                            <div class="dropdown-name"><?= esc(session('nama') ?? 'Direktur') ?></div>
+                            <div class="dropdown-role">Direktur</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+
+                    <a href="<?= site_url('direktur/profile') ?>" class="dropdown-item">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Profil Saya</span>
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="<?= site_url('logout') ?>" class="dropdown-item logout-item">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Keluar</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
     </nav>
 
     <style>

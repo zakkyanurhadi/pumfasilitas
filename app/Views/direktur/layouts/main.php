@@ -25,6 +25,25 @@
                     <?= session()->getFlashdata('success') ?>
                 </div>
             <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="notification error"
+                    style="background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #fecaca;">
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('errors')): ?>
+                <div class="notification errors"
+                    style="background: #fff7ed; color: #9a3412; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffedd5;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                            <li><?= esc($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+
             <?= $this->renderSection('content') ?>
         </div>
     </main>

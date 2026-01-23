@@ -55,25 +55,37 @@ class ProfileDirekturController extends BaseController
 
         // --- Proses Upload Avatar ---
         $avatarFile = $this->request->getFile('avatar');
-        $namaAvatar = $user['img']; // Gunakan nama avatar lama sebagai default
+        $namaAvatar = $user['img'];
 
-        // Jika ada file baru yang diupload dan valid
         if ($avatarFile && $avatarFile->isValid() && !$avatarFile->hasMoved()) {
-            // Hapus avatar lama jika bukan default.jpg
+            $targetPath = FCPATH . 'uploads/avatars';
+
+            // Pastikan folder ada
+            if (!is_dir($targetPath)) {
+                mkdir($targetPath, 0777, true);
+            }
+
+            // Hapus avatar lama jika bukan default
             if ($namaAvatar && !in_array($namaAvatar, ['default.jpg', 'default.png', 'default.webp'])) {
-                $oldAvatarPath = FCPATH . 'uploads/avatars/' . $namaAvatar;
+                $oldAvatarPath = $targetPath . DIRECTORY_SEPARATOR . $namaAvatar;
                 if (file_exists($oldAvatarPath)) {
-                    unlink($oldAvatarPath);
+                    @unlink($oldAvatarPath);
                 }
             }
-            // Konversi ke WebP dan simpan
-            // PENTING: BaseController harus punya method convertImageToWebP
-            // Jika tidak ada, pakai logic standar move()
+
+            // Coba konversi ke WebP jika method tersedia
             if (method_exists($this, 'convertImageToWebP')) {
-                $namaAvatar = $this->convertImageToWebP($avatarFile, FCPATH . 'uploads/avatars', 70);
+                $webpName = $this->convertImageToWebP($avatarFile, $targetPath, 70);
+                if ($webpName) {
+                    $namaAvatar = $webpName;
+                } else {
+                    // Jika gagal konvert, simpan aslinya
+                    $namaAvatar = $avatarFile->getRandomName();
+                    $avatarFile->move($targetPath, $namaAvatar);
+                }
             } else {
                 $namaAvatar = $avatarFile->getRandomName();
-                $avatarFile->move(FCPATH . 'uploads/avatars', $namaAvatar);
+                $avatarFile->move($targetPath, $namaAvatar);
             }
         }
 
